@@ -129,7 +129,7 @@ class Connector:
         return url;
     
     def get_request_headers( self, headers = {} ):
-        request_headers = self.headers;
+        request_headers = self.headers.copy();
         if ( self.has_http_basic_authentication() ):
             request_headers.update({'Authorization': self.http_basic_authentication})
         request_headers.update(headers)
@@ -141,13 +141,13 @@ class Connector:
         # May be overridden to raise an exception instead
         return True;
     
-    def request( self, method='GET', url='', headers={}, query_params={}, data={} ):
+    def request( self, method='GET', url='', headers={}, query_params={}, data=None ):
         self.is_ready()
 
         if (query_params == None):
             query_params = {};
                 
-        if method == "GET":
+        if method == 'GET':
             if (data == None ):
                 data = {};
                 
@@ -166,8 +166,6 @@ class Connector:
                 data = urllib.parse.urlencode(data).encode()
         if data:
             data = data.encode("utf-8");
-            
-            
             
         request = urllib.request.Request(
             url, data=data, headers=headers, method=method
