@@ -85,7 +85,7 @@ class Templating:
 
      
     def recalculate( self, conn_session: ConnectorTygronSession, reset: bool = True ):
-        conn_session.request(
+        response = conn_session.request(
                 method='POST',
                 url='event/editorindicator/reset_indicators',
                 data=[ reset ]
