@@ -1,74 +1,38 @@
 from .. import sdk as tygron
 
+import sys
+import importlib
+
 import json
 
 def main():
+    if len(sys.argv) <= 3:
+        raise IndexError('Arguments required: trigger module, host, apitoken, and optionally a json of parameters (tygronsdk.example.* engine.tygron.com 12345678abcdabcdabcdabcd)')
+        
+        
+    trigger     = sys.argv[1]
+    host        = sys.argv[2]
+    apitoken    = sys.argv[3]
+    parameters  = '{}'
+    
+    if not len(sys.argv) <= 4:
+        parameters  = sys.argv[4]
 
-    print('This is an example for how to create/run an API trigger. This example does not include a full webservice but will demonstrate what the webservice has to do.')
-    
-    query_parameter_apitoken = query_parameter_apitoken or None
-    if (not query_parameter_apitoken):
-        print('Also note that this example won\'t run, unless a real "query_parameter_apitoken" is provided.')
-    
-    print('Set up a few assumptions first: A request is made, originating from the Tygron Platform. This request always includes the following information, which you should parse from the request:')
-    
-    header_referer = 'engine.tygron.com'
-    print('Referer (sic) header : ' + header_referer )
-    
-    query_parameter_apitoken = query_parameter_apitoken or '[Some token]'
-    print('Api token is '+query_parameter_apitoken)
-    
-    print('We can then set up a connection to the session which made the request')
-    sdk = tygron.sdk({
-             'host' : header_referer
-        } );
-    conn_session = sdk.create_connector_session()
-    conn_session.set_api_token( query_parameter_apitoken )
-    
-    print( 'The connector will facilitate all calls to '+conn_session.get_url_full() )
-    
-    print( 'Next, we can obtain some information, and perform computations with that information as desired')
-    
-    calc_results = {
-        'buildings' : 0,
-        'human_buildings': 0,
-        'human_buildings_planned' : 0
-        }
-    playable_stakeholders = []
+    parameters = json.loads( parameters )
 
-    stakeholders_items = conn_session.request(
-            method='GET',
-            url='items/stakeholders'
-        ).get_response_body_json()
-    for item in stakeholders_items :
-        if ( item.get('human',False) ):
-            playable_stakeholders.append(item.get('id'))
+    trigger_module = importlib.import_module(trigger)
+    trigger_class_name = ''.join(word.title() for word in trigger.rpartition('.')[2].split('_'))
 
-    print ('The following buildings correspond to human stakeholders in the project ' + str(playable_stakeholders) )
-    
-    buildings_items = conn_session.request(
-            method='GET',
-            url='items/buildings'
-        ).get_response_body_json()
+    print(trigger_class_name)
+    trigger_class = getattr(trigger_module, trigger_class_name)
 
-    for  item in buildings_items  :
-        calc_results['buildings'] += 1
-        if (not (item.get('ownerID',-1) in playable_stakeholders )):
-            continue
-        calc_results['human_buildings'] += 1
-        if ( not(item.get('state', 'NONE') in ['PENDING_CONSTRUCTION']) ):
-            continue
-        calc_results['human_buildings_planned'] += 1
+    print( 'Instantiate a '+trigger_class_name+' trigger, with parameters:' + str([host, apitoken, parameters]) )
+    trigger_obj = trigger_class( host, apitoken, parameters )
     
-    print('With the computation completed, we can set up a returnable object.')
-    returnable_results = {
-        'UPDATE_GLOBAL_VALUE_WHERE_NAME_IS_COUNT_BUILDINGS' : calc_results['buildings'],
-        'UPDATE_GLOBAL_VALUE_WHERE_NAME_IS_COUNT_BUILDINGS_HUMAN' : calc_results['human_buildings'],
-        'UPDATE_GLOBAL_VALUE_WHERE_NAME_IS_COUNT_BUILDINGS_HUMAN_PLANNED' : calc_results['human_buildings_planned']
-    }
-    
-    print('The following json can be responded to the original web call, and will effect changes in the session which reached out to the trigger:')
-    print( json.dumps( returnable_results, indent=4 ) );
-    
+    print( 'Then run the trigger' )
+    result = trigger_obj.trigger()
+
+    print(' The trigger has given the following response, which can be sent back as a response to the original call to run the trigger: ')
+    print( json.dumps( result, indent=4 ) );
 
 main()

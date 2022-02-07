@@ -1,4 +1,5 @@
 from .response import Response
+from .response_stream import ResponseStream
 
 import os
 import base64, json
@@ -141,7 +142,7 @@ class Connector:
         # May be overridden to raise an exception instead
         return True;
     
-    def request( self, method='GET', url='', headers={}, query_params={}, data=None ):
+    def request( self, method='GET', url='', headers={}, query_params={}, data=None, stream=False ):
         self.is_ready()
 
         if (query_params == None):
@@ -159,37 +160,65 @@ class Connector:
         headers = self.get_request_headers(headers);
 
         if data:
-            if (self.get_request_format() == 'JSON'):
-                data = json.dumps(data);
-                headers["Content-Type"] = "application/json; charset=UTF-8"
+            if (stream):
+                data = data
             else:
-                data = urllib.parse.urlencode(data).encode()
-        if data:
-            data = data.encode("utf-8");
+                if (self.get_request_format() == 'JSON'):
+                    data = json.dumps(data);
+                    headers['Content-Type'] = 'application/json; charset=UTF-8'
+                else:
+                    data = urllib.parse.urlencode(data).encode()
+                data = data.encode('utf-8');
             
         request = urllib.request.Request(
             url, data=data, headers=headers, method=method
         );
+        
+        response = None
         try:
-            with urllib.request.urlopen(request) as httpresponse:
-                response = Response(
-                    http_status_code=httpresponse.status,
-                    http_status_message=None,
-                    response_headers=httpresponse.headers,
-                    response_body=httpresponse.read().decode(
-                        httpresponse.headers.get_content_charset("utf-8")
-                    )
-                )
-        except urllib.error.HTTPError as e:
+            httpresponse = None
+            error = False
+            try:
+                httpresponse = urllib.request.urlopen(request)
+            except urllib.error.HTTPError as e:
+                httpresponse = e
+                error = True
+            finally:
+                response = self.create_request_response( httpresponse, stream )
+                if ( not stream ):
+                    httpresponse.close()
+                else:
+                    pass
+        except Exception as e:
+            raise e
+        if ( error and self.get_exception_on_error() ):
+            raise Exception( response )
+        return response
+        
+    def create_request_response( self, response_from_request = None, stream:bool = False ):
+        if ( response_from_request == None ):
+            return None
+        if stream:
+            response = ResponseStream.from_request_result(response_from_request)
+        else:
+            response = Response.from_request_result(response_from_request)
+        return response
+        
+        if False:
             response = Response(
-                http_status_code=e.code,
-                http_status_message=str(e.reason),
-                response_headers=e.headers,
-                response_body=e.read().decode(
-                        e.headers.get_content_charset("utf-8")
-                    ),
+                    http_status_code=response_from_request.code,
+                    http_status_message=str(response_from_request.reason),
+                    response_headers=response_from_request.headers,
+                    response_encoding=response_from_request.headers.get_content_charset("utf-8"),
+                    response=response_from_request
+                )
+        else:
+            response = Response(
+                http_status_code=httpresponse.status,
+                http_status_message=None,
+                response_headers=httpresponse.headers,
+                response_body=httpresponse.read().decode(
+                    httpresponse.headers.get_content_charset("utf-8")
+                )
             )
-            if ( self.get_exception_on_error() ):
-                raise Exception( response );
-
-        return response;
+        return response

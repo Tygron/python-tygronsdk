@@ -1,4 +1,4 @@
-from ..connectors import ConnectorTygronSession
+from ..core.connectors import ConnectorTygronSession
 
 import json
 

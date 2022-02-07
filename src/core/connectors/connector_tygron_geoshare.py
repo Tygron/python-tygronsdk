@@ -4,5 +4,5 @@ class ConnectorTygronGeoshare(ConnectorTygron):
 
     def __init__( self ):
         super().__init__();
-        self.set_base( 'geoshare' );
+        self.set_base( 'share' );
         return;

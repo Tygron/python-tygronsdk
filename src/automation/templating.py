@@ -1,4 +1,4 @@
-from ..connectors import ConnectorTygronSession, ConnectorTygronApi
+from ..core.connectors import ConnectorTygronSession, ConnectorTygronApi
 
 from typing import Callable
 import time
@@ -102,7 +102,7 @@ class Templating:
                     )
                 return response.is_success()
             except Exception as err:
-                if (err.arg[0].get_http_status_code == 504):
+                if (err.args[0].get_http_status_code == 504):
                     return None
                 raise err
             

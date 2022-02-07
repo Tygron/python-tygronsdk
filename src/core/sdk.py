@@ -1,8 +1,9 @@
 from . import connectors
+from .. import automation
 
 class sdk():
 
-    def __init__( self, settings, **kwargs ):
+    def __init__( self, settings = {}, **kwargs ):
         self.settings = {};
         self.set_sdk_settings( {**settings,  **kwargs} );
         return;
@@ -31,3 +32,6 @@ class sdk():
             conn.apply_session_connection(session_connection)
             
         return conn;
+        
+    def create_automation_templating( self ):
+        return 
