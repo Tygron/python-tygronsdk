@@ -11,7 +11,7 @@ class ConnectorTygron(Connector):
         self.set_request_format('JSON')
         return
  
-    def apply_settings( self, settings = {}, **kwargs )
+    def apply_settings( self, settings = {}, **kwargs ):
         combined_settings = {**settings, **kwargs}
         local_settings = dict((k, combined_settings[k]) for k in [
                 'platform',
@@ -19,7 +19,7 @@ class ConnectorTygron(Connector):
                 'username',
                 'password'
             ] if k in combined_settings)
-        for key, value in local_settings.items()
+        for key, value in local_settings.items():
             if key == 'platform':
                 self.set_platform( value )
             elif key == 'host':
