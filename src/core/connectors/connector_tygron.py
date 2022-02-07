@@ -5,39 +5,40 @@ import base64
 class ConnectorTygron(Connector):
 
     def __init__( self ):
-        super().__init__();
-        self.set_platform( 'engine' );
-        self.set_query_params({'f':'JSON'});
-        self.set_request_format('JSON');
-        return;
+        super().__init__()
+        self.set_platform( 'engine' )
+        self.set_query_params({'f':'JSON'})
+        self.set_request_format('JSON')
+        return
  
-    def apply_settings( self, settings = {}, **kwargs ):
-        combined_settings = {**settings, **kwargs};
+    def apply_settings( self, settings = {}, **kwargs )
+        combined_settings = {**settings, **kwargs}
         local_settings = dict((k, combined_settings[k]) for k in [
                 'platform',
                 'host',
                 'username',
                 'password'
             ] if k in combined_settings)
-        for key, value in local_settings.items():
+        for key, value in local_settings.items()
             if key == 'platform':
-                self.set_platform( value );
-                
+                self.set_platform( value )
+            elif key == 'host':
+                self.set_host( value )    
             elif key == 'username':
                 if ( 'password' in combined_settings ):
-                    self.set_http_basic_authentication( value, local_settings['password'] );
+                    self.set_http_basic_authentication( value, local_settings['password'] )
                 elif ( self.username != value ):
-                    self.set_http_basic_authentication( None, None );
-                self.set_username(value);
+                    self.set_http_basic_authentication( None, None )
+                self.set_username(value)
                 
             elif key == 'password':
-                continue;
+                continue
                 
             else:
-                setattr( self, key, local_settings[key] );
+                setattr( self, key, local_settings[key] )
  
     def set_platform( self, platform ):
-        self.set_host( platform + '.tygron.com' );
+        self.set_host( platform + '.tygron.com' )
     
     def set_username( self, username ):
-        self.username=username;
+        self.username=username
