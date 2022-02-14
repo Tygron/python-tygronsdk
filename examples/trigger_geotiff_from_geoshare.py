@@ -12,7 +12,8 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
         result_ids = []
         result_urls = []
         result_uploaders = self.get_trigger_name()
-
+	
+        print( conn_session.get_url_full() )
         overlays = conn_session.request(
                 url='items/overlays'
             ).get_response_body_json()
