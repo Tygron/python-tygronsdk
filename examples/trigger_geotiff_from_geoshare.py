@@ -1,5 +1,7 @@
 from .. import interfaces
 from .. import items
+
+import json
 import base64
 import re
 
@@ -11,7 +13,7 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
 
         result_ids = []
         result_urls = []
-        result_uploaders = self.get_trigger_name()
+        result_uploaders = []
 	
         print( conn_session.get_url_full() )
         overlays = conn_session.request(
@@ -44,14 +46,15 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
                     result_urls.append( url )
                 else:
                     result_urls.append( conn_geoshare.get_url_full(url) )
+                result_uploaders.append( self.get_trigger_name() )
         
         if ( len(result_ids) == 0 ):
             return
 
         self.add_result( 'editorgeotiff/set_geotiff_url', [
                 result_ids,
-                result_urls,
-                result_uploaders
+                json.dumps(result_urls) if len(result_urls) != 1 else result_urls[0],
+                json.dumps(result_uploaders) if len(result_uploaders) != 1 else result_uploaders[0],
             ])
     
     def get_geoshare_url_for_geotiff( self, tiff_id:int = None, tiff_name:str = None):
