@@ -3,7 +3,7 @@ from ..core.connectors import ConnectorTygronSession
 from typing import List
 import json
 
-class ResultExport:
+class DataExport:
 
     #Standardized forms of export are:
     # html      decorated output
@@ -17,8 +17,9 @@ class ResultExport:
     def __init__( self ):
         #super().__init__();
         return;
-    
-    def export_indicators( self, conn_session: ConnectorTygronSession, location: str, forms: List[str] ):
+ 
+    @staticmethod   
+    def export_indicators( conn_session: ConnectorTygronSession, location: str, forms: List[str] ):
         response = conn_session.request(
                 method='GET',
                 url='items/indicators'

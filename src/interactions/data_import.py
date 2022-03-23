@@ -1,14 +1,12 @@
 from ..core.connectors import ConnectorTygronSession
+from ..utilities.geometries import Geometries
 
 import json
 
-class FileImport:
+class DataImport:
 
-    def __init__( self ):
-        #super().__init__();
-        return;
-
-    def import_areas( self, conn_session: ConnectorTygronSession, area_data_content: str, buffer: int = 1 ):
+    @staticmethod
+    def geojson_areas( conn_session: ConnectorTygronSession, area_data_content: str, buffer: int = 1 ):
         feature_collection = json.load( area_data_content )
         
         geometry_collection = { 
@@ -40,7 +38,7 @@ class FileImport:
                 values.append( value )
         
         query_params = {}
-        crs = self.get_crs_code_from_feature_collection( feature_collection )
+        crs = Geometries.feature_collection_get_crs_code( feature_collection )
         if (crs):
             query_params['CRS'] = crs
         
@@ -49,17 +47,4 @@ class FileImport:
                 url='event/editorarea/import', 
                 query_params=query_params,
                 data=[ geometry_collection, names, attributes, values, buffer, None ],
-            )
-    
-
-
-
-    
-    def get_crs_code_from_feature_collection( self, feature_collection = {} ):
-        if ( feature_collection.get('crs', False) ):
-            if ( feature_collection['crs'].get('properties', False) ):
-                if ( feature_collection['crs']['properties'].get('name', False) ):
-                    crs_parts = feature_collection['crs']['properties']['name'].split(':')
-                    if ( len(crs_parts)==2 and str(crs_parts[1]).isnumeric() ):
-                        return crs_parts[1]
-        return None
+            )   

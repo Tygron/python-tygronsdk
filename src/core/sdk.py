@@ -1,5 +1,7 @@
 from . import connectors
-from .. import automation
+from .. import interactions
+from .. import utilities
+from .. import items
 
 class sdk():
 
@@ -32,6 +34,3 @@ class sdk():
             conn.apply_session_connection(session_connection)
             
         return conn;
-        
-    def create_automation_templating( self ):
-        return 
