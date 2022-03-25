@@ -6,7 +6,7 @@ import json
 class DataImport:
 
     @staticmethod
-    def geojson_areas( conn_session: ConnectorTygronSession, area_data_content: str, buffer: int = 1 ):
+    def geojson_areas( conn_session: ConnectorTygronSession, area_data_content: str, buffer: int = 1, name_attribute:str = 'NAME' ):
         feature_collection = json.load( area_data_content )
         
         geometry_collection = { 
@@ -21,7 +21,7 @@ class DataImport:
         
         for  feature in feature_collection['features'] :
             geometry_collection['geometries'].append(feature['geometry'])
-            names.append( feature['properties'].get('NAME', 'Unnamed Area') )
+            names.append( feature['properties'].get(name_attribute, 'Unnamed Area') )
             for  prop, value in feature['properties'].items() :
                 if (prop.upper() not in attributes):
                     attributes_keys.append( prop ) 
@@ -31,10 +31,11 @@ class DataImport:
             for  attribute in attributes_keys :
                 value = feature['properties'].get(attribute, None)
                 try:
-                    float(value)
+                    value = float(value)
                 except (ValueError, TypeError):
                     if ( not isinstance(value, list) ):
                         value = None
+                    #TODO: test whether each entry in list is float, cast to float
                 values.append( value )
         
         query_params = {}

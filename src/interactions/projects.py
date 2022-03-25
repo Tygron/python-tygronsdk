@@ -1,4 +1,5 @@
 from ..core.connectors import ConnectorTygronSession, ConnectorTygronApi
+from ..utilities.strings import Strings
 
 import json
 
@@ -6,7 +7,6 @@ class Projects:
 
     @staticmethod
     def save_project_as( conn_api: ConnectorTygronApi, session_id: int, domain: str, project_name: str, clear_map: bool = False, attempts:int = 25 ):
-        attempts = 25
         last_err = None
         for i in range(attempts):
             attempt_name = project_name + ('' if i==0 else '-'+str(i))
@@ -24,6 +24,14 @@ class Projects:
                 last_err = Exception('Could not set name: '+attempt_name, err )
                 continue
         raise last_err
+ 
+    def save_project( conn_api: ConnectorTygronApi, session_id: int ):
+        response = conn_api.request(
+                method='POST',
+                url='event/io/save_project',
+                data=[ session_id ]
+            )
+        session_id
  
     @staticmethod           
     def delete_project( conn_api: ConnectorTygronApi, project_name: str ):

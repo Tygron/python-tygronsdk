@@ -23,7 +23,7 @@ class Creation:
                 data=[ location_x, location_y, polygon ]
             )
             
-        err_count = Creation.wait_for_project_generation( conn_session )
+        err_count = Creation.wait_for_map_generation( conn_session )
         
         if (err_count == -1):
             raise Exception('Project generation did not start') 
@@ -33,7 +33,7 @@ class Creation:
         return
  
     @staticmethod   
-    def wait_for_project_generation( conn_session: ConnectorTygronSession ):
+    def wait_for_map_generation( conn_session: ConnectorTygronSession ):
         
         def wait_function():
             progress_items = conn_session.request(
