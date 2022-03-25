@@ -1,29 +1,52 @@
-
+import json
 
 
 
 class Geometries:
 
     @staticmethod
-    def feature_get_centre( feature ):
-        queue = json.loads(json.dumps( feature.get('geometry', {}).get('coordinates', [] ) ))
-        minX = None
-        maxX = None
-        minY = None
-        maxY = None
+    def feature_get_center( feature ):
+        envelope  = Geometries.feature_get_envelope( feature )
+        
+        if (envelope == None):
+            return envelope
+            
+        return [ ((envelope['minX']+envelope['maxX'])/2), ((envelope['minY']+envelope['maxY'])/2) ]
+        
+    @staticmethod
+    def feature_get_envelope( feature ):
+        queue = [json.loads(json.dumps( feature.get('geometry', {}).get('coordinates', [] ) ))]
+        min_x = None
+        max_x = None
+        min_y = None
+        max_y = None
         while queue:
             elem = queue.pop()
             try:
-                minX = ( float(elem[0]) if minX == None else min(minX, float(elem[0])) )
-                maxX = ( float(elem[0]) if maxX == None else max(maxX, float(elem[0])) )
-                minY = ( float(elem[1]) if minY == None else min(minY, float(elem[1])) )
-                maxY = ( float(elem[1]) if maxY == None else max(maxY, float(elem[1])) )
+                min_x = ( float(elem[0]) if min_x == None else min(min_x, float(elem[0])) )
+                max_x = ( float(elem[0]) if max_x == None else max(max_x, float(elem[0])) )
+                min_y = ( float(elem[1]) if min_y == None else min(min_y, float(elem[1])) )
+                max_y = ( float(elem[1]) if max_y == None else max(max_y, float(elem[1])) )
             except (ValueError, TypeError, IndexError) as err:
                 if ( isinstance(elem, list) ):
                     queue += elem
                 else:
                     raise err
-        return [ ((minX+maxX)/2), ((minY+maxY)/2) ]
+                    
+        if ( min_x == None ):
+            return None
+            
+        envelope = {
+                'minX' : min_x,
+                'maxX' : max_x,
+                'minY' : min_y,
+                'maxY' : max_y
+            }
+        envelope['xmin'] = envelope['minX']
+        envelope['xmax'] = envelope['maxX']
+        envelope['ymin'] = envelope['minY']
+        envelope['ymax'] = envelope['maxY']
+        return envelope
         
     @staticmethod
     def feature_collection_get_crs_code( self, feature_collection = {} ):

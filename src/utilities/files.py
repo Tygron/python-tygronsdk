@@ -13,7 +13,7 @@ class Files:
 
     def ensure_directory( directory:str ):
         if ( not os.path.exists(directory) ):
-            os.makedirs(directory)
+            os.makedirs(directory, exist_ok=True)
 
     @staticmethod
     def move_file( file:str, source_location:str, target_location:str ):
@@ -21,8 +21,7 @@ class Files:
         target = os.path.join( target_location, file )
         if ( not Path(source).is_file() ):
             raise Exception('File not found: ' + str( source ) )
-        if ( not os.path.exists(target_location) ):
-            os.makedirs(target_location)
+        Files.ensure_directory(target_location)
         if ( Path(target).is_file() ):
             raise Exception('File already exists: ' + str( target ) )
         os.replace( os.path.join( source ) , os.path.join( target ) )  
