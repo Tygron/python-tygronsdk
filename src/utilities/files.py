@@ -11,6 +11,7 @@ class Files:
         f.write(str(content))
         f.close()
 
+    @staticmethod
     def ensure_directory( directory:str ):
         if ( not os.path.exists(directory) ):
             os.makedirs(directory, exist_ok=True)
@@ -24,4 +25,11 @@ class Files:
         Files.ensure_directory(target_location)
         if ( Path(target).is_file() ):
             raise Exception('File already exists: ' + str( target ) )
-        os.replace( os.path.join( source ) , os.path.join( target ) )  
+        os.replace( os.path.join( source ) , os.path.join( target ) )
+        
+
+    @staticmethod
+    def get_content_of_directory( directory:str, error_if_not_exists:bool = False ):
+        if ( not os.path.exists(directory) and not error_if_not_exists):
+            return []
+        return os.listdir( directory )
