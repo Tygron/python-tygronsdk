@@ -14,11 +14,12 @@ class Response():
         self._response_encoding = response_encoding
         self._response_body = response_body
 
+    @staticmethod
     def from_request_result( result ):
         return Response(
-                http_status_code=result.status,
-                http_status_message=str(result.reason) if result.reason else None,
-                response_headers=result.headers,
+                http_status_code=getattr(result, 'status',None),
+                http_status_message=getattr(result, 'reason',None),
+                response_headers=getattr(result, 'headers',[]),
                 response_encoding=result.headers.get_content_charset( 'utf-8' ),
                 response_body=result.read()
             )
@@ -59,8 +60,6 @@ class Response():
             
     def __len__( self ):
         try:
-            print( self.get_response_headers() )
             return getattr( self.get_response_headers(), 'Content-Length' )
         except Exception as e:
-            return 10
             raise e

@@ -22,6 +22,7 @@ class ResponseStream(Response):
         
         self.set_chunk_size( 1026 * 16 )
 
+    @staticmethod
     def from_request_result( result ):
         return ResponseStream(
                 http_status_code=result.status,

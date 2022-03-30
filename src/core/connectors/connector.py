@@ -3,7 +3,8 @@ from .response_stream import ResponseStream
 
 import os
 import base64, json
- 
+
+import http.client 
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -142,7 +143,7 @@ class Connector:
         # May be overridden to raise an exception instead
         return True;
     
-    def request( self, method='GET', url='', headers={}, query_params={}, data=None, stream=False ):
+    def request( self, method='GET', url='', headers={}, query_params={}, data=None, stream=False, timeout=None ):
         self.is_ready()
 
         if (query_params == None):
@@ -179,14 +180,18 @@ class Connector:
             httpresponse = None
             error = False
             try:
-                httpresponse = urllib.request.urlopen(request)
-            except urllib.error.HTTPError as e:
+                httpresponse = urllib.request.urlopen(request, timeout=timeout) #what if timeout?
+            except (urllib.error.HTTPError, http.client.RemoteDisconnected) as e:
                 httpresponse = e
                 error = True
             finally:
                 response = self.create_request_response( httpresponse, stream )
                 if ( not stream ):
-                    httpresponse.close()
+                    if ( httpresponse != None ):
+                        try:
+                            httpresponse.close()
+                        except AttributeError as e:
+                            pass #Tried to close an exception. No problem
                 else:
                     pass
         except Exception as e:
@@ -198,27 +203,14 @@ class Connector:
     def create_request_response( self, response_from_request = None, stream:bool = False ):
         if ( response_from_request == None ):
             return None
-        if stream:
+        if ( isinstance(response_from_request, Exception) and not isinstance(response_from_request, urllib.error.HTTPError) ):
+            response = Response(
+                    http_status_message = 'An exception occurred, and there was no response',
+                    response_body = response_from_request
+                )
+        elif stream:
             response = ResponseStream.from_request_result(response_from_request)
         else:
             response = Response.from_request_result(response_from_request)
         return response
         
-        if False:
-            response = Response(
-                    http_status_code=response_from_request.code,
-                    http_status_message=str(response_from_request.reason),
-                    response_headers=response_from_request.headers,
-                    response_encoding=response_from_request.headers.get_content_charset("utf-8"),
-                    response=response_from_request
-                )
-        else:
-            response = Response(
-                http_status_code=httpresponse.status,
-                http_status_message=None,
-                response_headers=httpresponse.headers,
-                response_body=httpresponse.read().decode(
-                    httpresponse.headers.get_content_charset("utf-8")
-                )
-            )
-        return response
