@@ -5,7 +5,7 @@ from ..utilities.timing import Timing
 class Creation:
 
     @staticmethod
-    def generate_map( conn_session: ConnectorTygronSession, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None ):
+    def generate_map( conn_session: ConnectorTygronSession, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 600  ):
         
         response = conn_session.request(
                 method='POST',
@@ -23,7 +23,7 @@ class Creation:
                 data=[ location_x, location_y, polygon ]
             )
             
-        err_count = Creation.wait_for_map_generation( conn_session )
+        err_count = Creation.wait_for_map_generation( conn_session, timeout_in_seconds )
         
         if (err_count == -1):
             raise Exception('Project generation did not start') 
@@ -33,7 +33,7 @@ class Creation:
         return
  
     @staticmethod   
-    def wait_for_map_generation( conn_session: ConnectorTygronSession ):
+    def wait_for_map_generation( conn_session: ConnectorTygronSession, timeout_in_seconds:int = 600  ):
         
         def wait_function():
             progress_items = conn_session.request(
@@ -49,4 +49,4 @@ class Creation:
             failed_progress_count = len( [elem for elem in progress_items if (not elem['failText'] == '')] )
             return failed_progress_count
             
-        return Timing.wait_for( wait_function )
+        return Timing.wait_for( wait_function, timeout_in_seconds=timeout_in_seconds )
