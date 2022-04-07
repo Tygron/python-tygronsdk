@@ -29,12 +29,24 @@ class Calculation:
                         url='update',
                         data={"SETTINGS":0}
                     )
+                if ( not response.is_success() ):
+                    raise Exception(response)
                 return response.is_success()
             except Exception as err:
                 try:
-                    #exception might not have a response object as first argument
+                    #Still calculating
                     if (err.args[0].get_http_status_code() == 504):
                         return None
+                        
+                    #Session does not exist (or no more)
+                    elif (err.args[0].get_http_status_code() == 497):
+                        raise err
+                    
+                        
+                    #Special rule for unresponsive (but working) sessions
+                    elif (err.args[0].get_http_status_code() == 'TIMEOUT'):
+                        return None
+                        
                 except Exception as e:
                     pass
                 raise err
