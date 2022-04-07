@@ -44,6 +44,18 @@ class ConnectorTygronSession(ConnectorTygron):
     
     
     
+
+    def get_request_headers( self, headers = {} ):
+        request_headers = headers.copy()
+        client_token = self.get_client_token()
+        if ( not (client_token == None) ):
+            request_headers['clientToken'] = client_token
+        request_headers = super().get_request_headers(headers)
+        return request_headers
+
+
+    
+    
     def run_query( self, query:str, value = None ):
         return self.request(
                 method='GET',
