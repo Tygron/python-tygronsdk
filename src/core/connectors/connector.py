@@ -205,6 +205,7 @@ class Connector:
             return None
         if ( isinstance(response_from_request, Exception) and not isinstance(response_from_request, urllib.error.HTTPError) ):
             response = Response(
+                    http_status_code = 'TIMEOUT',
                     http_status_message = 'An exception occurred, and there was no response',
                     response_body = response_from_request
                 )
