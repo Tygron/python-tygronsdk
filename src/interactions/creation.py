@@ -6,7 +6,7 @@ from ..utilities.timing import Timing
 class Creation:
 
     @staticmethod
-    def generate_map( conn_session: ConnectorTygronSession, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 600  ):
+    def generate_map( conn_session: ConnectorTygronSession, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 600, allow_errors:bool = False  ):
         
         
         response = conn_session.request(
@@ -33,12 +33,12 @@ class Creation:
         
         err_count = Creation.wait_for_map_generation( conn_session, timeout_in_seconds )
         
-        if (err_count == -1):
+        if ( err_count == -1 ):
             raise Exception('Project generation did not start') 
-        if (err_count > 0):
-            raise Exception('Project generation experienced '+count+ ' errors') 
+        if ( err_count > 0 and (not allow_errors) ):
+            raise Exception('Project generation experienced '+str(err_count)+ ' errors') 
         
-        return
+        return err_count
  
     @staticmethod   
     def wait_for_map_generation( conn_session: ConnectorTygronSession, timeout_in_seconds:int = 600  ):
