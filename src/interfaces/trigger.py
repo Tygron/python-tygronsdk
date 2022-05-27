@@ -1,5 +1,7 @@
 from ..core import sdk as tygron
 
+from ..interactions import Session
+
 import sys
 
 from collections import OrderedDict
@@ -24,8 +26,6 @@ class Trigger():
         if not len(args) <= 3:
             parameters  = json.loads(args[3])
 
-        #print([host, apitoken, parameters])    
-
         trigger_object = cls(host, apitoken, parameters)
         trigger_object.trigger()  
 
@@ -38,7 +38,22 @@ class Trigger():
 
     def get_trigger_name( self ):
         return 'API Trigger - '+ type(self).__name__
-        
+     
+    def is_only_mode_editor( self ):
+        return False
+    
+    def is_only_mode_session( self ):
+        return False    
+    
+    def is_session_in_right_mode( self ):
+        if ( self.is_only_mode_editor() ):
+            if (not Session.is_session_state_editing( self.get_session_connection() ) ):
+                return False
+        if ( self.is_only_mode_session() ):
+            if (not Session.is_session_state_session( self.get_session_connection() ) ):
+                return False
+        return True
+     
     def get_sdk( self ):
         return self._sdk  
     def get_session_connection( self ):
@@ -87,6 +102,8 @@ class Trigger():
     
     def trigger( self ):
         try:
+            if ( not self.is_session_in_right_mode() ):
+                return
             self.run()
         except Exception as e:
             self.set_exception(e)

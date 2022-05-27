@@ -7,6 +7,9 @@ import re
 
 class TriggerGeotiffFromGeoshare(interfaces.Trigger):
     
+    def is_only_mode_editor( self ):
+        return True
+    
     def run( self ):
         conn_session = self.get_session_connection()
         conn_geoshare = self.get_sdk().create_connector_geoshare()
@@ -53,8 +56,8 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
 
         self.add_result( 'editorgeotiff/set_geotiff_url', [
                 result_ids,
-                json.dumps(result_urls) if len(result_urls) != 1 else result_urls[0],
-                json.dumps(result_uploaders) if len(result_uploaders) != 1 else result_uploaders[0],
+                result_urls, #json.dumps(result_urls) if len(result_urls) != 1 else result_urls[0],
+                result_uploaders #json.dumps(result_uploaders) if len(result_uploaders) != 1 else result_uploaders[0],
             ])
     
     def get_geoshare_url_for_geotiff( self, tiff_id:int = None, tiff_name:str = None):
