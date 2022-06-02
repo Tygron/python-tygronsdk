@@ -10,6 +10,9 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
     def is_only_mode_editor( self ):
         return True
     
+    def get_supported_types( self ):
+        return 'EVENT'
+        
     def run( self ):
         conn_session = self.get_session_connection()
         conn_geoshare = self.get_sdk().create_connector_geoshare()
