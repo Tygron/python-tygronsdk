@@ -29,8 +29,8 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
     
     def get_instructions_usage( self ):
         return '''<p>Ensure the data for the GeoTiff is present on the GeoShare, and that the url for the GeoTiff file on the GeoShare is known.</p>
-        <p>Ensure that there is a GeoTiff present in the Project, and that that GeoTiff is used in a GeoTiff Overlay</p>
-        <p>Add Add parameters of the form "&[GEOTIFF]=[URL]" to the task url</p>
+        <p>Ensure that there is a GeoTiff present in the Project, and that that GeoTiff is used in a GeoTiff Overlay.</p>
+        <p>Add Add parameters of the form "&[GEOTIFF]=[URL]" to the task url.</p>
         <p>Recalculate the project. All indicated GeoTiffs which are part of a GeoTiff Overlay, and have no discernable data (their volume value amounts to 0) will be updated from their respectively indicated urls.</p>
         '''
     
