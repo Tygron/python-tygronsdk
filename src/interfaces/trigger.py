@@ -64,13 +64,15 @@ class Trigger():
         metadata['description'] = self.get_description()
         metadata['descriptionShort'] = self.get_description_short()
         metadata['supportedTypes'] = self.get_supported_types()
-        metadata['recommendedTiming'] = self.get_recommended_timing()
         metadata['recommendedTimeout'] = self.get_recommended_timeout()
+        metadata['recommendedTiming'] = self.get_recommended_timing()
         metadata['isOnlyModeEditor'] = self.is_only_mode_editor()
         metadata['isOnlyModeSession'] = self.is_only_mode_session()
         metadata['assets'] = self.get_documented_assets()
         metadata['parameters'] = self.get_documented_parameters()
         metadata['results'] = self.get_documented_results()
+        metadata['instructionsInstallation'] = self.get_instructions_installation()
+        metadata['instructionsUsage'] = self.get_instructions_usage()
         metadata['examples'] = self.get_usage_examples()
         
         return metadata
@@ -83,12 +85,13 @@ class Trigger():
     
     def is_secret( self ):
         return False
+        
     def get_supported_types( self ):
         return []
-    def get_recommended_timing( self ):
-        return 'BEFORE'
     def get_recommended_timeout( self ):
         return None
+    def get_recommended_timing( self ):
+        return 'BEFORE'
     
     def is_only_mode_editor( self ):
         return False
@@ -100,6 +103,10 @@ class Trigger():
     def get_documented_parameters( self ):
         return None
     def get_documented_results( self ):
+        return None
+    def get_instructions_installation( self ):
+        return None
+    def get_instructions_usage( self ):
         return None
     def get_usage_examples( self ):
         return None

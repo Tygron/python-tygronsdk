@@ -12,7 +12,33 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
     
     def get_supported_types( self ):
         return 'EVENT'
+    
+    def get_description( self ):
+        return '''<p>Checks whether specific GeoTiff files in a Project are empty (have no data), and if so instructs the Tygron Platform to update them with indicated data from the GeoShare.</p>
         
+        <p>This allows for GeoTiff files in Projects created from Templates to be populated with data from the GeoShare automatically. In the original Template Project the GeoTiff may have appropriate data, but in a new Project based on that Project Template the GeoTiff will not have any data. By providing GeoShare urls of where to find data for specific GeoTiffs, this trigger will repopulate data to the GeoTiffs automatically.</p>'''
+    
+    def get_documented_results( self ):
+        return 'All indicated GeoTiffs are updated with the latest version as available on the GeoShare.'
+    
+    def get_documented_parameters( self ):
+        return '''Add parameters of the form "&[GEOTIFF]=[URL]" to the task url, where:<ol>
+            <li>[GEOTIFF] is either the ID of the GeoTiff or the name of the GeoTiff</li>
+            <li>[URL] is the location of the file on the GeoShare</li>
+            As many can be added as desired.'''
+    
+    def get_instructions_usage( self ):
+        return '''<p>Ensure the data for the GeoTiff is present on the GeoShare, and that the url for the GeoTiff file on the GeoShare is known.</p>
+        <p>Ensure that there is a GeoTiff present in the Project, and that that GeoTiff is used in a GeoTiff Overlay</p>
+        <p>Add Add parameters of the form "&[GEOTIFF]=[URL]" to the task url</p>
+        <p>Recalculate the project. All indicated GeoTiffs which are part of a GeoTiff Overlay, and have no discernable data (their volume value amounts to 0) will be updated from their respectively indicated urls.</p>
+        '''
+    
+    def get_usage_examples( self ):
+        return {
+            '&bbp-value=tygron/foo/bbp-information.tiff' : 'Will check whether a GeoTiff named "bbp-value has any discernable data. If not, will instruct the Tygron Platform to update the GeoTiff with data on the GeoShare. Specifically, the file accessible by the url "https://engine.tygron.com/share/tygron/foo/bbp-information.tiff".'
+        }
+    
     def run( self ):
         conn_session = self.get_session_connection()
         conn_geoshare = self.get_sdk().create_connector_geoshare()
