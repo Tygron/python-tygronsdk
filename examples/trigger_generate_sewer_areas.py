@@ -30,7 +30,7 @@ class TriggerGenerateSewerAreas(interfaces.Trigger):
         return {
             'urbanization' : 'The minimum "URBANIZATION" value of Neighborhoods to generate Sewer Areas for. Default is 3.',
             'storage' : 'The storage in sewers, in mm. Default is 4',
-            'storageBefore65' : 'The storage in sewers for neighborhoods from before 1965, in mm. If not provided, it defaults to the "sotrage" parameter\'s value. If that value is not provided either, uses a default value. Default is 0.7',
+            'storageBefore65' : 'The storage in sewers for neighborhoods from before 1965, in mm. If not provided, it defaults to the "storage" parameter\'s value. If that value is not provided either, uses a default value. Default is 0.7',
             'pumpCapacity' :  'The pump capacity for the sewer areas, dictating the rate at which water is pumped out of the sewers, in mm/hour Default is 0.7'
             };
     
