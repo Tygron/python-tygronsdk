@@ -20,6 +20,13 @@ class Timing:
         return result
 
     @staticmethod
+    def wait( interval_in_seconds: int = 5, wait_time: int = 300 ):
+        start_time = Timing.get_timestamp_seconds()
+        while( not Timing.time_passed(start_time, time=wait_time) ):
+            time.sleep(interval_in_seconds)
+        return True
+
+    @staticmethod
     def get_timestamp(milliseconds:bool):
         return Timing.get_timestamp_seconds() if not milliseconds else Timing.get_timestamp_milliseconds()
     

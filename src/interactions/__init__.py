@@ -1,4 +1,7 @@
 
+from .user import User
+from .domain import Domain
+
 from .projects import Projects
 from .creation import Creation
 
