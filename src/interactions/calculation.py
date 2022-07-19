@@ -13,8 +13,10 @@ class Calculation:
             response = conn_session.request(
                     method='POST',
                     url='event/editorindicator/reset_indicators',
-                    data=[ reset ]
+                    data=[ reset ],
+                    timeout=min(timeout_in_seconds, 60)
                 )
+                #Explicitly setting a maximum timmeout of 1 minute here, to prevent unreasonable waits and request timeouts
         except Exception as e:
             #When dealing with long-running calculations, wait for beyond whatever intermediate timeout exists
             #TODO: Explicitly check whether the error was a timeout

@@ -180,7 +180,7 @@ class Connector:
             httpresponse = None
             error = False
             try:
-                httpresponse = urllib.request.urlopen(request, timeout=timeout) #what if timeout?
+                httpresponse = urllib.request.urlopen(request, timeout=timeout) #what if timeout (TimeoutError)?
             except (urllib.error.HTTPError, http.client.RemoteDisconnected) as e:
                 httpresponse = e
                 error = True
