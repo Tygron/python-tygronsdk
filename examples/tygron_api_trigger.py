@@ -32,7 +32,7 @@ def main():
     print( 'Then run the trigger' )
     result = trigger_obj.trigger()
 
-    print(' The trigger has given the following response, which can be sent back as a response to the original call to run the trigger: ')
+    print( 'The trigger has given the following response, which can be sent back as a response to the original call to run the trigger: ')
     print( json.dumps( result, indent=4 ) );
 
 main()
