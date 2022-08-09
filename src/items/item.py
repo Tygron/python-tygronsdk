@@ -2,6 +2,9 @@
 
 class Item():
 
+    #constant for reference to no other item
+    NONE = -1;
+
     def __init__( self, data = {} ):
         super().__init__()
         self.data = {}
