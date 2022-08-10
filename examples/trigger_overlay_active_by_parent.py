@@ -75,7 +75,8 @@ class TriggerOverlayActiveByParent(interfaces.Trigger):
                     
                 if ( parent_overlay['active'] is not child_overlay['active'] ):
                     print( str(overlay_child_id)+' does not match, and should be set to the state of '+str(overlay_parent_id) )
-                    self.add_result( 'editoroverlay/set_grid_active/nonce'+ str(nonce_counter++), [
+                    nonce_counter += 1
+                    self.add_result( 'editoroverlay/set_grid_active/nonce'+ str(nonce_counter), [
                         overlay_child_id, parent_overlay['active']
                     ])
             except Exception as e:
