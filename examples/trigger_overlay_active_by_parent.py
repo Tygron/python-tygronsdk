@@ -51,7 +51,12 @@ class TriggerOverlayActiveByParent(interfaces.Trigger):
                     print( str(overlay_child_id)+' does not have a parent overlay')
                     continue
                 if ( affected_overlays is not None ):
-                    if ( not ( overlay_child_id in affected_overlays or overlay_parent_id in affected_overlays) ):
+                    if ( not ( 
+                            overlay_child_id in affected_overlays or
+                            overlay_parent_id in affected_overlays or
+                            str(overlay_child_id) in affected_overlays or
+                            str(overlay_parent_id) in affected_overlays
+                        ) ):
                         print( str(overlay_child_id)+' and '+str(overlay_parent_id)+' are not listed as affected' )
                         continue
                         
