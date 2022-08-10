@@ -9,7 +9,30 @@ class TriggerOverlayActiveByParent(interfaces.Trigger):
     
     def is_only_mode_editor( self ):
         return True
+    def is_only_mode_session( self ):
+        return False
+    def get_supported_types( self ):
+        return 'EVENT'
     
+    def get_description( self ):
+        return '''<p>Checks Grid Overlays which are the children of parent Overlays, and ensures that the children of active Overlays are active and the children of inactive parents are inactive.</p>
+        
+        <p>Overlays which are not children of other Overlays are not affected. Overlays which are formal RESULT_CHILD Overlays of complex calculation models are not affected. Overlays which are not Grid Overlays or are not the child Overlays of Grid Overlays are not affected.</p>'''
+    
+    def get_documented_results( self ):
+        return 'Child overlays will be set to active or inactive based on the state of the parents.'   
+    def get_documented_parameters( self ):
+        return {
+            'overlays' : 'An id or a list of ids of Overlays. Overlays will only be set to active or inactive if either their id or the id of their parent are provided. When this parameter is absent, all overlays are checked.'
+            };
+    def get_instructions_usage( self ):
+        pass
+    def get_usage_examples( self ):
+        return {
+            '&overlays=5' : 'Will only change the state of the overlay with id 5, or of the children of the overlay with id 5.',
+            '&overlays=[4,5,6]' : 'Will only change the state of overlays which are either themselves the overlays with id 4, 5, or 6, or of the overlays which are children of the overlays with ids 4, 5, or 6',
+        }
+            
     def run( self ):
         conn_session = self.get_session_connection()
 
