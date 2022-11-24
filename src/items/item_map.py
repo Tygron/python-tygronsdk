@@ -1,15 +1,18 @@
 from .item import Item
 
+from typing import Type
+
 class ItemMap():
 
 
-    def __init__( self, data = {}, as_items:bool = True ):
+    def __init__( self, data = {}, as_items:bool = True, as_item:Type[Item] = None ):
         super().__init__()
         self._data = {}
         self._size = 0
         self._count = 0
         
-        self._as_items = as_items
+        self._as_items = as_items or as_item != None
+        self._item_type = as_item if as_item != None else Item
         
         self.set_data(data)
         
@@ -21,7 +24,7 @@ class ItemMap():
             data = {}
             if ( self._as_items ):
                 for entry in list_data:
-                    data[entry['id']] = Item(entry)
+                    data[entry['id']] = self._item_type(entry)
             else:
                 for entry in list_data:
                     data[entry['id']] = entry
@@ -34,7 +37,7 @@ class ItemMap():
         return self._data
         
     def get( self, item_id ):
-        return self._data.get( item_id, None )
+        return self._data.get( int(item_id), None )
     
     def size( self ):
         # size method mirrors Tygron's internal implementation of item maps
