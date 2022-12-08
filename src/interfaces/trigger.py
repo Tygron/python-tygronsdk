@@ -1,11 +1,7 @@
-from ..core import sdk as tygron
-
-from ..interactions import Session
+from .. import sdk as tygron
 
 import sys
 
-from collections import OrderedDict
-from typing import Union
 import json
 
 class Trigger():
@@ -15,10 +11,6 @@ class Trigger():
         if (args == None):
             args = sys.argv
 
-        '''
-        if len(sys.argv) <= 3:
-            raise IndexError('A host, and an api token must be provided as arguments. The trigger\'s file is the implicit first parameter. A parameter argument is optional.')
-        '''
         trigger_object = None
         
         try:        
@@ -117,17 +109,15 @@ class Trigger():
     
     def is_session_in_right_mode( self ):
         if ( self.is_only_mode_editor() ):
-            if (not Session.is_session_state_editing( self.get_session_connection() ) ):
+            if (not self.sdk.session.session.is_session_state_editing() ):
                 return False
         if ( self.is_only_mode_session() ):
-            if (not Session.is_session_state_session( self.get_session_connection() ) ):
+            if (not self.sdk.session.session.is_session_state_session() ):
                 return False
         return True
      
     def get_sdk( self ):
-        return self._sdk  
-    def get_session_connection( self ):
-        return self._session_connection
+        return self.sdk
         
     def get_parameters( self ):
         return self._parameters
@@ -159,20 +149,20 @@ class Trigger():
             'exception' : str(self.get_exception()) if self.get_exception() else None,
         }
 
-    def __init__( self, host: str = None, apitoken: str = None, parameters: dict = {} ):
+    def __init__( self, host: str = None, api_token: str = None, parameters: dict = {} ):
         self._parameters = parameters
         self._results = {}
         self._exception = None
 
         if ( not (host == None) and not (apitoken == None) ):
-            self._sdk = tygron.sdk({
+            sdk = tygron.sdk({
                     'host': host
                 })
-            self._session_connection = self._sdk.create_connector_session()
-            self._session_connection.set_api_token(apitoken)
+            sdk.session.authenticate(api_token)
+            self.sdk = sdk
     
     def is_ready_to_trigger( self ):
-        return not (self.get_session_connection() == None)
+        return not (self.sdk == None)
     
     def trigger( self ):
         try:

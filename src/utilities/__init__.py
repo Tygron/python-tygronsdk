@@ -1,6 +1,6 @@
-from .processes import Processes
-from .files import Files
-from .geometries import Geometries
-from .timing import Timing
-from .exceptions import Exceptions
-from .strings import Strings
+from .processes import Processes as processes
+from .files import Files as files
+from .geometries import Geometries as geometries
+from .timing import Timing as timing
+from .exceptions import Exceptions as exceptions
+from .strings import Strings as strings

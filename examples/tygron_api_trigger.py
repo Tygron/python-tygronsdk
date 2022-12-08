@@ -13,10 +13,7 @@ def main():
     trigger     = sys.argv[1]
     host        = sys.argv[2]
     apitoken    = sys.argv[3]
-    parameters  = '{}'
-    
-    if not len(sys.argv) <= 4:
-        parameters  = sys.argv[4]
+    parameters  = '{}' if len(sys.argv) <= 4 else sys.argv[4]
 
     parameters = json.loads( parameters )
 
