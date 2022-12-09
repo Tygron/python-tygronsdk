@@ -1,9 +1,7 @@
 from . import utilities
 
-from .core import core
-from .core import base as baseEnv
-from .core import session as sessionEnv
-from .core import share as shareEnv
+from . import core
+from . import environments
 
 class sdk():
 
@@ -57,9 +55,9 @@ class sdk():
         
         
     def create_environments(self):
-        self.base       = baseEnv.ApiEnvironment( self.settings )
-        self.session    = sessionEnv.ApiEnvironment( self.settings )
-        self.share      = shareEnv.ApiEnvironment( self.settings )
+        self.base       = environments.base.ApiEnvironment( self.settings )
+        self.session    = environments.session.ApiEnvironment( self.settings )
+        self.share      = environments.share.ApiEnvironment( self.settings )
         
         # self.session    = core.ApiEnvironment( settings= self.settings, module = sessionEnv )
         pass

@@ -6,14 +6,14 @@ import inspect
 class Items:
 
     @staticmethod
-    def load( conn: Connector, item_type, attribute:str = None, timeout_in_seconds = 30 ):
+    def load( conn: Connector, item_type, filter:list = [], timeout_in_seconds = 30 ):
         item_type_to_get = Item.maplink_from( item_type )
         as_item = item_type if inspect.isclass(item_type) and issubclass(item_type, Item) else None
-        attribute_postfix = '' if attribute == None else '-'attribute.lower()
+        filter_postfix = '' if len(filter) == 0 else '-'+'-'.join(filter)
         try:
             response = conn.request(
                     method='GET',
-                    url='items/'+str(item_type_to_get)+str(attribute_postfix),
+                    url='items/'+str(item_type_to_get)+str(filter_postfix),
                     timeout=timeout_in_seconds
                 )
             if ( response.is_success() ):

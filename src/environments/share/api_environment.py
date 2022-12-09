@@ -1,4 +1,4 @@
-from ..core import ApiEnvironment as CoreApiEnvironment
+from ...core import ApiEnvironment as CoreApiEnvironment
 
 class ApiEnvironment(CoreApiEnvironment):
 

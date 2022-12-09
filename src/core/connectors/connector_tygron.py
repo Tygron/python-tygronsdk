@@ -1,4 +1,4 @@
-from ....utilities.connectors import Connector
+from ...utilities.connectors import Connector
 
 import base64
 

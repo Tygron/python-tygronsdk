@@ -1,4 +1,4 @@
-from ...core.connectors.connector_tygron import ConnectorTygron
+from ....core.connectors.connector_tygron import ConnectorTygron
 
 class ConnectorTygronApi(ConnectorTygron):
 
