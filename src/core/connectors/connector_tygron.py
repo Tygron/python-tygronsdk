@@ -39,3 +39,11 @@ class ConnectorTygron(Connector):
     def set_platform( self, platform ):
         self.set_host( platform + '.tygron.com' )
     
+    def fire_event( self, event, **kwargs ):
+        response =  self.request(
+            method='POST',
+            url='event/'+event.get_path(),
+            data=event.get_arguments(),
+                **kwargs
+            )
+        return response

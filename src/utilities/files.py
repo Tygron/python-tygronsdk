@@ -1,6 +1,6 @@
 import os
 
-
+from pathlib import Path
 
 class Files:
 
@@ -33,3 +33,10 @@ class Files:
         if ( not os.path.exists(directory) and not error_if_not_exists):
             return []
         return os.listdir( directory )
+        
+    @staticmethod
+    def get_filename( file_path:str, include_extension:bool = True ):
+        filename = Path(file_path).stem
+        if ( not include_extension ):
+            filename = filename.split('.')[0]
+        return filename

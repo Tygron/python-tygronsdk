@@ -1,4 +1,6 @@
 from ..connectors import Connector
+from ..data import events
+
 from ..interactions.users import Users
 
 import json

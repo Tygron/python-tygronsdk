@@ -1,4 +1,6 @@
 from ..connectors import Connector
+from ..data import events
+
 from ..interactions.users import Users
 
 from ....utilities.strings import Strings
@@ -7,58 +9,59 @@ import json
 
 class Projects:
 
-    def get_startable_projects( conn: Connector, domain: str ):
+    @staticmethod
+    def get_startable_projects( conn: Connector, domain: str = None ):
         if (domain == None ):
             my_user = Users.get_my_user(conn)
             domain = my_user['domain']
-        response = conn.request(
-                method='POST',
-                url='event/io/get_domain_startable_projects',
-                data=[ domain ]
-            )
+        response = conn.fire_event( 
+            events.io.get_domain_startable_projects (
+                domain
+            ) )
+            
         return response.get_response_body_json()
     
-    def get_startable_templates( conn: Connector, domain: str ):
+    @staticmethod
+    def get_startable_templates( conn: Connector, domain: str = None ):
         if (domain == None ):
             my_user = Users.get_my_user(conn)
             domain = my_user['domain']
-        response = conn.request(
-                method='POST',
-                url='event/io/get_domain_startable_templates',
-                data=[ domain ]
-            )
-        return response.get_response_body_json()
-    
+        response = conn.fire_event( 
+            events.io.get_domain_startable_templates (
+                domain
+            ) )
+
 
 
 
     @staticmethod
     def get_project( conn: Connector, project_name: str ):
-        response = conn.request(
-                method='POST',
-                url='event/io/get_project_data',
-                data=[ project_name ]
-            )
+        response = conn.fire_event( 
+            events.io.get_project_data (
+                project_name
+            ) )
+                
         return response.get_response_body_json()
  
     @staticmethod           
     def delete_project( conn: Connector, project_name: str ):
-        response = conn.request(
-                method='POST',
-                url='event/io/trash_project', 
-                data=[ project_name, True ]
-            );
+        response = conn.fire_event( 
+            events.io.trash_project (
+                project_name, True
+            ) )
+                
         if response.is_success():
             return True
         else:
             raise Exception( response );
+            
     @staticmethod           
     def undelete_project( conn: Connector, project_name: str ):
-        response = conn.request(
-                method='POST',
-                url='event/io/trash_project', 
-                data=[ project_name, False ]
-            );
+        response = conn.fire_event( 
+            events.io.trash_project (
+                project_name, False
+            ) )
+                
         if response.is_success():
             return True
         else:

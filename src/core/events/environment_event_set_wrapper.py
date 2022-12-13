@@ -1,0 +1,23 @@
+from . import EnvironmentEventWrapper
+
+import inspect
+
+class EnvironmentEventSetWrapper():
+
+    def __init__( self, events_set, connector = None, settings = {}, storage = {} ):
+        self._events = events_set
+        self._connector = connector
+        self._settings = settings
+        self._storage = storage
+        
+    def __getattr__( self, event_name ):
+        event_data = self._events.__getattr__( attr=event_name )
+        settings = self._settings
+        storage = self._storage
+        
+        return EnvironmentEventWrapper(
+            event = event_data,
+            connector = self._connector,
+            settings = self._settings,
+            storage = self._storage
+        )

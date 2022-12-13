@@ -1,11 +1,16 @@
-from .interactions import InteractionWrapper
-import sys
+from . import interactions
+from . import events
+
+from .. import utilities
+
+import sys, inspect
 
 class ApiEnvironment():
 
     def __init__( self, settings = {}, module = None ):
         self._settings = settings
         self.module = module
+        self.generate_module_references(self.module)
 
     @property
     def settings(self):
@@ -32,7 +37,8 @@ class ApiEnvironment():
     def module(self, value):
         if ( not hasattr(self, '_module') and value is not None ):
             self._module = value
-
+        
+        
     @property
     def connector(self):
         connector = None
@@ -44,6 +50,7 @@ class ApiEnvironment():
         return self._connector
 
       
+      
     def generate_connector( self, settings ):
         return self.module.Connector( settings )
     
@@ -51,40 +58,37 @@ class ApiEnvironment():
         auth_details = { **authentication_details, **kwargs }
         pass
     
-    def get_interaction_wrapper(self, interaction_module):
-        try:
-            submodule = self.module
-            if ( not submodule is None and 'interactions' in  submodule.__dict__ ):
-                submodule = getattr( submodule, 'interactions' )
-            else:
-                submodule = None
-                
-            if ( not submodule is None and interaction_module in  submodule.__dict__ ):
-                submodule = getattr( submodule, interaction_module )
-            else:
-                submodule = None
-                
-            if ( not submodule is None ):
-                return InteractionWrapper(
-                        interactions_object = submodule,
+    
+    
+    def generate_module_references( self, module ):
+        self.generate_interaction_wrappers( getattr(module, 'interactions', None) )
+        self.generate_event_collection( getattr(getattr(module, 'data', module), 'events', None) )
+            
+    def generate_interaction_wrappers( self, interactions_module ):
+        if ( interactions_module == None):
+            return
+        objects = [interactions_module]
+        if ( not inspect.isclass(interactions_module) ):
+            objects = inspect.getmembers(interactions_module)
+        for key, submodule in objects:
+            if ( not inspect.isclass(submodule) ):
+                continue
+            
+            if ( not hasattr(self, key) ):
+                setattr( self, key, interactions.EnvironmentInteractionWrapper(
+                        interactions_module = submodule,
                         connector = self.connector,
                         settings = self.settings
-                    )
-        except Exception as err:
-            print(err)
-            return None
+                    ) )
     
-
-    
-    def __getattr__(self, attr):
-        if ( not '_module' in self.__dict__ ):
-            return super().__getattr__(attr)
-        submodule = self.get_interaction_wrapper(attr)
-        if ( not submodule is None ):
-            return submodule
+    def generate_event_collection( self, events_module ):
+        self.events = getattr(self, 'events', events.EnvironmentEventSetCollection() )
         
-        #sys.modules(self.module)
-        raise AttributeError('Environment does not have an attribute, submodule, or interaction named \''+str(attr)+'\'')
-                
-            
-        
+        classes = utilities.modules.get_content_from_module(events_module, events.EventSet)
+        for key, cls in classes.items():
+            if ( not hasattr(self.events, key) ):
+                setattr( self.events, key, events.EnvironmentEventSetWrapper(
+                        events_set = cls,
+                        connector = self.connector,
+                        settings = self.settings
+                    ) )

@@ -1,1 +1,1 @@
-from .interaction_wrapper import InteractionWrapper
+from .environment_interaction_wrapper import EnvironmentInteractionWrapper

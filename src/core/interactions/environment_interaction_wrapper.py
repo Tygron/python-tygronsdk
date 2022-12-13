@@ -1,16 +1,16 @@
 import inspect
 from ..data.items import ItemMap
 
-class InteractionWrapper():
+class EnvironmentInteractionWrapper():
     
-    def __init__( self, interactions_object, connector, settings = {}, storage = {} ):
+    def __init__( self, interactions_module, connector, settings = {}, storage = {} ):
         self._connector = connector
-        self._interactions_object = interactions_object
+        self.interactions_module = interactions_module
         self._settings = settings
         self._storage = storage
         
     def __getattr__( self, function_name ):
-        function = getattr(self._interactions_object, function_name)
+        function = getattr(self.interactions_module, function_name)
         settings = self._settings
         storage = self._storage
         
