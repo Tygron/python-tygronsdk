@@ -9,10 +9,8 @@ class Domains:
 
     @staticmethod
     # If subdomain does not exist, it will report 0. If no subdomain is provided, it will report 0.
-    def get_domain_usage( conn: Connector, domain: str = None, subdomain: str = None ):
-        if ( domain == None ):
-            my_user = Users.get_my_user(conn)
-            domain = my_user['domain']
+    def get_domain_usage( conn: Connector, subdomain: str = None ):
+        domain = Users.get_my_domain_name(conn)
             
         response = conn.request(
             method='POST',

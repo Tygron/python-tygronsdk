@@ -1,6 +1,8 @@
 from ..connectors import Connector
 from ..data import events
 
+from ..interactions.users import Users
+
 from ....utilities.strings import Strings
 
 import json
@@ -43,17 +45,16 @@ class Sessions:
  
  
     @staticmethod
-    def save_project_as( conn: Connector, session_id: int, project_name: str, clear_map: bool = False, attempts:int = 25 ):
-        my_user = Users.get_my_user(conn)
-        domain = my_user['domain']
+    def save_project_as( conn: Connector, session_id: int, new_project_name: str, clear_map: bool = False, attempts:int = 25 ):
+        domain = Users.get_my_domain_name(conn)
         
         last_err = None
         for i in range(attempts):
-            attempt_name = project_name + ('' if i==0 else '-'+str(i))
+            attempt_name = new_project_name + ('' if i==0 else '-'+str(i))
             try:
                 response = conn.fire_event( 
                     events.io.save_project_as (
-                        session_id, domain, project_name, clear_map
+                        session_id, domain, attempt_name, clear_map
                     ) )
                     
                 if response.is_success():

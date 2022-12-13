@@ -56,8 +56,8 @@ class EventDefinitionsCollectionClass():
         
         
     _trash_project = [
-            EventParameter('project_name', Type[str],
-            EventParameter('delete', Type[bool], False), True)
+            EventParameter('project_name', Type[str]),
+            EventParameter('delete', Type[bool], False, True)
         ]
 
 

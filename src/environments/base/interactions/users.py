@@ -11,3 +11,10 @@ class Users:
             url='myuser'
         )
         return response.get_response_body_json()
+        
+    @staticmethod
+    def get_my_domain_name( conn: Connector ):
+        my_user = Users.get_my_user(conn)
+        domain = my_user['domain']
+        
+        return domain

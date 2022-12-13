@@ -10,10 +10,9 @@ import json
 class Projects:
 
     @staticmethod
-    def get_startable_projects( conn: Connector, domain: str = None ):
-        if (domain == None ):
-            my_user = Users.get_my_user(conn)
-            domain = my_user['domain']
+    def get_startable_projects( conn: Connector ):
+        domain = Users.get_my_domain_name(conn)
+            
         response = conn.fire_event( 
             events.io.get_domain_startable_projects (
                 domain
@@ -22,14 +21,15 @@ class Projects:
         return response.get_response_body_json()
     
     @staticmethod
-    def get_startable_templates( conn: Connector, domain: str = None ):
-        if (domain == None ):
-            my_user = Users.get_my_user(conn)
-            domain = my_user['domain']
+    def get_startable_templates( conn: Connector ):
+        domain = Users.get_my_domain_name(conn)
+            
         response = conn.fire_event( 
             events.io.get_domain_startable_templates (
                 domain
             ) )
+            
+        return response.get_response_body_json()
 
 
 
