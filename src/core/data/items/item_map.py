@@ -38,7 +38,6 @@ class ItemMap():
         
     def get( self, item_id: int = None):
         if ( item_id is None or item_id is Item.NONE ):
-            print('Could not get with '+str(item_id))
             return None
         return self._data.get( int(item_id), None )
     

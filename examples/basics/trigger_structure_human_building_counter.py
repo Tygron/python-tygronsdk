@@ -11,7 +11,7 @@ def main():
     else:
         print('Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_server and tygron_api_token.')
 
-    print('This is an example for how to create/run an API trigger. This example does not include a full webservice but will demonstrate what the webservice has to do.')
+    print('This is an example for an API trigger functions. This example does not include a full webservice but will demonstrate what the webservice has to do.')
     
     if ( not hasattr(credentials, 'tygron_api_token') ):
         print('A running session\'s API token is required in order to interact with it.')

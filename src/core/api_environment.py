@@ -82,7 +82,7 @@ class ApiEnvironment():
                     ) )
     
     def generate_event_collection( self, events_module ):
-        self.events = getattr(self, 'events', events.EnvironmentEventSetCollection() )
+        self.events = getattr(self, 'events', events.EventSetCollection() )
         
         classes = utilities.modules.get_content_from_module(events_module, events.EventSet)
         for key, cls in classes.items():

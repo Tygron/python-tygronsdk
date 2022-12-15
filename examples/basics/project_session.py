@@ -47,7 +47,7 @@ def main():
     
         #   First, obtain data about the Project. This verifies it exists, but is not required.
         project_data = sdk.base.projects.get_project( project_to_run )
-        print('The Project\'s data is the following: ' + str(project_data) + '".')
+        print('The Project\'s data is the following: ' + str(project_data) + '.')
         
         #   Next, we start a session of that Project. This returns a session_id.
         session_id = sdk.base.sessions.start_project_session( project_to_run )
@@ -57,7 +57,7 @@ def main():
         
         #   Joining the session will provide details of the running session, and the API token neccesary to authenticate to the session environment.
         join_session_data = sdk.base.sessions.join_project_session( session_id )
-        print('The Session\'s join data is the following: ' + str(join_session_data) + '".')
+        print('The Session\'s join data is the following: ' + str(join_session_data) + '.')
         auth_result = sdk.session.authenticate( {
                 'api_token' :join_session_data['apiToken'],
             } )  

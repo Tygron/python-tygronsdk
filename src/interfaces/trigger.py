@@ -118,6 +118,8 @@ class Trigger():
      
     def get_sdk( self ):
         return self.sdk
+    def get_session_connection( self ):
+        return self.sdk.session.connector
         
     def get_parameters( self ):
         return self._parameters
@@ -154,11 +156,11 @@ class Trigger():
         self._results = {}
         self._exception = None
 
-        if ( not (host == None) and not (apitoken == None) ):
+        if ( not (host == None) and not (api_token == None) ):
             sdk = tygron.sdk({
                     'host': host
                 })
-            sdk.session.authenticate(api_token)
+            sdk.session.authenticate({ 'api_token' : api_token})
             self.sdk = sdk
     
     def is_ready_to_trigger( self ):
