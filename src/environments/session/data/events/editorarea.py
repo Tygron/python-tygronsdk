@@ -62,8 +62,8 @@ class EventDefinitionsCollectionClass():
         
         
     _generate_border_areas = [
-            EventParameter('param1', Type[str]),
-            EventParameter('param2', Type[str]),
+            EventParameter('attribute_to_generate_for', Type[str]),
+            EventParameter('attribute_to_add', Type[str]),
             EventParameter('width', Type[float], False),
         ]
     _generate_inundation_areas = [
