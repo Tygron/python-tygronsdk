@@ -43,14 +43,14 @@ class TriggerGenerateSewerAreas(interfaces.Trigger):
         }
     
     def run( self ):
+        sdk = self.get_sdk()
         areas = sdk.session.items.load( 
             'areas',
-            attribute='SEWER_STORAGE'
+            filter='SEWER_STORAGE'
         )
-        
+
         if ( areas.count() > 0 ):
             return
-            
         parameters = [
                 self.get_parameter( 'urbanization', 3 ),
                 float(self.get_parameter( 'storageBefore65', self.get_parameter( 'storage', 0.7 ) ))*0.001,
@@ -58,6 +58,7 @@ class TriggerGenerateSewerAreas(interfaces.Trigger):
                 float(self.get_parameter( 'pumpCapacity', 0.7 ))*0.001,
                 self.get_parameter( 'waterAreaAttribute','' )
             ]
-         
-        self.add_result( 'editorarea/generate_sewer_areas', parameters)   
+        event = sdk.session.events.editorarea.generate_sewer_areas( *parameters )
+        
+        self.add_result( event.get_path(), event.get_arguments() )   
         

@@ -1,15 +1,20 @@
 from ..connectors import Connector
 from ..data.items import Item, ItemMap
 
+from typing import Union
 import inspect
 
 class Items:
 
     @staticmethod
-    def load( conn: Connector, item_type, filter:list = [], timeout_in_seconds = 30 ):
+    def load( conn: Connector, item_type, filter:Union[str, list] = [], timeout_in_seconds = 30 ):
         item_type_to_get = Item.maplink_from( item_type )
         as_item = item_type if inspect.isclass(item_type) and issubclass(item_type, Item) else None
-        filter_postfix = '' if len(filter) == 0 else '-'+'-'.join(filter)
+        
+        if ( type(filter) == list and len(filter) > 0 ):
+            filter = '-'.join(filter)
+        filter_postfix = '' if len(filter) == 0 else '-'+filter
+            
         try:
             response = conn.request(
                     method='GET',

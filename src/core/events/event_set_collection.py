@@ -18,4 +18,3 @@ class EventSetCollection():
     def add_event_set( self, event_set:EventSet, event_domain:str = None ):
         event_domain = event_set.event_domain if event_domain == None else event_domain
         setattr( self, event_domain, event_set )
-        print('Registered '+event_domain+' with '+str(event_set))
