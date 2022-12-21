@@ -1,4 +1,7 @@
 from . import Item
 
 class GeoTiff(Item):
-    pass
+
+    @property
+    def uploader_name(self):
+        return self._data.get( 'uploaderName', None )

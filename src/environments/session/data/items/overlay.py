@@ -5,10 +5,6 @@ class Overlay(Item):
     ATTRIBUTE_TIMEFRAMES = 'TIMEFRAMES'
     
     TYPE_RESULT_CHILD = 'RESULT_CHILD'
-
-    def __init__( self, data = {} ):
-        super().__init__( data )
-        return
   
     @property
     def overlay_type(self):
