@@ -15,6 +15,10 @@ def main():
     if len(sys.argv) <= 3:
         raise IndexError('Arguments required: trigger module, host, apitoken, and optionally a json of parameters (tygronsdk.examples.triggers.* engine.tygron.com 12345678abcdabcdabcdabcd)')
         
+        
+        
+    #   As preparation, read out the arguments with which this example was called
+        
     #   For this example, the arguments are read out and prepared in readable variables
     trigger     = sys.argv[1]
     host        = sys.argv[2]
@@ -33,6 +37,11 @@ def main():
     trigger_module = importlib.import_module(trigger)
     trigger_class_name = ''.join(word.title() for word in trigger.rpartition('.')[-1].split('_'))
     trigger_class = getattr(trigger_module, trigger_class_name)
+
+
+
+
+    #   Now that the trigger, the originating session, and parameters are known, work with the actual trigger can start
 
     #   With the trigger class known, it can now be created and run
     print( 'Instantiate a '+trigger_class_name+' trigger, with parameters: ' + str([host, api_token, parameters]) )
