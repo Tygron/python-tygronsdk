@@ -58,6 +58,9 @@ class Item():
     @property
     def name(self):
         return self._data.get( 'name', None )
+    @property
+    def active(self):
+        return self._data.get( 'active', None )
         
     
     

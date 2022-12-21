@@ -1,4 +1,5 @@
 from ... import sdk as tygron
+from ... import utilities
 
 import sys
 import importlib
@@ -34,7 +35,7 @@ def main():
     trigger_class = getattr(trigger_module, trigger_class_name)
 
     #   With the trigger class known, it can now be created and run
-    print( 'Instantiate a '+trigger_class_name+' trigger, with parameters:' + str([host, api_token, parameters]) )
+    print( 'Instantiate a '+trigger_class_name+' trigger, with parameters: ' + str([host, api_token, parameters]) )
     trigger_obj = trigger_class( host, api_token, parameters )
     
     #   This is where the actual trigger is run. Based on which trigger is run (example or otherwise) its content may differ
@@ -46,7 +47,11 @@ def main():
     print( json.dumps( trigger_obj.get_results(), indent=4 ) );
     
     #   If neccesary, a more expansive result can be returned which includes all available types and exceptions if applicable
-    print ( 'It is also possible to dump a broader result structure, which is not compatible with the Tygron Platform, but allows for debugging: ')
+    print( 'It is also possible to dump a broader result structure, which is not compatible with the Tygron Platform, but allows for debugging: ')
     print( json.dumps( trigger_obj.get_results_structure(), indent=4 ) )
+
+    if ( not (trigger_obj.get_exception() == None) ):
+        print( 'An Exception has occured, the message of which is included in the broader return structure ,but not the full stack trace so obtain that manually:' )
+        print( utilities.exceptions.stringify(trigger_obj.get_exception() ) )
 
 main()

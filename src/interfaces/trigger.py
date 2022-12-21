@@ -131,12 +131,21 @@ class Trigger():
     
     def add_result( self, key, parameter, replace:bool = False ):
         if not replace:
-            if key in self._results:
-                del self._results[key]
+            new_key = str(key)
+            while(new_key in self._results):
+                #   When duplicate results occur, add a nonce to prevent overwriting earlier results
+                #   Nonces are ignored by the Platform for events, and collisions are undefined for TQL
+                new_key = str(key)+self.get_nonce()
+            key = new_key
         self._results[key] = parameter    
     def add_results( self, results:dict = {}, replace:bool = False ):
         for key, result in results.items():
             self.add_result(key, result, replace)
+    
+    def get_nonce( self ):
+        nonce_count = getattr(self, 'nonce_count', 0)
+        self.nonce_count = nonce_count +1
+        return '/nonce_'+str(nonce_count)
     
     def get_exception( self ):
         return self._exception
