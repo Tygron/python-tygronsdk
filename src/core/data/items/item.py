@@ -56,13 +56,16 @@ class Item():
     def id(self):
         return self._data.get( 'id', None )
     @property
+    def version(self):
+        return self._data.get( 'version', None )
+        
+    @property
     def name(self):
         return self._data.get( 'name', None )
     @property
     def active(self):
         return self._data.get( 'active', None )
         
-    
     
     
     
