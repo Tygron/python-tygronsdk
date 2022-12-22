@@ -10,7 +10,7 @@ def main():
     else:
         print('Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_username and tygron_password.');
     
-    project_to_run = 'climategame_5_2'
+    project_to_run = 'demo_heat_stress'
     
     print('This example will attempt to start, read out details from, and gracefully close, a session for a specific project: "' + project_to_run + '".')
 
