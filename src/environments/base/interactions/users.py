@@ -1,6 +1,6 @@
 from ..connectors import Connector
-from ..data.objects import User
-from ..data.objects import Domain
+from ..data.objects import UserData
+from ..data.objects import DomainData
 import json
 
 class Users:
@@ -11,7 +11,7 @@ class Users:
             method='GET',
             url='myuser'
         )
-        return User( response.get_response_body_json() )
+        return UserData( response.get_response_body_json() )
         
     @staticmethod
     def get_my_domain( conn: Connector ):
@@ -19,7 +19,7 @@ class Users:
             method='GET',
             url='myuser/domain'
         )
-        return Domain( response.get_response_body_json() )
+        return DomainData( response.get_response_body_json() )
         
     @staticmethod
     def get_my_domain_name( conn: Connector ):
@@ -29,8 +29,8 @@ class Users:
         return domain
         
     @staticmethod
-    def get_my_sub_domain_name( conn: Connector, noneIfRoot:bool = True ):
+    def get_my_sub_domain_name( conn: Connector, none_if_root:bool = True ):
         my_user = Users.get_my_user(conn)
-        if ( NoneIfRoot and my_user.has_root_domain_access() ):
+        if ( none_if_root and my_user.has_root_domain_access() ):
             return None
         return my_user.sub_domain

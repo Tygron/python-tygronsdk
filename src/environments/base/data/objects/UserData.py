@@ -1,6 +1,6 @@
 from .....utilities import datetimes
 
-class User:
+class UserData:
     
     def __init__( self, data:dict = {}, **kwargs ):
         self._data = { **data, **kwargs }

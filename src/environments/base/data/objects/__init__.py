@@ -1,2 +1,2 @@
-from .User import User as User
-from .Domain import Domain as Domain
+from .UserData import UserData as UserData
+from .DomainData import DomainData as DomainData

@@ -1,6 +1,6 @@
 from .....utilities import datetimes
 
-class Domain:
+class DomainData:
     
     def __init__( self, data:dict = {}, **kwargs ):
         self._data = { **data, **kwargs }
