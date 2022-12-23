@@ -16,7 +16,7 @@ def main():
 
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
     sdk = tygron.sdk( {
-            'platform' : 'preview',
+            'platform' : 'engine',
             'computer_name' : 'Python SDK Example',
         } );
 
