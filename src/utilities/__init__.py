@@ -5,3 +5,4 @@ from .timing import Timing as timing
 from .exceptions import Exceptions as exceptions
 from .strings import Strings as strings
 from .modules import Modules as modules
+from .datetimes import Datetimes as datetimes
