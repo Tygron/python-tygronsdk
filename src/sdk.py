@@ -70,8 +70,8 @@ class sdk():
         
         
         
-    def exit( self ):
-        exit_settings = self.on_exit_settings
+    def exit( self, exit_settings:dict = {} ):
+        exit_settings = { **self.on_exit_settings, **exit_settings }
         errors = []
         
         if ( self.base.connector.authenticate() ):
