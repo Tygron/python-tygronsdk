@@ -24,7 +24,13 @@ class Sessions:
             events.io.join (
                 session_id, client_type, computer_name, client_token
             ) )
-        return response.get_response_body_json()
+        join_session_data = response.get_response_body_json()
+        
+        if ( isinstance(join_session_data, dict) ):
+            join_session_data['session_id'] = session_id
+            join_session_data['api_token'] = join_session_data['apiToken']
+            
+        return join_session_data
         
     @staticmethod
     def close_project_session( conn: Connector, session_id:int, client_token:str = None, keep_open:bool = False ):
@@ -41,7 +47,36 @@ class Sessions:
                 session_id
             ) )
         return response.get_response_body_json()
- 
+
+
+    @staticmethod
+    def create_new_project_from_template( conn: Connector, template_name:str, new_project_name:str, session_language:str = None, attempts:int = 25 ):
+        session_id = Sessions.start_project_session(
+                conn = conn,
+                project_name = template_name,
+                session_language = session_language
+            )
+        try:
+            created_project_name = Sessions.save_project_as(
+                    conn = conn,
+                    session_id = session_id,
+                    new_project_name = new_project_name,
+                    clear_map = True,
+                    attempts = attempts
+                )
+            join_session_data = Sessions.join_project_session(
+                    conn = conn,
+                    session_id = session_id
+                )
+            print( 'Join: '+ str(join_session_data) )
+        except Exception as err:
+            Sessions.kill_project_session(
+                conn = conn,
+                session_id = session_id
+            )
+            raise err
+            
+        return join_session_data
  
  
     @staticmethod
