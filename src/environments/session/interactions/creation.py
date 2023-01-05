@@ -6,8 +6,7 @@ from ....utilities.timing import Timing
 class Creation:
 
     @staticmethod
-    def generate_map( conn: Connector, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 600, allow_errors:bool = False  ):
-        
+    def generate_map( conn: Connector, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 1200, allow_errors:bool = False  ):
         
         response = conn.request(
                 method='POST',
@@ -41,7 +40,7 @@ class Creation:
         return err_count
  
     @staticmethod   
-    def wait_for_map_generation( conn: Connector, timeout_in_seconds:int = 600  ):
+    def wait_for_map_generation( conn: Connector, timeout_in_seconds:int = 1200  ):
         
         def wait_function():
             Session.ping_session( conn )

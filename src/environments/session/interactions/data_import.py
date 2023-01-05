@@ -1,13 +1,43 @@
+from .items import Items
+
 from ..connectors import Connector
 from ....utilities import geometries
 
 import json
+from typing import List
 
 class DataImport:
 
+
     @staticmethod
-    def geojson_areas( conn: Connector, area_data_content: str, buffer: int = 1, name_attribute:str = 'NAME' ):
-        feature_collection = json.load( area_data_content )
+    def geojsons_areas( conn: Connector, area_geojson_strings:List[str] = [], area_buffers = [], area_name_attributes = [] ):
+
+        start_areas = Items.size( conn, 'areas' )
+
+        for index, entry in enumerate(area_geojson_strings):
+            area_geojson_string = entry
+            
+            buffer = area_buffers
+            if ( isinstance(buffer, list) and len(buffer)>index ):
+                buffer = buffer[index]
+            if ( not (isinstance(buffer, int) or isinstance(buffer, float)) ):
+                buffer = 1
+                
+            name = area_name_attributes
+            if ( isinstance(name, list) and len(name)>index ):
+                name = name[index]
+            if ( not isinstance(name, str) ):
+                name = 'NAME'
+                
+            result = DataImport.geojson_areas( conn, area_geojson_string, buffer, name_attribute )
+            results.append(result)
+            
+        return Items.size( conn, 'areas' ) - start_areas
+
+
+    @staticmethod
+    def geojson_areas( conn: Connector, area_geojson_string: str, buffer: int = 1, name_attribute:str = 'NAME' ):
+        feature_collection = json.load( area_geojson_string )
         
         geometry_collection = { 
                 "type": "GeometryCollection",
@@ -43,9 +73,14 @@ class DataImport:
         if (crs):
             query_params['CRS'] = crs
         
+        start_areas = Items.size( conn, 'areas' )
+        
         response = conn.request(
                 method='POST',
                 url='event/editorarea/import', 
                 query_params=query_params,
                 data=[ geometry_collection, names, attributes, values, buffer, None ],
-            )   
+            )
+            
+        return Items.size( conn, 'areas' ) - start_areas
+            

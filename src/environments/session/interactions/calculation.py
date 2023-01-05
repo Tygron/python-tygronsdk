@@ -1,13 +1,32 @@
 from ..connectors import Connector
 from ....utilities.timing import Timing
 
-import json
-import http.client
+from datetime import datetime
+from typing import List
 
 class Calculation:
 
     @staticmethod
-    def recalculate( conn: Connector, reset: bool = True, timeout_in_seconds:int = 600 ):
+    def recalculate_multiple_times( conn:Connector, recalculations_sequence:List[bool] = [True, False], recalculations_scheduled = [], timeout_in_seconds:int = None):
+        for index, recalculation_type in enumerate(recalculations_sequence):
+            scheduled = False
+            if ( isinstance(recalculations_scheduled, List) ):
+                if ( (len(recalculations_scheduled) > index) and (recalculations_scheduled[index] == True) ):
+                    scheduled = True
+            if ( isinstance(recalculations_scheduled, bool) ):
+                scheduled = recalculations_scheduled
+                
+            if ( scheduled ):
+                Calculation.recalculate_scheduled( conn )
+            else:
+                if ( timeout_in_seconds == None ):
+                    Calculation.recalculate( conn, recalculation_type )
+                else:
+                    Calculation.recalculate( conn, recalculation_type, timeout_in_seconds )
+                
+
+    @staticmethod
+    def recalculate( conn:Connector, reset: bool = True, timeout_in_seconds:int = 600 ):
         response = None
         try:
             response = conn.request(
@@ -17,13 +36,17 @@ class Calculation:
                     timeout=min(timeout_in_seconds, 60)
                 )
                 #Explicitly setting a maximum timmeout of 1 minute here, to prevent unreasonable waits and request timeouts
-        except Exception as e:
+        except Exception as err:
             #When dealing with long-running calculations, wait for beyond whatever intermediate timeout exists
             #TODO: Explicitly check whether the error was a timeout
             response = Calculation.wait_for_recalculate( conn, timeout_in_seconds )
         return response
-     
-    def wait_for_recalculate( conn: Connector, timeout_in_seconds:int = 600 ):
+    
+    def recalculate_scheduled( conn:Connector, recalculation_timestamp_in_seconds:int = None ):
+        raise Exception('Scheduled recalculations are not yet implemented')
+    
+    @staticmethod
+    def wait_for_recalculate( conn:Connector, timeout_in_seconds:int = 600 ):
         def wait_function():
             try:
                 response = conn.request(
