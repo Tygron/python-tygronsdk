@@ -23,7 +23,7 @@ class EnvironmentInteractionWrapper():
             remaining_args = all_args[len(args):] if len(all_args) > len(args) else []
             
             kwarg_key_set = set(remaining_args) & set(kwargs.keys())
-            kwargs = {k: kwargs[k] for k in kwarg_key_set}
+            kwargs = {k: kwargs[k] for k in kwarg_key_set if (not kwargs[k] == None) }
             
             result = function( *args, **kwargs )
             
