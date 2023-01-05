@@ -68,7 +68,7 @@ class Sessions:
                     conn = conn,
                     session_id = session_id
                 )
-            print( 'Join: '+ str(join_session_data) )
+
         except Exception as err:
             Sessions.kill_project_session(
                 conn = conn,
