@@ -1,32 +1,27 @@
 from ..connectors import Connector
 from ....utilities.timing import Timing
-
-from datetime import datetime
-from typing import List
+from ....utilities.lists import Lists
 
 class Calculation:
 
     @staticmethod
-    def recalculate_multiple_times( conn:Connector, recalculations_sequence:List[bool] = [True, False], recalculations_scheduled = [], timeout_in_seconds:int = None):
-        for index, recalculation_type in enumerate(recalculations_sequence):
-            scheduled = False
-            if ( isinstance(recalculations_scheduled, List) ):
-                if ( (len(recalculations_scheduled) > index) and (recalculations_scheduled[index] == True) ):
-                    scheduled = True
-            if ( isinstance(recalculations_scheduled, bool) ):
-                scheduled = recalculations_scheduled
+    def recalculate( conn:Connector, reset = False, scheduled = False, timeout_in_seconds:int = None ):
+        for index, reset_x in enumerate( Lists.coerce(reset) ):
+            
+            schedule = Lists.get(scheduled, index, False)
                 
-            if ( scheduled ):
+            if ( schedule == True ):
                 Calculation.recalculate_scheduled( conn )
+                continue
+                
+            if ( timeout_in_seconds == None ):
+                Calculation.recalculate_direct( conn, reset_x )
             else:
-                if ( timeout_in_seconds == None ):
-                    Calculation.recalculate( conn, recalculation_type )
-                else:
-                    Calculation.recalculate( conn, recalculation_type, timeout_in_seconds )
+                Calculation.recalculate_direct( conn, reset_x, timeout_in_seconds )
                 
 
     @staticmethod
-    def recalculate( conn:Connector, reset: bool = True, timeout_in_seconds:int = 600 ):
+    def recalculate_direct( conn:Connector, reset: bool = True, timeout_in_seconds:int = 600 ):
         response = None
         try:
             response = conn.request(
