@@ -68,6 +68,7 @@ class Sessions:
                     conn = conn,
                     session_id = session_id
                 )
+            join_session_data['new_project_name'] = created_project_name
 
         except Exception as err:
             Sessions.kill_project_session(
@@ -107,4 +108,17 @@ class Sessions:
             events.io.save_project (
                 session_id
             ) )
-        return session_id
+        return response
+ 
+    @staticmethod
+    def set_session_keep_alive( conn: Connector, session_id: int, keep_alive = True):
+        mode = 'NONE'
+        if ( keep_alive ):
+            mode = 'SHORT'
+        
+        response = conn.fire_event( 
+            events.io.save_project (
+                session_id,
+                mode
+            ) )
+        return response
