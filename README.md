@@ -42,7 +42,7 @@ sdk.base.sessions.kill_project_session( session_id )
 
 ## SDK Structure
 #### SDK Object
-The SDK Object is the main access to all sdk functionality.
+The SDK Object is the main access to all SDK functionality.
 
 #### Environments
 Functionality within the SDK is split up into a number of environments:
