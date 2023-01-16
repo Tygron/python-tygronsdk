@@ -21,17 +21,25 @@ class Overlay(Item):
         return self.id
     
     def get_timeframes( self ):
-        timeframes = self.get_attribute_value( 
-                self.ATTRIBUTE_TIMEFRAMES, 
-                first_only = True,
-                default_zero = False
-           )
-        return int(timeframes) if not timeframes == None else None
+        by_attribute_length = {
+                'HEAT_STRESS' : 'DATES'
+            }.get(self.overlay_type, None)
+        if ( not by_attribute_length is None ):
+            return self.get_attribute_length( attribute=by_attribute_length, include_attribute=True, include_maquette=False)
+    
+        by_attribute_value = {
+                'AVG' : 'ATTRIBUTE_TIMEFRAMES',
+            }.get(self.overlay_type, Overlay.ATTRIBUTE_TIMEFRAMES)
+        if ( not by_attribute_value is None ):
+            return self.get_attribute_value( attribute=by_attribute_value, include_attribute=True, include_maquette=False, first_only=True, default_zero=True)
+                
+        raise Exception( 'No (known) timeframes attribute exists for Overlay ' + self.get_printable_id() )
         
-    def get_timeframe( self, index: int = -1 ):
+        
+    def get_timeframe( self, index:int = -1 ):
         timeframes = self.get_timeframes( )
         if ( timeframes == None ):
-            raise Exception( 'No ' + self.ATTRIBUTE_TIMEFRAMES + ' attribute exists for Overlay ' + self.get_printable_id() )
+            raise Exception( 'No (known) timeframes attribute exists for Overlay ' + self.get_printable_id() )
             
         if ( index < 0 ):
             target_timeframe = timeframes + index
@@ -42,4 +50,22 @@ class Overlay(Item):
         if ( target_timeframe >= timeframes):
             raise Exception( 'Timeframe at index ' + str(index) + ' comes out to '+str(target_timeframe)+' after last timeframe at index ' + (str(timeframes)-1) + ' for Overlay ' + self.get_printable_id() )
         return int(target_timeframe)
+    
+    def get_timeframes_range( self, indexes = True ):
+        timeframes = []
+        number_of_timeframe = self.get_timeframes()
+        if (number_of_timeframe is None):
+            raise Exception( 'Unable to establish timeframes range for Overlay '+self.get_printable_id()+', of type '+overlay_type )
         
+        if ( indexes is True ):
+            timeframes = list(range(0, number_of_timeframe))
+        elif ( isinstance(indexes, int) ):
+            timeframes = self.get_timeframe(indexes)
+        elif ( isinstance(indexes, list) ):
+            for index in indexes:
+                if ( not isinstance(index, int) ):
+                    continue
+                timeframes.append( self.get_timeframes_range(index) )
+        else:
+            raise Exception( 'Unable to parse desired indexes: '+str(indexes) )
+        return timeframes
