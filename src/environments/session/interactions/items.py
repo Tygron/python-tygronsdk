@@ -81,6 +81,9 @@ class Items:
     @staticmethod
     def get_matching( conn: Connector, item_type, matchables, timeout_in_seconds = 30, 
             try_match_on_id:bool = True,  try_match_on_name:bool = True,  try_match_on_attribute:bool = True ):
+        if ( matchables == False ):
+            return ItemMap([], as_item = item_type)
+            
         items = Items.load( conn, 
                 item_type=item_type, 
                 timeout_in_seconds=timeout_in_seconds
