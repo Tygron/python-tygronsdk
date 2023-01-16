@@ -22,12 +22,16 @@ class ItemMap():
         if ( isinstance(data, list) ):
             list_data = data
             data = {}
-            if ( self._as_items ):
-                for entry in list_data:
+            
+            for entry in list_data:
+                if ( isinstance(entry, Item) ):
+                    entry = entry.get_data()
+                    
+                if (self._as_items):
                     data[int(entry['id'])] = self._item_type(entry)
-            else:
-                for entry in list_data:
+                else:
                     data[int(entry['id'])] = entry
+                
         elif ( isinstance(data, dict) ):
             pass
          
@@ -35,7 +39,10 @@ class ItemMap():
         
     def get_data( self ):
         return self._data
-        
+    
+    def get_item_type( self ):
+        return self._item_type if self._as_items else None
+    
     def get( self, item_id: int = None):
         if ( item_id is None or item_id is Item.NONE ):
             return None

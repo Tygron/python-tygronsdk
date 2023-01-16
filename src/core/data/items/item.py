@@ -13,8 +13,12 @@ class Item():
     #Item type management
     
     @staticmethod
-    def maplink_from( obj ):
+    def maplink_from( obj, assume_string_singular:bool = None ):
         if ( isinstance(obj, str) ):
+            if ( assume_string_singular is False):
+                return obj
+            if ( assume_string_singular is True or (not (obj[-1].lower() == 's')) ):
+                return obj+'s'
             return obj
         if ( inspect.isclass(obj) and issubclass(obj, Item) ):
             return obj.get_item_maplink()
@@ -76,16 +80,30 @@ class Item():
     def get_attribute_value( self, attribute: str, include_attribute: bool = True, include_maquette:bool = True, first_only: bool = False, default_zero: bool = True ):
         value = None
         if ( include_maquette ):
-            if (self._data.get('maquetteOverride', None) != None):
-                if (self._data['maquetteOverride'].get(attribute, None) != None):
+            if (not (self._data.get('maquetteOverride', None) is None)):
+                if (not (self._data['maquetteOverride'].get(attribute, None) is None)):
                     value = self._data['maquetteOverride'][attribute]
         if ( include_attribute ):
             if (value == None):
-                if (self._data.get('attributes', None)  != None):
-                    if (self._data['attributes'].get(attribute, None) != None):
+                if (not (self._data.get('attributes', None) is None)):
+                    if (not (self._data['attributes'].get(attribute, None) is None)):
                         value = self._data['attributes'][attribute]
-        if ( value == None ):
+        if ( value is None ):
             return 0 if default_zero else None
         if ( isinstance(value, list) and first_only ):
             return value[0]
         return value
+    
+    def get_attribute_length( self, attribute:str, include_attribute: bool = True, include_maquette:bool = True ):
+        value = self.get_attribute_value(
+                attribute = attribute,
+                include_attribute = include_attribute,
+                include_maquette = include_maquette,
+                first_only = False,
+                default_zero = False
+            )
+        if ( value is None):
+            return 0
+        if ( isinstance(value, list) ):
+            return len(value)
+        return 1
