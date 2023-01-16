@@ -83,7 +83,7 @@ class Connector:
     def path_is_file( self, path ):
         return path.rfind('.') > path.rfind('/')
     def path_has_params( self, path ):
-        return path.rfind('?') -1
+        return not (path.rfind('?') == -1)
         
     def parse_url( self, path ):
         # 'http://user:pass@NetLoc:80/path;parameters?query=argument#fragment'
@@ -127,19 +127,22 @@ class Connector:
             
         return full_path;
     def get_url_part_query_params( self, path='', query_params={} ):
-        path_params = {}
+        params = {}
+        params.update(self.query_params)
+        params.update(query_params)
         if ( self.path_has_params(path) ):
             path_params = self.parse_query_params_from_url( path )
-        path_params.update( query_params )
-        return self.create_query_string( path_params )
+            params.update(path_params)
+        return self.create_query_string( params )
+        
         
     def get_url_full( self, path = '', params = {} ):
         url = self.get_url_part_protocol()
         url+= self.get_url_part_host()
         url+= self.get_url_part_port()
         url+= self.get_url_part_path( path )
-
-        param_string = self.get_url_part_query_params( path, {**self.get_query_params(), **params} )
+    
+        param_string = self.get_url_part_query_params( path, params )
         url += ('?'+param_string) if (len(param_string) > 0) else ''
 
         return url;
@@ -170,9 +173,9 @@ class Connector:
             query_params = {**query_params, **data}
             data = None
         
-        if ( not self.path_is_url(url) ):
-            url = self.get_url_full( url, query_params );
-
+        if (not self.path_is_url(url)):
+            url = self.get_url_full( url, query_params )
+        
         headers = self.get_request_headers(headers);
 
         if data:
