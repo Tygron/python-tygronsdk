@@ -64,7 +64,7 @@ class DataExport:
         export_result = None
         if ( export_type == 'png' ):
             multiple_indexes = True
-            export_result = DataExport.export_overlay( conn, item_id, timeframes=indexes, format=export_type)
+            export_result = DataExport.export_overlay_as_png( conn, item_id, timeframes=indexes )
             extention = 'png'
         elif ( export_type == 'geotiff' ):
             multiple_indexes = True
@@ -188,6 +188,30 @@ class DataExport:
             data=[item_id]
         ).get_response_body()
         
+    
+    @staticmethod
+    def export_overlay_as_png( conn: Connector, item_id:int = None, timeframes = -1, export_params:dict = {}  ):
+        item = Items.get(
+                conn=conn,
+                item_type=Overlay, 
+                item_id=item_id
+            )
+        timeframes = item.get_timeframes_range(timeframes)
+ 
+        base_url = conn.get_url_part_protocol()+conn.get_url_part_host()
+        base_url += '/web/'+Overlay.get_item_type().lower()+'.png'
+ 
+        results = {}
+        for  timeframe in timeframes:
+            query_params = conn.get_url_part_query_params( '', {
+                    'id': item_id,
+                    'timeframe':timeframe
+                })
+            url= base_url+'?'+query_params
+            results[timeframe] = conn.request( url = url ).get_response_body()
+
+        return results
+    
     
     @staticmethod
     def export_overlay( conn: Connector, item_id:int = None, timeframes = -1, format:str = 'geotiff', export_params:dict = {}  ):
