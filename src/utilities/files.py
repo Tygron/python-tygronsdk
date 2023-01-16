@@ -5,12 +5,36 @@ from pathlib import Path
 class Files:
 
     @staticmethod
-    def write_file( directory:str, file:str, content:str = None, append:bool = False ):
+    def write_file( directory:str, file:str, content:None, append:bool = False ):
+        if ( isinstance(content, bytes) ):
+            Files.write_file_binary(
+                    directory=directory,
+                    file=file,
+                    content=content,
+                    append=append
+                )
+        else:
+            Files.write_file_text(
+                    directory=directory,
+                    file=file,
+                    content=content,
+                    append=append
+                )
+        
+    @staticmethod
+    def write_file_text( directory:str, file:str, content:str = None, append:bool = False ):
         Files.ensure_directory(directory)
         f = open( os.path.join( directory, file), 'w')
         f.write(str(content))
         f.close()
-
+        
+    @staticmethod
+    def write_file_binary( directory:str, file:str, content = None, append:bool = False ):
+        Files.ensure_directory(directory)
+        f = open( os.path.join( directory, file), 'ab')
+        f.write(content)
+        f.close()
+    
     @staticmethod
     def ensure_directory( directory:str ):
         if ( not os.path.exists(directory) ):
