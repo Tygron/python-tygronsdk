@@ -6,14 +6,14 @@ from typing import List
 class Processes:
 
     @staticmethod
-    def run_subprocess( cmd:List[str], pidfile:str = None, stdin:str = '/dev/null', stdout:str = '/dev/null', stderr:str = '/dev/null' ):
+    def run_subprocess( cmd:List[str], pidfile:str = None, stdin:str = '/dev/null', stdout:str = '/dev/null', stderr:str = '/dev/null', shell=False ):
         #TODO: stdin can either be /dev/null (string), or -1 (subprocess.PIPE), or sys.stdin etc (handle)
         
         stdin = stdin if not isinstance(stdin, str) else open(stdin, 'r')
         stdout = stdout if not isinstance(stdout, str) else open(stdout, 'a+')
         stderr = stderr if not isinstance(stderr, str) else open(stderr, 'a+')
         
-        p = subprocess.Popen(cmd, stdout=stdout, stderr=stderr, stdin=stdin, shell=False )
+        p = subprocess.Popen(cmd, stdout=stdout, stderr=stderr, stdin=stdin, shell=shell )
         return p
         
         #DEVNULL = open( os.devnull, 'wb' )
