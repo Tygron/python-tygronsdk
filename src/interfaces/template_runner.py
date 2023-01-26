@@ -31,8 +31,8 @@ class TemplateRunner:
             'size_y' : 1000,
             
             'area_geojsons' : [],
-            'area_geojson_buffers' : [],
             'area_geojson_names' : [],
+            'area_geojson_buffers' : [],
             
             'timeout_in_seconds' : None,
             'recalculate_reset_sequence' : [True],
@@ -100,10 +100,11 @@ class TemplateRunner:
     def set_formatted_logging_function( self, formatted_logging_function:Callable = None, log_format:str = None ):
         if ( not (formatted_logging_function is None) ):
             self.formatted_logging_function = formatted_logging_function
-        elif ( log_format is None and formatted_logging_function is None ):
-            self.formatted_logging_function = None
-        else:    
+        if ( not (log_format is None) ):
             self.log_format = log_format
+
+        if ( (formatted_logging_function is None) and (log_format is None) ):
+            self.formatted_logging_function = None
             
     def set_log_api_token( self, token_in_log:bool = True ):
         self.settings['log_api_token'] = token_in_log
@@ -214,7 +215,7 @@ class TemplateRunner:
         except:
             raise Exception('Areas geojson must be a valid json string')
             
-        if ( not (areas_buffer == None) and (areas_buffer <= 0) ):
+        if ( not (areas_buffer is None) and (areas_buffer <= 0) ):
             raise Exception('When provided, a buffer for geojson areas must be greater than 0')
                 
         self.settings['area_geojsons'].append( areas_geojson_string )
@@ -345,9 +346,12 @@ class TemplateRunner:
             
     def _add_data( self ):
         sdk = self.sdk
-        
         self.log( 'Adding additional Areas from provided geojsons.' )
-        result = sdk.session.data_import.geojsons_areas( **self.settings )
+        result = sdk.session.data_import.geojsons_areas(
+                area_geojson_strings = self.settings.get('area_geojsons',[]),
+                area_buffers = self.settings.get('area_geojson_buffers',[]),
+                area_name_attributes = self.settings.get('area_geojson_names',[])
+            )
         self.log( 'Geojson Areas import completed, adding this many areas: ' + str(result) )
             
             
