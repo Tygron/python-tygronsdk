@@ -2,6 +2,7 @@ from ..connectors import Connector
 from ..data.items import Item, ItemMap
 from ..data.items import Indicator, Panel, Overlay
 from .items import Items
+from .... import utilities
 
 from typing import List
 import json
@@ -109,18 +110,15 @@ class DataExport:
         return export_results
         
     @staticmethod
-    def generate_export_key( string_format=None, item_type = None, item_id = None, item_name = None, item_index = None, extention = None ):
+    def generate_export_key( string_format=None, **kwargs ):
+        item_id = kwargs.get('item_id')
+        item_index = kwargs.get('item_index')
         if ( not item_index is None ):
             item_id = str(item_id)+' ('+str(item_index)+')'
         if ( string_format == None ):
             string_format = '{item_type}-{item_id}{extention}'
-        return string_format.format(
-            item_type = item_type,
-            item_id = item_id,
-            item_name = item_name,
-            item_index=item_index,
-            extention=extention
-        )
+        terms = {**kwargs, 'item_id':item_id}
+        return utilities.strings.format( string_format, **terms )
     
     @staticmethod
     def export_as_json( conn: Connector, item_type:str, item_id:int ):
