@@ -116,7 +116,6 @@ class Files:
                 if ( path.is_file() ):
                     path.unlink()
                 elif ( path.is_dir() and also_directories ):
-                    print( 'deleting dir: '+str(path) )
                     shutil.rmtree(path)
         except Exception as err:
             errors.append(err)
