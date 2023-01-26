@@ -1,12 +1,16 @@
 import os, traceback
 
 from .lists import Lists
+from typing import Union
 
 class Exceptions:
 
     @staticmethod
-    def stringify( exception:Exception,  ):
+    def stringify( exception:Union[Exception,str],  ):
         string = ''
+        
+        if ( not isinstance(exception, Exception) ):
+            return exception
         
         for value in exception.args:
             if ( isinstance(value, Exception) ):
