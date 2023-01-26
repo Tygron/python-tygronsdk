@@ -1,7 +1,7 @@
 from ... import sdk as tygron
-from ... import items as items
+from .. import utilities as utilities
 
-from ... import utilities as utilities
+from ..environments.session.data import items as items
 
 import json
 from typing import List, Callable
@@ -9,10 +9,12 @@ from typing import List, Callable
 class TemplateRunner:
     
     def __init__( self, settings: dict = {}, **kwargs ):
-        self.default_run_export_key =  '{run_collection_name}-{run_name}-'
-        self.default_data_export_key =  '{item_type}-{item_name}-{item_id}{extention}'
+        self.default_data_export_key =  '{run_collection_name}-{run_name}-{item_type}-{item_name}-{item_id}{extention}'
         
         self.settings = {
+            'platform' : 'engine',
+            'computer_name' : 'Unnamed Python Template Runner',
+        
             'run_collection_name' : 'automated',
             'run_name' : utilities.strings.generate_random_token(10),
         
@@ -63,8 +65,10 @@ class TemplateRunner:
         
         self.settings = { **self.settings, **settings, **kwargs }
         
-        self.short_logging_function = None
-        self.long_logging_function = None
+        self.logging_function = None
+        self.formatted_logging_function = None
+        self.log_format = '{log_datetime} : {log_run_name} : {message}'
+        
         self.exports = {}
         self.logs = []
  
@@ -72,6 +76,9 @@ class TemplateRunner:
         if ( sdk == None ):
             sdk = tygron.sdk( kwargs )
         self.sdk = sdk
+    
+    def set_settings( self, settings ):
+        self.settings.update(settings)
     
     def set_run_name( self, run_name:str ):
         self.setting['run_name'] = run_name
@@ -88,9 +95,15 @@ class TemplateRunner:
                 run=self.settings['run_name'],
             )
         
-    def set_logging_functions( self, short_log_function:Callable = None, long_log_function:Callable = None ):
-        self.short_logging_function = short_log_function
-        self.long_logging_function = long_log_function
+    def set_logging_function( self, logging_function:Callable = None ):
+        self.logging_function = logging_function
+    def set_formatted_logging_function( self, formatted_logging_function:Callable = None, log_format:str = None ):
+        if ( not (formatted_logging_function is None) ):
+            self.formatted_logging_function = formatted_logging_function
+        elif ( log_format is None and formatted_logging_function is None ):
+            self.formatted_logging_function = None
+        else:    
+            self.log_format = log_format
             
     def set_log_api_token( self, token_in_log:bool = True ):
         self.settings['log_api_token'] = token_in_log
@@ -99,7 +112,10 @@ class TemplateRunner:
     
     def check_sdk_ready( self, authentication:dict = {} ):
         if ( getattr(self, 'sdk', None ) == None ):
-            self.set_sdk()
+            self.set_sdk(
+                    platform=self.settings['platform'],
+                    computer_name=self.settings['computer_name']
+                )
         self.sdk.base.authenticate(authentication)  
 
     def check_settings_ready( self ):
@@ -130,8 +146,8 @@ class TemplateRunner:
         self.settings['generate'] = True
         self.settings['size_x'] = size_x
         self.settings['size_y'] = size_x
-        self.settings['location_x_epsg3857'] = location_x_epsg3857
-        self.settings['location_y_epsg3857'] = location_y_epsg3857
+        self.settings['location_x'] = location_x_epsg3857
+        self.settings['location_y'] = location_y_epsg3857
     def set_new_project_generation_errors_allowed( self, allow_errors:bool = True ):
         self.settings['allow_errors'] = allow_errors
     
@@ -252,16 +268,28 @@ class TemplateRunner:
     def log( self, message = None ):
     
         if ( isinstance(message, Exception) ):
-            message = tygron_utilities.exceptions.stringify(message)
+            message = utilities.exceptions.stringify(message)
         else:
             message = str(message)
     
-        self.logs.append(message)
-    
-        if ( isinstance(self.short_logging_function, Callable) ):
-            self.short_logging_function( message )
-        if ( isinstance(self.long_logging_function, Callable) ):
-            self.long_logging_function( self.get_full_run_name() + ': ' + message )
+        current_time = utilities.timing.get_timestamp_seconds()
+        
+        simple_message = utilities.datetimes.datetime_to_string_datetime(current_time)+' : '+message
+        self.logs.append(simple_message)
+        
+        if ( isinstance(self.logging_function, Callable) ):
+            self.logging_function( simple_message )
+            
+        if ( isinstance(self.formatted_logging_function, Callable) ):
+            formatted_message = utilities.strings.format( self.log_format, **{
+                    'log_datetime' : utilities.datetimes.datetime_to_string_datetime(current_time),
+                    'log_date' : utilities.datetimes.datetime_to_string_date(current_time),
+                    'log_time' :  utilities.datetimes.datetime_to_string_time(current_time),
+                    'log_run_name' : self.get_full_run_name(),
+                    'message' : message
+                })
+        
+            self.formatted_logging_function( formatted_message )
             
     def get_logs( self ):
         return self.logs
@@ -344,17 +372,14 @@ class TemplateRunner:
     def _partially_format_data_export_key( self, export_key:str = None ):
         if ( export_key is None ):
             export_key = self.default_data_export_key
-            
-        run_key = self.default_run_export_key.format(
-            run_collection_name = self.settings['run_collection_name'],
-            run_name = self.settings['run_name']
-        )
         
-        return run_key + export_key
+        export_key = utilities.strings.format( export_key, **self.settings )
+        
+        return export_key
     
     def _export( self ):
         sdk = self.sdk
-        self.log( 'Starting export of data' )
+        self.log( 'Starting creation of exports of data' )
 
         results = {}
 
@@ -390,7 +415,7 @@ class TemplateRunner:
         
         all_item_results = {}
         all_matched_items = sdk.session.items.get_matching( item_type=items.Overlay, matchables=item_ids )
-        self.log( 'Exporting '+str(all_matched_items.count())+' of item type '+'overlay' )
+        self.log( 'Preparing '+str(all_matched_items.count())+' exports of item type '+'overlay' )
         
         for overlay_id in item_ids:
             for overlay in sdk.session.items.get_matching( item_type=items.Overlay, matchables=overlay_id ):
@@ -420,7 +445,7 @@ class TemplateRunner:
         
         all_item_results = {}
         all_matched_items = sdk.session.items.get_matching( item_type=item_type, matchables=item_ids )
-        self.log( 'Exporting '+str(all_matched_items.count())+' of item type '+item_type )
+        self.log( 'Preparing '+str(all_matched_items.count())+' exports of item type '+item_type )
         
         for item in all_matched_items:
             for export_format in export_formats:
@@ -445,14 +470,15 @@ class TemplateRunner:
     
     def _write_export_files( self ):
         if ( not self.settings['export_files']):
+            self.log( 'Not proactively writing any export files, as the "export_files" setting was set to '+str(self.settings['export_files']) )
             return
             
         location = self.settings['export_location']
         if ( location is None ):
-            location = ''
+            location = './'
         
         if (len(self.exports.items()) == 0):
-            self.log( 'No exports available, so not writing any files' )
+            self.log( 'No exports of data available, so not writing any files. This is because no data matched for exports, or because an error occured before exports could be established.' )
             return
         
         self.log( 'Writing files to location: '+location )

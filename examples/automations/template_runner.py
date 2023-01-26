@@ -1,6 +1,7 @@
 from ... import sdk as tygron
-from ...implementations.automations.template_runner import TemplateRunner
 from ... import utilities as utilities
+
+from ...src.interfaces import TemplateRunner
 
 from pathlib import Path
 
@@ -24,8 +25,8 @@ def main():
     runner.set_sdk(sdk)
     
     #   Because the TemplateRunner is meant to be run as part of larger batches, logging is important.
-    #   Depending on the encompassing application, a short and a long logging function can be provided which the TemplateRunner will call.
-    runner.set_logging_functions( None, print )
+    #   Depending on the encompassing application, a normal or a formatted logging function (or both) can be provided which the TemplateRunner will call.
+    runner.set_formatted_logging_function( print )
     
     #   Whether to, as the process runs, a log entry should be included which includes the api token
     runner.set_log_api_token( True)
@@ -34,12 +35,12 @@ def main():
     #   The configuration of what template to run:
     runner.set_template_name( template_name = template_project_name )
     #   The configuration of where to apply the template anew
-    runner.set_new_project_generation(
+    """runner.set_new_project_generation(
             size_x = 2000,
             size_y = 2000,
             location_x_epsg3857 = 480108.02047298977,
             location_y_epsg3857 = 6815252.010235827,
-        )
+        )"""
     
     #   The configuration of recalculations. Depending on the Template used, multiple recalculations can be run. "True" also does reset-X-Queries.
     runner.set_recalculation_sequence( [True, False] )
