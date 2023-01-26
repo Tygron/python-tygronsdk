@@ -6,16 +6,19 @@ import math
 class Timing:
 
     @staticmethod
-    def wait_for( wait_function: Callable, interval_in_seconds: int = 5, timeout_in_seconds: int = 300 ):
+    def wait_for( wait_function: Callable = None, interval_in_seconds: int = 5, timeout_in_seconds: int = 300 ):
         result = None
         start_time = Timing.get_timestamp_seconds()
-        while( result == None ):
+        while( result is None ):
             time.sleep(interval_in_seconds)
             try:
-                result = wait_function() 
+                if ( isinstance(wait_function, Callable) ):
+                    result = wait_function() 
             except Exception as err:
                 raise err
             if ( Timing.time_passed(start_time, time=timeout_in_seconds) ):
+                if ( wait_function is None ):
+                    return None
                 raise Exception( 'Timeout after waiting for '+str(Timing.time_passed(start_time)) )
         return result
 
