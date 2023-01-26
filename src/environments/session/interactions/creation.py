@@ -2,11 +2,12 @@ from ..connectors import Connector
 from .session import Session
 from ....utilities.timing import Timing
 
+from typing import Callable
 
 class Creation:
 
     @staticmethod
-    def generate_map( conn: Connector, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 1200, allow_errors:bool = False  ):
+    def generate_map( conn: Connector, size_x: int, size_y: int, location_x: float, location_y: float, polygon = None, timeout_in_seconds:int = 1200, allow_errors:bool = False, progress_function:Callable = None ):
         
         response = conn.request(
                 method='POST',
@@ -30,7 +31,7 @@ class Creation:
         if ( not response.is_success() ):
             raise Exception('Could not start map generation', response)
         
-        err_count = Creation.wait_for_map_generation( conn, timeout_in_seconds )
+        err_count = Creation.wait_for_map_generation( conn, timeout_in_seconds, progress_function )
         
         if ( err_count == -1 ):
             raise Exception('Project generation did not start') 
@@ -40,7 +41,7 @@ class Creation:
         return err_count
  
     @staticmethod   
-    def wait_for_map_generation( conn: Connector, timeout_in_seconds:int = 1200  ):
+    def wait_for_map_generation( conn: Connector, timeout_in_seconds:int = 1200, progress_function:Callable = None ):
         
         def wait_function():
             Session.ping_session( conn )
