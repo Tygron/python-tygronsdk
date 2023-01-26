@@ -13,6 +13,7 @@ class DataImport:
     def geojsons_areas( conn: Connector, area_geojson_strings:List[str] = [], area_buffers = [], area_name_attributes = [] ):
 
         start_areas = Items.size( conn, 'areas' )
+        results = []
 
         for index, entry in enumerate(area_geojson_strings):
             area_geojson_string = entry
@@ -23,11 +24,11 @@ class DataImport:
             if ( not (isinstance(buffer, int) or isinstance(buffer, float)) ):
                 buffer = 1
                 
-            name = area_name_attributes
-            if ( isinstance(name, list) and len(name)>index ):
-                name = name[index]
-            if ( not isinstance(name, str) ):
-                name = 'NAME'
+            name_attribute = area_name_attributes
+            if ( isinstance(name_attribute, list) and len(name_attribute)>index ):
+                name_attribute = name_attribute[index]
+            if ( not isinstance(name_attribute, str) ):
+                name_attribute = 'NAME'
                 
             result = DataImport.geojson_areas( conn, area_geojson_string, buffer, name_attribute )
             results.append(result)
@@ -37,7 +38,7 @@ class DataImport:
 
     @staticmethod
     def geojson_areas( conn: Connector, area_geojson_string: str, buffer: int = 1, name_attribute:str = 'NAME' ):
-        feature_collection = json.load( area_geojson_string )
+        feature_collection = json.loads( area_geojson_string )
         
         geometry_collection = { 
                 "type": "GeometryCollection",
