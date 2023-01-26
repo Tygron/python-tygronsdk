@@ -1,7 +1,6 @@
 import os
 import math, binascii
 
-
 class Strings:
     
     @staticmethod
