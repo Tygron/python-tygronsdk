@@ -1,14 +1,13 @@
 from ..connectors import Connector
-from ....utilities.timing import Timing
-from ....utilities.lists import Lists
+from .... import utilities
 
 class Calculation:
 
     @staticmethod
     def recalculate( conn:Connector, reset = False, scheduled = False, timeout_in_seconds:int = None ):
-        for index, reset_x in enumerate( Lists.coerce(reset) ):
+        for index, reset_x in enumerate( utilities.lists.coerce(reset) ):
             
-            schedule = Lists.get(scheduled, index, False)
+            schedule = utilities.lists.get(scheduled, index, False)
                 
             if ( schedule == True ):
                 Calculation.recalculate_scheduled( conn )
@@ -71,4 +70,4 @@ class Calculation:
                     pass
                 raise err
             
-        return Timing.wait_for( wait_function, timeout_in_seconds=timeout_in_seconds )
+        return utilities.timing.wait_for( wait_function, timeout_in_seconds=timeout_in_seconds )
