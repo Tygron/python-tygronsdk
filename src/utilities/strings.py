@@ -1,5 +1,5 @@
 import os
-import math, binascii
+import math, binascii, re
 
 class Strings:
     
@@ -45,3 +45,37 @@ class Strings:
             Substring and attempt to replace it with formatted
             If error, replace with substring itself
         """
+    
+    def strip_to_number( input:str, negative_kept:bool = False, decimal_character:str = None ):
+        regex = '^0-9'
+        regex = regex + ( '\-' if negative_kept else '' )
+        regex = regex + ( decimal_character if ( not decimal_character is None ) else '' )
+        regex = '['+regex+']'
+        return re.sub(regex,'',input)
+        
+    def strip_to_letters( input:str, ):
+        regex = '^a-zA-Z'
+        regex = '['+regex+']'
+        return re.sub(regex,'',input)
+    
+    def parse_file_size_string( input:str, output_unit:str = 'MB' ):
+        units = {"B": 1, "KB": 10**3, "MB": 10**6, "GB": 10**9, "TB": 10**12}
+        number = int(Strings.strip_to_number(input))
+        unit = Strings.strip_to_letters(input)
+        size = number*units[unit]
+        
+        return size/units.get(output_unit.upper(), 1)
+        
+    def parse_surface_area_from_sizes_string( input:str, negative_kept:bool = False, decimal_character = None ):
+        seperator_chars = [' ','x','X', 'by',':']
+        split_input = re.split('|'.join(seperator_chars),input)
+        value = None
+        for entry in split_input:
+            try:
+                number = float( Strings.strip_to_number(entry, negative_kept, decimal_character) )
+                value = number if ( value is None ) else value*number
+            except Exception as err:
+                pass
+        if ( not (value is None) ):
+            return value
+        raise Exception('Could not parse 2 numbers to multiply from "'+input+'"')

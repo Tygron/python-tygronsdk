@@ -16,3 +16,10 @@ class TygronStrings:
                 Strings.is_length( string, min_length=3, max_length=20 )
                 and TygronStrings.is_simple_characters( string )
             )
+    
+    @staticmethod
+    def make_enum_term( string:str = '' ) -> str:
+        term = string.upper()
+        term = term.replace( ' ', '_' )
+        term = re.sub( '[^_0-9a-zA-Z]', '', term )
+        return term
