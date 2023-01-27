@@ -32,7 +32,7 @@ class LicenseData:
     @property
     def new_projects_per_day(self):
         value = self._data.get( self.key_mapping['new_projects_per_day'], None )
-        return utilities.strings.strip_to_number(value)
+        return int(utilities.strings.strip_to_number(value))
     @property
     def max_projects_per_day(self):
         return self.new_projects_per_day
@@ -47,11 +47,11 @@ class LicenseData:
     @property
     def max_total_area(self):
         value = self._data.get( self.key_mapping['max_total_area'], None )
-        return utilities.strings.strip_to_number(value)
+        return int( utilities.strings.strip_to_number(value) )
     
     @property
     def max_geoshare_storage(self):
-        value = get_max_geoshare_storage_string(self)
+        value = self.get_max_geoshare_storage_string()
         return int( utilities.strings.parse_file_size_string(value) )
     def get_max_geoshare_storage_string(self):
         return self._data.get( self.key_mapping['max_geoshare_storage'], None )
