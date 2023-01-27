@@ -1,2 +1,3 @@
-from .UserData import UserData as UserData
-from .DomainData import DomainData as DomainData
+from .DomainData import DomainData
+from .LicenseData import LicenseData
+from .UserData import UserData
