@@ -1,32 +1,44 @@
 from ... import sdk as tygron
 from ... import items as items
 
+
+
+
+
+
+
+
+
 from pathlib import Path
 import json
 
 def main():
 
-    if ( Path('credentials.py').is_file() ):
-        import credentials
-    else:
-        print('Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_server and tygron_api_token.')
-
+    try:
+        credentials = tygronsdk.load_credentials_from_file( files=[
+                './credentials.txt',
+                './credentials.json'
+            ] )
+    except:
+        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
+        return
+        
     print('This is an example for an API trigger functions. This example does not include a full webservice but will demonstrate what the webservice has to do.')
     
-    if ( not hasattr(credentials, 'tygron_api_token') ):
+    if ( not hasattr(credentials, 'api_token') ):
         print('A running session\'s API token is required in order to interact with it.')
-    if ( not hasattr(credentials, 'tygron_server') ):
+    if ( not hasattr(credentials, 'server') ):
         print('It is not required to configure a server. The SDK defaults to the LTS server.')
-        credentials.tygron_server = 'engine.tygron.com'
+        credentials.server = 'engine.tygron.com'
     
     print('Simulating a request from '+str(credentials.tygron_server)+' (which would be read from the referrer header), with API token '+str(credentials.tygron_api_token)+' (which would be read from the query parameters)')
     
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
     sdk = tygron.sdk({
-             'host' : credentials.tygron_server
+             'host' : credentials.server
         })
     auth_result = sdk.session.authenticate({
-            'api_token' : credentials.tygron_api_token
+            'api_token' : credentials.api_token
         })
     print('The authentication result is: "'+str(auth_result)+'".')
         

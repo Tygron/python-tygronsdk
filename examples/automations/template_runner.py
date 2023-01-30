@@ -1,17 +1,28 @@
-from ... import sdk as tygron
-from ... import utilities as utilities
+import tygronsdk
+from tygronsdk import sdk as tygron
+from tygronsdk import utilities as utilities
+from tygronsdk import interfaces as interfaces
 
-from ...src.interfaces import TemplateRunner
+
+
+
+
+
+
 
 from pathlib import Path
 
 def main():
 
-    if ( Path('credentials.py').is_file() ):
-        import credentials;
-    else:
-        print('Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_username and tygron_password.');
-    
+    try:
+        credentials = tygronsdk.load_credentials_from_file( files=[
+                './credentials.txt',
+                './credentials.json'
+            ] )
+    except:
+        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
+        return
+        
     template_project_name = 'demo_heat_stress'
     
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
@@ -20,7 +31,7 @@ def main():
             'computer_name' : 'Python SDK Example',
         } );
         
-    runner = TemplateRunner()
+    runner = interfaces.TemplateRunner()
     
     runner.set_sdk(sdk)
     
@@ -35,12 +46,12 @@ def main():
     #   The configuration of what template to run:
     runner.set_template_name( template_name = template_project_name )
     #   The configuration of where to apply the template anew
-    """runner.set_new_project_generation(
+    runner.set_new_project_generation(
             size_x = 2000,
             size_y = 2000,
             location_x_epsg3857 = 480108.02047298977,
             location_y_epsg3857 = 6815252.010235827,
-        )"""
+        )
     
     #   The configuration of recalculations. Depending on the Template used, multiple recalculations can be run. "True" also does reset-X-Queries.
     runner.set_recalculation_sequence( [True, False] )
@@ -79,8 +90,8 @@ def main():
             formats=['PNG', 'GEOTIFF']    #Function which takes the item and the timeframe as input, and returns 
         )
     
-    username = str(credentials.tygron_username)
-    password = str(credentials.tygron_password)
+    username = str(credentials.username)
+    password = str(credentials.password)
     
     #   After all configurations are made, the runner can be started by using .run(), providing the credentials to authenticate
     runner.log( 'Starting the template runner with credentials for '+username )

@@ -1,17 +1,28 @@
-from ... import sdk as tygron
-from ... import items as items
+import tygronsdk
+from tygronsdk import sdk as tygron
+from tygronsdk import items as items
+from tygronsdk import utilities as utilities
 
-from ... import utilities as utilities
+
+
+
+
+
+
 
 from pathlib import Path
 
 def main():
 
-    if ( Path('credentials.py').is_file() ):
-        import credentials;
-    else:
-        print('Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_username and tygron_password.');
-    
+    try:
+        credentials = tygronsdk.load_credentials_from_file( files=[
+                './credentials.txt',
+                './credentials.json'
+            ] )
+    except:
+        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
+        return
+   
     print('This example will read out details about the current user, about the domain, and explore a number of operations associated with them.')
 
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
@@ -33,11 +44,11 @@ def main():
     #   Each environment may require its own authentication, which must be explicitly set, and is separate from the SDK's settings.
     
     #   The base environment requires username-and-password authentication.
-    username = str(credentials.tygron_username)
-    password =  str(credentials.tygron_password)
+    username = str(credentials.username)
+    password = str(credentials.password)
     print('Authenticating base API environment as '+username)
     auth_result = sdk.base.authenticate( {
-            'username' :username,
+            'username' : username,
             'password' : password,
         } )  
              
@@ -63,6 +74,25 @@ def main():
         print( 'Domain contact: ' + domain.get_contact_name() )
         print( 'License number: ' + domain.license_number )
         print( 'License expires on: ' + utilities.datetimes.datetime_to_string_date(domain.expire_date) )
+        
+        print( '---' )
+        
+        license = sdk.base.domains.get_domain_license()
+        usage = sdk.base.domains.get_domain_usage()
+        allowance = sdk.base.domains.get_domain_allowance()
+        
+        print( license )
+        print( usage )
+        print( allowance )
+        print( 'License name: ' + license.license )
+        print( 'License enum: ' + license.license_enum )
+        print( 'New projects per day allowed: ' + str(license.new_projects_per_day) )
+        print( 'Total project area allowed: ' + str(license.max_total_area) )
+        print( 'Geoshare storage usage allowed: ' + str(license.max_geoshare_storage) )
+        print( 'New projects used today: ' + str(usage.new_projects_today) )
+        print( 'New projects remaining today: ' + str(allowance.remaining_projects_today) )
+        print( 'Percentage of new project allowance used today: ' + str(round( allowance.usage_fraction_projects_today*100)) + ' %' )
+        
         
     except Exception as err:
         print('An error occured unexpectedly while running the example.')

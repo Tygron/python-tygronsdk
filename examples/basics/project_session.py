@@ -1,15 +1,28 @@
-from ... import sdk as tygron
-from ... import items as items
+import tygronsdk
+from tygronsdk import sdk as tygron
+from tygronsdk import items as items
+
+
+
+
+
+
+
+
 
 from pathlib import Path
 
 def main():
 
-    if ( Path('credentials.py').is_file() ):
-        import credentials;
-    else:
-        print('Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_username and tygron_password.');
-    
+    try:
+        credentials = tygronsdk.load_credentials_from_file( files=[
+                './credentials.txt',
+                './credentials.json'
+            ] )
+    except:
+        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
+        return
+
     project_to_run = 'demo_heat_stress'
     
     print('This example will attempt to start, read out details from, and gracefully close, a session for a specific project: "' + project_to_run + '".')
@@ -33,8 +46,8 @@ def main():
     #   Each environment may require its own authentication, which must be explicitly set, and is separate from the SDK's settings.
     
     #   The base environment requires username-and-password authentication.
-    username = str(credentials.tygron_username)
-    password =  str(credentials.tygron_password)
+    username = str(credentials.username)
+    password = str(credentials.password)
     print('Authenticating base API environment as '+username)
     auth_result = sdk.base.authenticate( {
             'username' :username,

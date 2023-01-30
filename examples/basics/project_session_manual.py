@@ -1,22 +1,28 @@
-from ... import items as items
+import tygronsdk
+from tygronsdk import sdk as tygron
+from tygronsdk import items as items
+from tygronsdk import events as events
+from tygronsdk import environments as environments 
+
 Item = items.Item
 ItemMap = items.ItemMap
 
-from ... import events as tygron_events
-from ... import environments as tygron_environments
-ConnectorBaseApi = tygron_environments.base.Connector
-ConnectorSessionApi = tygron_environments.session.Connector
+ConnectorBaseApi = environments.base.Connector
+ConnectorSessionApi = environments.session.Connector
 
 from pathlib import Path
 
-
 def main():
 
-    if ( Path('credentials.py').is_file() ):
-        import credentials;
-    else:
-        print( 'Credentials can be defined in a credentials.py file in the root directory of where the example runs from. Should define tygron_username and tygron_password.' );
-    
+    try:
+        credentials = tygronsdk.load_credentials_from_file( files=[
+                './credentials.txt',
+                './credentials.json'
+            ] )
+    except:
+        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
+        return
+        
     project_to_run = 'demo_heat_stress'
     
     print( 'This example will attempt to start, read out details from, and gracefully close, a session for a specific project: "' + project_to_run + '".' )
@@ -46,8 +52,8 @@ def main():
     try:
     
         #   The base API requires authentication for http-basic authentication using a username and password
-        username = str(credentials.tygron_username)
-        password =  str(credentials.tygron_password)
+        username = str(credentials.username)
+        password = str(credentials.password)
         
         print( 'Authenticating base API environment as '+username )
         connector_base_api.set_http_basic_authentication( username, password )    
@@ -56,14 +62,14 @@ def main():
     
     
         #   First, obtain data about the Project. This verifies it exists, but is not required.
-        event = tygron_events.io.get_project_data( project_name = project_to_run )
+        event = events.io.get_project_data( project_name = project_to_run )
         print( 'Prepared an event to interact with the server: ' + str(event) )
         
         project_data_response = connector_base_api.fire_event(event)
         print( 'The response holds the Project\'s data, and is the following: ' + str(project_data_response) )
         
         #   Next, start the Project Session.
-        event = tygron_events.io.start( project_name = project_to_run )
+        event = events.io.start( project_name = project_to_run )
         print( 'Prepared an event to interact with the server: ' + str(event) )
         
         session_id_response = connector_base_api.fire_event(event)
@@ -71,7 +77,7 @@ def main():
         
         #   Finally, join the Session.
         session_id = session_id_response.get_response_body_json()
-        event = tygron_events.io.join( session_id = session_id, computer_name = connection_settings['computer_name'] )
+        event = events.io.join( session_id = session_id, computer_name = connection_settings['computer_name'] )
         print( 'Prepared an event to interact with the server: ' + str(event) )
         
         join_response = connector_base_api.fire_event(event)
@@ -124,7 +130,7 @@ def main():
     
         #   After the script has concluded, either through completion or an unexpected or unrecoverable error, any sessions started should be closed.
         if ( not(session_id == None) ):
-            event = tygron_events.io.close( session_id = session_id, client_token = client_token )
+            event = events.io.close( session_id = session_id, client_token = client_token )
             print ( 'Prepared an event to interact with the server: ' + str(event) )
             
             close_response = connector_base_api.fire_event(event)
