@@ -1,6 +1,6 @@
-from ... import sdk
-from ... import utilities
-from ... import interfaces
+import tygronsdk
+from tygronsdk import utilities
+from tygronsdk import interfaces
 
 import os, sys, json
 import importlib, inspect
@@ -97,12 +97,11 @@ class TemplateRunnerOrchestrator:
         target_file = self.settings['default_credentials_file']
         if (not credentials_file is None):
             target_file = self.get_credentials_dir_or_file(target_file)
-            self.log_task('Ability to import arbitrary credentials file not yet implemented')
-            
-        import credentials
         
-        if ( not getattr(credentials, 'tygron_username', False) and getattr(credentials, 'tygron_password', False) ):
-            raise Exception( 'Credentials file must define both a tygron_username and a tygron_password' )
+        credentials = tygronsdk.load_credentials_from_file( file=target_file )
+        
+        if ( not getattr(credentials, 'username', False) and getattr(credentials, 'password', False) ):
+            raise Exception( 'Credentials file must define both a "username" and a "password"' )
         return credentials
     
     
@@ -239,7 +238,8 @@ class TemplateRunnerOrchestrator:
                 '',
                 'Running tasks:',
                 'Amount of tasks in parallel: '+str(self.settings['parallel_tasks']),
-                #'Maximum allowed amount of projects: '+self.settings['domain_projects_limit'],
+                #'Maximum allowed amount of new projects. Runs are paused if exceeded: '+self.settings['domain_projects_limit'],
+                #'Maximum allowed percentage of new projects. Runs are paused if exceeded: '+self.settings['domain_projects_limit_fraction'],
                 '',
                 'On finish:',
                 'Stop orchestration when input and running directories are empty: '+str(self.settings['on_done_stop_orchestration']),
@@ -348,25 +348,24 @@ class TemplateRunnerOrchestrator:
         if ( task_in_running ):
             
             try:
-                credentials_file = task_parameters.get('credentials_file', None)
-                credentials = self.get_credentials( credentials_file )
+                credentials = self.get_credentials( task_parameters.get('credentials_file', None) )
                 self.log_orchestrator( 'Read out credentials file' )
             except Exception as err:
-                runner.log( 'Caught an error while establishing credentials for run' )
+                runner.log( 'Encountered an error while establishing credentials for run' )
                 critical_error = err
         
             
         if ( not (credentials is None) ):    
-            self.log_orchestrator( 'Starting the template runner with credentials for '+credentials.tygron_username )
+            self.log_orchestrator( 'Starting the template runner with credentials for '+credentials.username )
         
             try:
                 runner.run({
-                        'username' : credentials.tygron_username,
-                        'password' : credentials.tygron_password,
+                        'username' : credentials.username,
+                        'password' : credentials.password,
                     })
                             
             except Exception as err:
-                runner.log( 'Caught an error while the task was running' )
+                runner.log( 'Encountered an error while the task was running' )
                 critical_error = err
 
         
@@ -378,6 +377,7 @@ class TemplateRunnerOrchestrator:
         
         if ( not critical_error is None ):
             self.log_orchestrator(critical_error)
+    
     
     def add_geojson_definitions_to_runner( self, runner:interfaces.TemplateRunner, geojson_file_definitions:list ):
         definitions_count = 0
