@@ -43,10 +43,7 @@ class Files:
 
         
     @staticmethod
-    def read_file_as_text( file ):
-        if ( (not file) or (not Path( file ).is_file()) ):
-            raise Exception( str(file) + ' is not a valid file' )
-            
+    def read_file_as_text( file ):            
         with open(file, encoding='utf8') as f:
             return ''.join(f.readlines())
         
@@ -54,6 +51,15 @@ class Files:
     def read_file_as_json( file ):
         content = Files.read_file_as_text( file )
         return json.loads( content )
+        
+    @staticmethod
+    def read_file_as_key_values( file ):        
+        data = {}
+        with open(file, encoding='utf8') as f:
+            for line in f:
+                key, value = line.partition('=')[::2]
+                data[key.strip()] = value.strip()
+        return data
     
  
  

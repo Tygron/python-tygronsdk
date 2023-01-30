@@ -10,3 +10,5 @@ from .lists import Lists as lists
 from .html import Html as html
 
 from .tygron_strings import TygronStrings as tygron_strings
+
+from . import credentials
