@@ -63,7 +63,7 @@ class sdk():
         pass
     
     
-    
+        
     def authenticate( self, authentication_details: dict = {}, **kwargs ):
         auth_details = { **authentication_details, **kwargs }
         pass
