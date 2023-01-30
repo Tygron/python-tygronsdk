@@ -26,7 +26,8 @@ class LicenseData:
     @property
     def license(self):
         return self._data.get( self.key_mapping['license'] , None )
-    def get_license_enum(self):
+    @property
+    def license_enum(self):
         return utilities.tygron_strings.make_enum_term( self.license )
     
     @property
