@@ -28,6 +28,15 @@ class CredentialsTygron():
     @property
     def api_token(self):
         return self._data.get('api_token', None)
+    @property
+    def session_id(self):
+        api_token = self.api_token
+        if ( api_token is None ):
+            return None
+        try:
+            return TygronStrings.parse_session_id_from_api_token( api_token )
+        except:
+            return None
     
     @property
     def source(self):
@@ -116,13 +125,13 @@ class CredentialsTygron():
     def __str__(self):
         output = []
         if   ( self.username and self.password ):
-            output.append('User '+str(self.username) + ' with password set ')
+            output.append('User '+str(self.username) + ' with password set')
         elif ( self.username ):
             output.append('User '+str(self.username) + ' without password set')
         elif ( self.password ):
             output.append('Password without known user')
             
         if   ( self.api_token ):
-            output.append('API token for session ' + str(TygronStrings.sessionid_from_token) )
+            output.append('API token for session ' + str(self.session_id) )
         
         return 'Credentials: ' + (', '.join(output))
