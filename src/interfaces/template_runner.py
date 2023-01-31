@@ -119,10 +119,11 @@ class TemplateRunner:
             )
         return self.sdk
     
-    def check_sdk_ready( self, authentication:dict = {} ):
+    def check_sdk_ready( self, credentials:dict = {} ):
         if ( getattr(self, 'sdk', None ) is None ):
             self.create_sdk()
-        self.sdk.base.authenticate(authentication)  
+        if ( not self.sdk.base.authenticate(credentials) ):
+            raise Exception('Could not authenticate with provided credentials')
 
     def check_settings_ready( self ):
         if ( self.settings['template_name'] == None ):
@@ -229,9 +230,9 @@ class TemplateRunner:
 
 
 
-    def run( self, authentication:dict = {} ):
+    def run( self, credentials:dict = {} ):
     
-        self.check_sdk_ready( authentication )
+        self.check_sdk_ready( credentials )
         self.check_settings_ready( )
         self.log( 'Template runner is ready. Starting process.' )
     
