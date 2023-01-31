@@ -1,4 +1,5 @@
 from ..files import Files
+from ..tygron_strings import TygronStrings
 
 import json, base64
 
@@ -101,3 +102,27 @@ class CredentialsTygron():
         proper_key = key.replace( b64_removable_term, replacement_term )
         
         return { proper_key : decoded_value}
+        
+        
+    def keys(self):
+        return self._data
+    def __getitem__(self, key):
+        return self._data[key]
+    def __len__(self):
+        return len(self._data)
+    def __iter__(self):
+        return iter(self._data)
+        
+    def __str__(self):
+        output = []
+        if   ( self.username and self.password ):
+            output.append('User '+str(self.username) + ' with password set ')
+        elif ( self.username ):
+            output.append('User '+str(self.username) + ' without password set')
+        elif ( self.password ):
+            output.append('Password without known user')
+            
+        if   ( self.api_token ):
+            output.append('API token for session ' + str(TygronStrings.sessionid_from_token) )
+        
+        return 'Credentials: ' + (', '.join(output))
