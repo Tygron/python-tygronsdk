@@ -35,6 +35,13 @@ class AllowanceData:
                 
                 max_project_size=round(self.get_max_project_area_available(),0)
             )
+            
+    @property
+    def license(self):
+        return self._license
+    @property
+    def usage(self):
+        return self._usage
 
     
     @property
