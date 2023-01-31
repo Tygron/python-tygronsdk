@@ -73,7 +73,7 @@ class TemplateRunner:
         self.logs = []
  
     def set_sdk( self, sdk:tygron = None, **kwargs ):
-        if ( sdk == None ):
+        if ( sdk is None ):
             sdk = tygron.sdk( kwargs )
         self.sdk = sdk
     
@@ -111,12 +111,17 @@ class TemplateRunner:
     
     
     
+    def create_sdk( self ):
+        self.set_sdk(
+                sdk = getattr(self, 'sdk', None),
+                platform = self.settings['platform'],
+                computer_name = self.settings['computer_name']
+            )
+        return self.sdk
+    
     def check_sdk_ready( self, authentication:dict = {} ):
-        if ( getattr(self, 'sdk', None ) == None ):
-            self.set_sdk(
-                    platform=self.settings['platform'],
-                    computer_name=self.settings['computer_name']
-                )
+        if ( getattr(self, 'sdk', None ) is None ):
+            self.create_sdk()
         self.sdk.base.authenticate(authentication)  
 
     def check_settings_ready( self ):
