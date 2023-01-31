@@ -19,7 +19,7 @@ class AllowanceData:
         self._usage = usage
     
     def __str__(self):
-        return 'New projects: {used_new}/{max_new} ({fraction_new}%) used, Area: {used_area}/{max_area} ({fraction_area}%) used, Geoshare: {used_geoshare}/{max_geoshare} ({fraction_geoshare}%) used. Max project size: {max_project_size}'.format(
+        return 'New projects: {used_new}/{max_new} ({fraction_new}%) used, Area: {used_area}/{max_area} km2 ({fraction_area}%) used, Geoshare: {used_geoshare}/{max_geoshare} ({fraction_geoshare}%) used. Max project size: {max_project_size} km2'.format(
  
                 used_new=self._usage.new_projects_today,
                 max_new=self._license.new_projects_per_day,
