@@ -7,11 +7,11 @@ class CredentialsTygron():
 
     def __init__( self, data:dict = None, file:str = None ):
         self._data = {}
+        self._source = None
         self.load( 
                 data=data,
                 file=file
             )
-        self._source = None
     
     @staticmethod
     def create( file:str ):
@@ -55,17 +55,20 @@ class CredentialsTygron():
         if ( clear ):
             self._data = {}
             self._source = None
-            
+        
         if ( not (isinstance(data, dict) or isinstance(file,str) ) ):
             return
-        
+            
+        from_file = False
         if ( data is None ):
             data = self.load_from_file(file)
-                
+            from_file = True
         if ( not isinstance(data, dict) ):
             raise Exception('Credentials file read succesfully, but did not contain valid data. Must be either a JSON, or key value pairs')           
  
         self._data.update( self.decode_keys(data) )
+        if ( from_file ):
+            self._source = file
     
     
     
