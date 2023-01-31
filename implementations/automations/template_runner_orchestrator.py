@@ -1,4 +1,5 @@
 import tygronsdk
+from tygronsdk import sdk as tygron
 from tygronsdk import utilities
 from tygronsdk import interfaces
 
@@ -30,6 +31,7 @@ class TemplateRunnerOrchestrator:
                 'parallel_tasks' : 2,
                 'domain_projects_limit' : 80,
                 'domain_projects_limit_fraction' : 0.75,
+                'license_allowance_retry_time_in_seconds' : 3600,
                 
                 
                 'single_task' : False,
@@ -94,10 +96,11 @@ class TemplateRunnerOrchestrator:
         
         
     def get_credentials( self, credentials_file:str = None ):
-        target_file = self.settings['default_credentials_file']
-        if (not credentials_file is None):
-            target_file = self.get_credentials_dir_or_file(target_file)
-        
+        if ( credentials_file is None ):
+            target_file = self.settings['default_credentials_file']
+        else:
+            target_file = self.get_credentials_dir_or_file(credentials_file)
+            
         credentials = tygronsdk.load_credentials_from_file( file=target_file )
         
         if ( not getattr(credentials, 'username', False) and getattr(credentials, 'password', False) ):
@@ -206,6 +209,7 @@ class TemplateRunnerOrchestrator:
         utilities.files.ensure_directory( self.get_running_dir_or_file() )
         utilities.files.ensure_directory( self.get_output_dir_or_file() )
         utilities.files.ensure_directory( self.get_data_dir_or_file() )
+        utilities.files.ensure_directory( self.get_credentials_dir_or_file() )
     
         if ( self.settings['single_task'] ):
             return
@@ -230,6 +234,7 @@ class TemplateRunnerOrchestrator:
                 'Input: '+self.get_input_dir_or_file(),
                 'Running: '+self.get_running_dir_or_file(),
                 'Output: '+self.get_output_dir_or_file(),
+                'Credentials: '+self.get_credentials_dir_or_file(),
                 '',
                 'On start:',
                 'Clean running tasks to input: '+str(self.settings['on_start_clean_running_tasks']),
@@ -238,8 +243,9 @@ class TemplateRunnerOrchestrator:
                 '',
                 'Running tasks:',
                 'Amount of tasks in parallel: '+str(self.settings['parallel_tasks']),
-                #'Maximum allowed amount of new projects. Runs are paused if exceeded: '+self.settings['domain_projects_limit'],
-                #'Maximum allowed percentage of new projects. Runs are paused if exceeded: '+self.settings['domain_projects_limit_fraction'],
+                'Maximum allowed amount of new projects. Runs are paused if exceeded: '+str(self.settings['domain_projects_limit']),
+                'Maximum allowed percentage of new projects. Runs are paused if exceeded: '+str(self.settings['domain_projects_limit_fraction']),
+                'Paused runs are paused for this many seconds: '+str(self.settings['license_allowance_retry_time_in_seconds']),
                 '',
                 'On finish:',
                 'Stop orchestration when input and running directories are empty: '+str(self.settings['on_done_stop_orchestration']),
@@ -324,7 +330,9 @@ class TemplateRunnerOrchestrator:
         runner.set_formatted_logging_function( self.log_runner, '{log_run_name} : {message}' )
         
         critical_error = None
-        task_in_running = False
+        
+        task_in_input = True
+        credentials = None
         
         try:
             task_file = self.get_input_dir_or_file( self.settings['task_file'] )
@@ -337,39 +345,43 @@ class TemplateRunnerOrchestrator:
             
             self.move_task_file_input_running( self.settings['task_file'] )
             self.log_orchestrator( 'Moved task file into running directory.' )
-            task_in_running = True
+            task_in_input = False
             
         except Exception as err:
             self.log_orchestrator( 'Encountered an error while interpreting task file data' )
             critical_error = err
             
         
-        credentials = None
-        if ( task_in_running ):
-            
+        if ( not critical_error ):
             try:
                 credentials = self.get_credentials( task_parameters.get('credentials_file', None) )
-                self.log_orchestrator( 'Read out credentials file' )
+                self.log_orchestrator( 'Read out credentials file from '+str(credentials.source) )
             except Exception as err:
-                runner.log( 'Encountered an error while establishing credentials for run' )
+                self.log_orchestrator( 'Encountered an error while establishing credentials for run' )
                 critical_error = err
         
-            
-        if ( not (credentials is None) ):    
-            self.log_orchestrator( 'Starting the template runner with credentials for '+credentials.username )
         
+        if ( not critical_error ):
             try:
-                runner.run({
-                        'username' : credentials.username,
-                        'password' : credentials.password,
-                    })
-                            
+                self.log_orchestrator( 'Checking runner can authenticate with obtained credentials' )
+                runner.check_sdk_ready( credentials )
+                
+                self.log_orchestrator( 'Checking license allowance for new projects today' )
+                self.wait_license_allowance_new_projects( runner.sdk )        
             except Exception as err:
-                runner.log( 'Encountered an error while the task was running' )
+                self.log_orchestrator( 'Encountered an error while checking authorization and license' )
+                critical_error = err
+        
+        if ( not critical_error ):
+            try:
+                self.log_orchestrator( 'Starting the template runner as user: '+str(credentials.username) )
+                runner.run(credentials)        
+            except Exception as err:
+                self.log_orchestrator( 'Encountered an error while the task was running' )
                 critical_error = err
 
         
-        if (not task_in_running):
+        if (task_in_input):
             self.move_task_file_input_running( self.settings['task_file'] )
         
         self.output_log_of_runner( self.settings['task_file'], runner, critical_error )
@@ -377,6 +389,38 @@ class TemplateRunnerOrchestrator:
         
         if ( not critical_error is None ):
             self.log_orchestrator(critical_error)
+    
+    
+    
+    def wait_license_allowance_new_projects( self, sdk:tygron.sdk ):
+        result = False
+        previous_result = False
+        
+        while ( not result is True):
+            if ( not (previous_result == result) ):
+                if ( previous_result is False ):
+                    self.log_orchestrator( 'Task is not allowed to start due to license allowance: '+str(result) )
+                    self.log_orchestrator( 'Waiting until license allows creation of further projects' )
+                else:
+                    self.log_orchestrator( 'Task is still not allowed to start due to license allowance: '+str(result) )
+                previous_result = result
+                utilities.timing.wait_for( timeout_in_seconds=self.settings['license_allowance_retry_time_in_seconds'] )       
+            result = self.check_license_allows_new_projects( sdk )
+            
+        return True
+    
+    def check_license_allows_new_projects( self, sdk:tygron.sdk ):
+        allowance_data = sdk.base.domains.get_domain_allowance()
+        
+        if ( allowance_data.usage.new_projects_today >= self.settings['domain_projects_limit'] ):
+            return 'The configured amount of projects allowed to create per day has been reached.'
+        elif (allowance_data.usage_fraction_projects_today >= self.settings['domain_projects_limit_fraction'] ):
+            return 'The configured amount of projects allowed to create per day has been reached.'
+        elif ( allowance_data.remaining_projects_today <= 0 ):
+            return 'The license allows no further project creations today.'
+        else:
+            return True
+            
     
     
     def add_geojson_definitions_to_runner( self, runner:interfaces.TemplateRunner, geojson_file_definitions:list ):
