@@ -96,9 +96,9 @@ class Sessions:
                 if response.is_success():
                     return attempt_name
                 else:
-                    raise Exception( response, attempt_name );
+                    raise Exception( response );
             except Exception as err:
-                last_err = Exception('Could not set name: '+attempt_name, err )
+                last_err = Exception('Could not set name: '+new_project_name+', with '+str(attempts)+' attempts', err )
                 continue
         raise last_err
  
