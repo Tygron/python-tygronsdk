@@ -1,0 +1,42 @@
+{
+	"run_collection_name" : "example",
+	"run_name" : "{feature_name}-{feature_index}",
+	
+	
+	"platform": "engine",
+	
+	
+	"template_name" : "demo_heat_stress",
+	"attempts" : 100,
+	"keep_alive" : true,
+	
+	
+	"log_api_token" : true,
+	
+	
+	"generate" : true,
+	"size_x" : 2000,
+	"size_y" : 2000,
+	"allow_errors" : true,
+	
+	
+	"recalculate_reset_sequence" : [true, false],
+	"timeout_in_seconds" : 1200,
+	
+	
+	"export_files" : true,
+	
+	"exports" : {
+		"indicator": {
+			"ids" : true,
+			"formats" : ["HTML"],
+			"export_key" : "example-{item_type}-{item_name}-{item_id}{extention}"
+		},
+		"overlay": {
+			"ids" : {"HOURLY_TEMPERATURE": [0,1,-2,-1] },
+			"formats" : ["GEOTIFF","PNG"],
+			"export_key" : "{item_type}-{item_name}-{run_name}-{item_id}{extention}"
+		}
+	}
+	
+}
