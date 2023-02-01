@@ -92,12 +92,17 @@ class Files:
 
 
     @staticmethod
-    def move_file( file:Union[str, list], source_location:str, target_location:str ):  
+    def move_file( file:Union[str, list], source_location:str, target_location:str, new_name:Union[str, list] = None, overwrite:bool = None ):  
         errors = []
         try:
-            for f in Lists.coerce(file):
-                source = os.path.join( source_location, f )
-                target = os.path.join( target_location, f )
+            new_names = enumerate(Lists.coerce(new_name))
+            for index, source_name in enumerate(Lists.coerce(file)):
+                try:
+                    target_name = source_name if (len(new_names) < index) or new_names[index] is None else new_names[index]
+                except:
+                    target_name = source_name
+                source = os.path.join( source_location, source_name )
+                target = os.path.join( target_location, source_name )
                 if ( not Path(source).is_file() ):
                     raise Exception('File not found: ' + str( source ) )
                 Files.ensure_directory(target_location)
@@ -109,6 +114,43 @@ class Files:
         except Exception as err:
             errors.append(err)
         Exceptions.raise_multiple_exceptions('moving files', *errors)
+
+    @staticmethod
+    def copy_file( file:Union[str, list], source_location:str, target_location:str, new_name:Union[str, list] = None, overwrite:bool = None ):  
+        errors = []
+        try:
+            new_names = enumerate(Lists.coerce(new_name))
+            for index, source_name in enumerate(Lists.coerce(file)):
+                try:
+                    target_name = source_name if (len(new_names) < index) or new_names[index] is None else new_names[index]
+                except:
+                    target_name = source_name
+                source = os.path.join( source_location, source_name )
+                target = os.path.join( target_location, target_name )
+                if ( not Path(source).is_file() ):
+                    raise Exception('File not found: ' + str( source ) )
+                Files.ensure_directory(target_location)
+                if ( Path(target).is_file() ):
+                    if( overwrite is None ):
+                        raise Exception('File already exists: ' + str( target ) )
+                    if ( overwrite is True ):
+                        Files.delete_file( source_name )
+                    else:
+                        continue
+                if ( Path(target).is_dir() ):
+                    if( overwrite is None ):
+                        raise Exception('Directory already exists: ' + str( target ) )
+                    if ( overwrite is True ):
+                        Files.delete_file( source_name, also_directories=True )
+                    else:
+                        continue
+                shutil.copy( os.path.join(source), os.path.join(target) )
+        except Exception as err:
+            if ( isinstance(file, list) ):
+                errors.append(err)
+            else:
+                raise err
+        Exceptions.raise_multiple_exceptions('copying files', *errors)
  
     @staticmethod
     def delete_file( file:Union[str, list], also_directories:bool = False ):
