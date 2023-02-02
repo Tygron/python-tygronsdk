@@ -2,8 +2,11 @@ import inspect
 from typing import Type
 from types import ModuleType
 
+import importlib.util
+import sys
+
 class Modules:
-            
+    
     @staticmethod
     def get_content_from_module( module:Type[ModuleType] = None, cls:Type = None ):
         try:
@@ -37,3 +40,11 @@ class Modules:
             return classes
         except Exception as err:
             raise err
+            
+    @staticmethod
+    def get_module_dot_notation_string( module:Type[ModuleType] ):
+        return module.__module__
+            
+    @staticmethod
+    def get_class_dot_notation_string( cls:Type ):
+        return cls.__module__ + '.' + cls.__class__.__name__
