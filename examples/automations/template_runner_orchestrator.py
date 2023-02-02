@@ -3,6 +3,8 @@ from tygronsdk import sdk as tygron
 from tygronsdk import utilities as utilities
 from tygronsdk import interfaces as interfaces
 from tygronsdk.implementations import automations
+from tygronsdk.implementations.automations.template_runner_input_generator import TemplateRunnerInputGenerator
+from tygronsdk.implementations.automations.template_runner_orchestrator import TemplateRunnerOrchestrator
 
 
 
@@ -25,6 +27,13 @@ def main():
         
     print( 'This example will demonstrate how the TemplateRunnerOrchestrator can be used to automatically perform repeated calculations.' )
     
+    print( os.linesep, 'Preface' )
+    print( 'This script will create a workspace with example files.' )
+    print( 'When such a workspace already exists, the desired operations can also be manually run directly from the terminal: ' )
+    print( '    python -m {module}'.format(module=utilities.modules.get_module_dot_notation_string( TemplateRunnerInputGenerator )) )
+    print( '    python -m {module}'.format(module=utilities.modules.get_module_dot_notation_string( TemplateRunnerOrchestrator   )) )
+    print( 'Each command can be provided an argument of settings. The argument can either be a json object, or a json file containing a json object.')
+    
     
     
     print( os.linesep, 'Step 1 : Creation of workspace' )
@@ -32,6 +41,7 @@ def main():
     print( 'For the example, an example workspace will be created with a folder to store template data.')
 
     base_directory = 'tygron_example_outputs/automations_workspace/'
+    utilities.files.delete_file( base_directory, also_directories=True )
     print( 'This base directory will be: '+base_directory)
     
 
@@ -52,7 +62,7 @@ def main():
     print( '    Error   : '+error_dir+', which is a subdirectory of output and will hold the tasks and logs of any runs that encountered an error, and should be investigated and/or rerun.' )
 
     
-    print( 'In the template folder 2 template files are required: A Geojson indicating locations, and a json file defining the template for all tasks' )
+    print( 'In the template folder 2 template files are required: A geojson file indicating locations, and a json file defining the template for all tasks' )
     current_dir = os.path.dirname(os.path.realpath(__file__))
     example_files_dir = os.path.join( current_dir, 'example_files' )
     
@@ -68,18 +78,19 @@ def main():
     print( 'The template.json file serves as a template based on which to create multiple individual task files. The locations.geojson file defines the amount of task files, and the locations of the projects.' )
     print(' The TemplateRunnerInputGenerator will take the files as input, and generate the required output files.')
     
-    input_generator = automations.TemplateRunnerInputGenerator({
+    input_generator = TemplateRunnerInputGenerator({
             'input_file' : 'template_input.json',
             'geojson_file' : 'locations.geojson',
             'base_directory' : base_directory
         }) # InputGenerator allows more settings, and can run without any settings as well.
     
+    print('After setting the TemplateRunnerInputGenerator up, it can be run')
     input_generator.run()
     
     for directory in [ template_dir, input_dir, data_dir ]:
         print( 'The following files now exist in {dir}: {list}'.format(
                 dir=directory,
-                list=( ', '.join(utilities.files.get_content_of_directory(directory)) )
+                list=( (os.linesep+' - ').join(['']+utilities.files.get_content_of_directory(directory)) )
             ))
     
     
@@ -89,22 +100,29 @@ def main():
     print( 'Each individual task file is intended to compatible with the TemplateRunner.' )
     print( 'The TemplateRunnerOrchestrator will manage creating TemplateRunners based on the task files at an appropriate rate.' )
     
-    orchestrator = automations.TemplateRunnerOrchestrator({
+    orchestrator = TemplateRunnerOrchestrator({
             'on_start_clean_output' : True,
             'domain_projects_limit_fraction' : 0.5,
             'base_directory' : base_directory,
             'default_credentials_file' : credentials.source
         }) # Orchestrator allows more settings, and can run without any settings as well.
     
-    orchestrator.run()
+    print('As an additional config when running as part of a program, explicitly set it to log its output by printing them to the terminal')
+    orchestrator.set_logging_function(print)
     
+    print('After setting the TemplateRunnerOrchestrator up, it can be run')
+    
+    orchestrator.run()
+
     print( 'After the orchestrator has completed all tasks, all logging from the orchestrator can be found on the terminal output.' )
     print( 'In addition, logs are also output to the output directory found at :'+input_dir )
 
     for directory in [ input_dir, output_dir, error_dir ]:
         print( 'The following files now exist in {dir}: {list}'.format(
                 dir=directory,
-                list=( ', '.join(utilities.files.get_content_of_directory(directory)) )
+                list=( (os.linesep+' - ').join(['']+utilities.files.get_content_of_directory(directory)) )
             ))
+            
+    print( 'This example has now fully run.')
             
 main()

@@ -3,6 +3,7 @@ from tygronsdk import sdk as tygron
 from tygronsdk import utilities
 from tygronsdk import interfaces
 
+
 import os, sys, json
 import importlib, inspect
 
@@ -149,10 +150,11 @@ class TemplateRunnerOrchestrator:
     def get_module_path_to_orchestrator( self ):
         if ( not (self.settings['path_to_orchestrator'] is None) ):
             return self.settings['path_to_orchestrator']
-            
-        from .template_runner_orchestrator import TemplateRunnerOrchestrator as self_module
-        return inspect.getmodule(self_module).__name__
-    
+        
+        if __name__ == '__main__':
+            from .template_runner_orchestrator import TemplateRunnerOrchestrator as self_module
+            return inspect.getmodule(self_module).__name__
+        return __name__
     
     
     
@@ -317,12 +319,11 @@ class TemplateRunnerOrchestrator:
         self.log_orchestrator( 'Starting a new task in a seperate process for file: '+task_file )
         task_settings = {**self.settings}
         task_settings['task_file'] = task_file
+        task_settings['path_to_orchestrator'] = self.get_module_path_to_orchestrator()
         
-        module_path = self.get_module_path_to_orchestrator() 
-        
+        module_path = task_settings['path_to_orchestrator']
         cmd = ' '.join( [ os.path.basename(sys.executable),' -m ', module_path, json.dumps(json.dumps(task_settings)) ] )
         process = utilities.processes.run_subprocess( cmd, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr, shell=True )
-
         pass
     
     def run_task( self ):
