@@ -15,14 +15,30 @@ events = core.events.EventSetCollection(**{
 })
 
 
-def load_credentials_from_file( file:str = None, files:list=[] ):
-    for f in ([ *files, file ]):
+
+def load_credentials_from_file( file:str = None, files:list=[], create_if_missing:bool = False ):
+    files_to_try = [ f for f in utilities.lists.coerce(files)+utilities.lists.coerce(file) if f is not None ]
+    for f in ( files_to_try ):
         try :
-            if ( f is None ):
-                continue
-            credentials = utilities.credentials.CredentialsTygron( file=f )
-            return credentials
-        except Exception as err:
-            error = err
+            return utilities.credentials.CredentialsTygron( file=f )
+        except FileNotFoundError:
             pass
-    raise error
+    if ( create_if_missing ):
+        create_default_credentials_file()
+        return load_credentials_from_file( files=files_to_try, create_if_missing=False )
+    raise FileNotFoundError( files_to_try )
+
+
+def create_default_credentials_file( file:str = 'credentials.json' ):
+    print('Creating a credentials file named '+file+'. SECURITY WARNING that this stores credentials in plaintext, albeit base64 encoded!')
+    import base64
+    credentials = {
+        'base64_username': base64.b64encode(input('Enter username: ').encode('ASCII')).decode('ASCII'),
+        'base64_password': base64.b64encode(input('Enter password: ').encode('ASCII')).decode('ASCII')
+    }
+    if ( utilities.files.get_extention(file) == '.json' ):
+        content = utilities.strings.create_json_string(credentials)
+        utilities.files.write_file( directory = './', file = file, content=content )
+    else:
+        content = utilities.strings.create_keys_values_string(credentials)
+        utilities.files.write_file( directory = './', file = file, content=content )
