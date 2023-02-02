@@ -17,7 +17,7 @@ class Strings:
             if ( len(string) > max_length ):
                 return False
         return True
-        
+    
     @staticmethod
     def format( string:str = '', **kwargs ):
         formatted = ''
@@ -46,6 +46,7 @@ class Strings:
             If error, replace with substring itself
         """
     
+    @staticmethod
     def strip_to_number( input:str, negative_kept:bool = False, decimal_character:str = None ):
         regex = '^0-9'
         regex = regex + ( '\-' if negative_kept else '' )
@@ -53,11 +54,13 @@ class Strings:
         regex = '['+regex+']'
         return re.sub(regex,'',input)
         
+    @staticmethod
     def strip_to_letters( input:str, ):
         regex = '^a-zA-Z'
         regex = '['+regex+']'
         return re.sub(regex,'',input)
     
+    @staticmethod
     def parse_file_size_string( input:str, output_unit:str = 'MB' ):
         units = {"B": 1, "KB": 10**3, "MB": 10**6, "GB": 10**9, "TB": 10**12}
         number = int(Strings.strip_to_number(input))
@@ -66,6 +69,7 @@ class Strings:
         
         return size/units.get(output_unit.upper(), 1)
         
+    @staticmethod
     def parse_surface_area_from_sizes_string( input:str, negative_kept:bool = False, decimal_character = None ):
         seperator_chars = [' ','x','X', 'by',':']
         split_input = re.split('|'.join(seperator_chars),input)
@@ -79,3 +83,11 @@ class Strings:
         if ( not (value is None) ):
             return value
         raise Exception('Could not parse 2 numbers to multiply from "'+input+'"')
+    
+    @staticmethod
+    def create_json_string( obj:dict = {} ):
+        return json.dumps(obj)
+    
+    @staticmethod
+    def create_keys_values_string( obj:dict = {} ):
+        return os.linesep.join([k+'='+v for k,v in obj.items()])

@@ -178,6 +178,13 @@ class Files:
         return filename
         
     @staticmethod
+    def get_extention( file_path:str ):
+        filename = Path(file_path).stem
+        filename_parts = filename.split('.')
+        extention = ('.'+filename_parts[-1]) if (len(filename_parts)>1) else ''
+        return extention
+        
+    @staticmethod
     def remove_invalid_chars_from_filename( filename:str, replacements:Union[str,dict] = None ):
         if ( replacements is None ):
             replacements = ''
