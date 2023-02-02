@@ -20,7 +20,7 @@ def main():
         credentials = tygronsdk.load_credentials_from_file( files=[
                 './credentials.txt',
                 './credentials.json'
-            ] )
+            ], create_if_missing=True )
     except:
         print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
         return
