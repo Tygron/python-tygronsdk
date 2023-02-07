@@ -108,65 +108,9 @@ Not all Items have a specialized Item class as of yet. However, all Items served
 ##### Notes
 It is possible to import and access the contents of an environment directly, for example the interactions class or the connector. However, it is recommended to use the instances provided via the environments in the sdk object, as these also wrap the objects to take care of some overhead which would otherwise be the responsibility of the application using the provided components. 
 
-## Running examples:
+## Examples:
 The SDK contains a number of exmaples a publicly available practicle implementations. Examples can be run from the directory enclosing the tygronsdk.
 
-Depending on the examples, credentials are required to authenticate against the Tygron Platform. Credentials for the examples can be provided by credentials file in the directory from where the the command is run.
+Documentation regarding the specific examples is included in the examples directory.
 
-The following credentials can be provided:
-* username: your username for the Tygron Platform
-* password: your password for the Tygron Platform
-* api_token: the API token of a running session (if applicable)
-
-If desired, it is also possible to provide credentials base64-encoded. Prefix the credential keys with "base64_" to do so:
-* base64_username: your username for the Tygron Platform
-* base64_password: your password for the Tygron Platform
-* base64_api_token: the API token of a running session (if applicable)
-
-**Note that both of these approaches may allow others to obtain the credentials if they have access to this file. Be aware of potential security implications of sharing this file and the account it provides access to.**
-
-Credentials can either be provided in a file named " _credentials.json_ " as JSON. Example with the password base64-encoded:
-
-```json
-{
-    "username" : "example@tygron.com",
-    "base64_password" : "U3VwZXJTZWNyZXRQYXNzd29yZDEyMw==",
-    "api_token" : "12345678abcdabcdabcdabcdabcdabcd"
-}
-```
-
-Or credentials can be provided in a file named " _credentials.txt_ ", as key-value pairs. Example with the password base64-encoded
-```txt
-username=example@tygron.com
-base64_password=U3VwZXJTZWNyZXRQYXNzd29yZDEyMw==
-api_token=12345678abcdabcdabcdabcdabcdabcd
-```
-
-#### Basic Project interaction
-Locating a Project, starting it as a Session, reading information, and closing it:
-
-```bash
-python -m "tygronsdk.examples.basics.project_session"
-```
-
-#### User, domain, and license information
-Obtaining information about the current user, the domain the user belongs to, and the available allowances in the domain's license:
-
-```bash
-python -m "tygronsdk.examples.basics.users_and_domains"
-```
-
-#### Template Runner
-Setting up the automated TemplateRunner to apply the "demo heat stress" project on a different location in The Hague, and exporting calculation results to "./tygron_example_outputs":
-
-```bash
-python -m "tygronsdk.examples.automations.template_runner"
-```
-
-#### Running a trigger
-Provided a running session's server and api token, call an implementation of a trigger and print its response. Any of the following can be tried:
-```bash
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.implementations.triggers.trigger_generate_sewer_areas engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30"
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.implementations.triggers.trigger_geotiff_from_geoshare engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30 {\"bbp-value\":\"tygron/testfiles/bbp-zero.tiff\"}"
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.implementations.triggers.trigger_overlay_active_by_parent engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30"
-```
+[Examples](examples)
