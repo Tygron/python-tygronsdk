@@ -12,10 +12,10 @@ python -m "tygronsdk.examples.basics.users_and_domains"
 ### Credentials
 When an example is run for the first time, the shell may prompt for a username and password with which to create a credentials file. This file will be stored in the current directory and will be accessed for future runs of the examples. It is recommended to have a separate account in your domain with access rights set such that the account has access to the Editor features, but not to administrate other users within the domain.
 
-**SECURITY WARNING: The credentials file will store the credentials in plain text (albeit base64--encoded), which is not a secure form. Be aware of the implications of storing the username and password in a plain-text file, do not place it in shared folders, and do not share it with other users unless explicitly intended.**
+**SECURITY WARNING: The credentials file will store the credentials in plain text (albeit base64-encoded), which is not a secure form. Be aware of the implications of storing the username and password in a plain-text file, do not place it in shared folders, and do not share it with other users unless explicitly intended.**
 
 ### Available examples
-The following examples are available
+The following examples are available.
 
 #### Basics
 These examples are excellent starting points for developers just starting out with the Tygron Platform, the SDK, or both.
@@ -44,6 +44,7 @@ python -m "tygronsdk.examples.automations.template_runner"
 
 ##### Running the built-in TemplateRunner Orchestrator:
 Demonstrates using the TemplateOrchestrator to perform fully-automated calculations. This example will set up a workspace to manage the required files for individual runs, use the TemplateRunnerInputGenerator to create run files based on a single template file, and then use the automated TemplateRunnerOrchestrator to sequentially use the TemplateRunner to create all required Projects, run the calculations, and write the results to an output folder.
+
 *Note: As provided, running this example will create 3 additonal Projects, which will count against your daily limit. It will pause if your daily usage has reached or exceeded 50% of what the license allows.*
 ```bash
 python -m "tygronsdk.examples.automations.template_runner_orchestrator"
@@ -53,6 +54,7 @@ python -m "tygronsdk.examples.automations.template_runner_orchestrator"
 
 ##### Demonstrating principles of a Trigger
 Demonstrates the principles of a Trigger without the additional functionality of the Trigger interface. This example will connect to a running session, perform a few basic operations, and generate a response which would be valid for a Trigger.
+
 *Note: Running this example requires an active session, and a known API token. An API token can be added to the credentials file manually, with the key "api_token"*
 ```bash
 python -m "tygronsdk.examples.basics_trigger_structure_human_building_counter"
