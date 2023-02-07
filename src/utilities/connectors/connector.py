@@ -178,7 +178,7 @@ class Connector:
         
         headers = self.get_request_headers(headers);
 
-        if data:
+        if (not (data is None)):
             if (stream):
                 data = data
             else:
