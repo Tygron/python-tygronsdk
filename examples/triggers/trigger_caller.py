@@ -1,5 +1,6 @@
-from ... import sdk as tygron
-from ... import utilities
+import tygronsdk
+from tygronsdk import sdk as tygron
+from tygronsdk import utilities
 
 import sys
 import importlib
@@ -60,7 +61,7 @@ def main():
     print( json.dumps( trigger_obj.get_results_structure(), indent=4 ) )
 
     if ( not (trigger_obj.get_exception() == None) ):
-        print( 'An Exception has occured, the message of which is included in the broader return structure ,but not the full stack trace so obtain that manually:' )
+        print( 'An Exception has occured, the message of which is included in the broader return structure, but not the full stack trace so obtain that manually:' )
         print( utilities.exceptions.stringify(trigger_obj.get_exception() ) )
 
 main()

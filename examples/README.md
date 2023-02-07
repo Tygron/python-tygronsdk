@@ -97,14 +97,14 @@ These examples work via the trigger_caller example, which takes arguments includ
 A number of Trigger implementations exist which are also live and available for public use. These server as the best demonstrations of how Triggers can be structured in a live environment.
 
 ```bash
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.implementations.triggers.trigger_generate_sewer_areas engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30"
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.implementations.triggers.trigger_geotiff_from_geoshare engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30 {\"bbp-value\":\"tygron/testfiles/bbp-zero.tiff\"}"
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.implementations.triggers.trigger_overlay_active_by_parent engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30"
+python -m "tygronsdk.examples.triggers.trigger_caller" tygronsdk.implementations.triggers.trigger_generate_sewer_areas engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30
+python -m "tygronsdk.examples.triggers.trigger_caller" tygronsdk.implementations.triggers.trigger_geotiff_from_geoshare engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30 {\"bbp-value\":\"tygron/testfiles/bbp-zero.tiff\"}
+python -m "tygronsdk.examples.triggers.trigger_caller" tygronsdk.implementations.triggers.trigger_overlay_active_by_parent engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30
 ```
 
 In addition, a few examples of Triggers exist which have been created in the past, but are not used in live environments anymore. However, they still serve as practical examples in regards to structure and potential applications.
 
 ```bash
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.examples.triggers.trigger_implementation_human_building_counter engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30"
-python -m "tygronsdk.examples.triggers.trigger_caller tygronsdk.examples.triggers.trigger_implementation_geotiff_from_geoshare_via_stream engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30 {\"bbp-value\":\"tygron/testfiles/bbp-zero.tiff\"}"
+python -m "tygronsdk.examples.triggers.trigger_caller" tygronsdk.examples.triggers.trigger_implementation_human_building_counter engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30
+python -m "tygronsdk.examples.triggers.trigger_caller" tygronsdk.examples.triggers.trigger_implementation_geotiff_from_geoshare_via_stream engine.tygron.com 14654848IaBWfOYqGxd2BhSimG8d0S30 {\"bbp-value\":\"tygron/testfiles/bbp-zero.tiff\"}
 ```
