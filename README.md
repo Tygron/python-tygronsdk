@@ -102,8 +102,19 @@ items.Overlay # Item class specifically for Overlays
 Not all Items have a specialized Item class as of yet. However, all Items served by the Tygron Platform can at least be instantiated as the Item base class, and stored in the ItemMap.
 
 ##### Connector
+
+A generic connector is included to facilitate communication with external services through HTTP calls. Each environment also features its own subclassed implementation, to facilitate lower-level status checks and more specialized requests.
     
 ##### Data
+
+Each environment features a collection of miscellaneous data objects which wrap certain responses from the Tygron Platform API in a more managable form, or to combine multiple such data objects to allow easier access to inferred information.
+
+Examples of these are the following objects from the base environment:
+* base.data.objects.UserData and base.data.objects.DomainData 1-on-1 wrap the data received from specific endpoints for "my user" and "my domain" respectively.
+* base.data.objects.UsageData wraps a list of values about the usages within a domain into a more manageable object.
+* base.data.objects.LicenseData is a fully synthetic object which can hold data regarding licenses.
+* base.data.objects.AllowanceData is composed of LicenseData and UsageData to provide insight into how much room there still is within a license.
+
 
 ##### Notes
 It is possible to import and access the contents of an environment directly, for example the interactions class or the connector. However, it is recommended to use the instances provided via the environments in the sdk object, as these also wrap the objects to take care of some overhead which would otherwise be the responsibility of the application using the provided components. 
