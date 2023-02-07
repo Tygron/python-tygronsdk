@@ -14,6 +14,35 @@ When an example is run for the first time, the shell may prompt for a username a
 
 **SECURITY WARNING: The credentials file will store the credentials in plain text (albeit base64-encoded), which is not a secure form. Be aware of the implications of storing the username and password in a plain-text file, do not place it in shared folders, and do not share it with other users unless explicitly intended.**
 
+A credentials file can also be created manually.
+
+The following credentials can be provided:
+* username: your username for the Tygron Platform
+* password: your password for the Tygron Platform
+* api_token: the API token of a running session (if applicable)
+
+If desired, it is also possible to provide credentials base64-encoded. Prefix the credential keys with "base64_" to do so:
+* base64_username: your username for the Tygron Platform
+* base64_password: your password for the Tygron Platform
+* base64_api_token: the API token of a running session (if applicable)
+
+Credentials can either be provided in a file named " _credentials.json_ " as JSON. Example with the password base64-encoded:
+
+```json
+{
+    "username" : "example@tygron.com",
+    "base64_password" : "U3VwZXJTZWNyZXRQYXNzd29yZDEyMw==",
+    "api_token" : "12345678abcdabcdabcdabcdabcdabcd"
+}
+```
+
+Or credentials can be provided in a file named " _credentials.txt_ ", as key-value pairs. Example with the password base64-encoded
+```txt
+username=example@tygron.com
+base64_password=U3VwZXJTZWNyZXRQYXNzd29yZDEyMw==
+api_token=12345678abcdabcdabcdabcdabcdabcd
+```
+
 ### Available examples
 The following examples are available.
 
