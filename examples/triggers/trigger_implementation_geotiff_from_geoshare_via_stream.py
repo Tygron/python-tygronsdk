@@ -63,7 +63,7 @@ class TriggerImplementationGeotiffFromGeoshareViaStream(interfaces.Trigger):
                             )
                         continue
                     
-                    print( 'GeoTiff ' + asset_name + '('+str(tiff_id)+')' + ' can be updated with data from : ' + str(geoshare_path) )    
+                    print( 'GeoTiff ' + asset_name + ' ('+str(tiff_id)+')' + ' can be updated with data from : ' + str(geoshare_path) )    
                     self.import_geotiff_from_geoshare( geoshare_path, tiff_id, asset_name )
 
             print( 'This completes the trigger\'s internal work.' )
@@ -103,7 +103,7 @@ class TriggerImplementationGeotiffFromGeoshareViaStream(interfaces.Trigger):
                 file_data=geotiff_file_response
             )
             
-        print( 'GeoTiff ' + asset_name + '('+str(tiff_id)+')' + ' stream result: ' + str(upload_response) ) 
+        print( 'GeoTiff ' + asset_name + '('+str(asset_id)+')' + ' stream result: ' + str(upload_response) ) 
         
         return upload_response.get_response_body()
         
