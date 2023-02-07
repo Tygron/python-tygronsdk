@@ -1,5 +1,6 @@
-from ... import sdk as tygron
-from ... import items as items
+import tygronsdk
+from tygronsdk import sdk as tygron
+from tygronsdk import items as items
 
 
 
@@ -19,7 +20,7 @@ def main():
                 './credentials.txt',
                 './credentials.json'
             ], create_if_missing=True )
-    except:
+    except Exception as err:
         print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
         return
         
@@ -31,7 +32,7 @@ def main():
         print('It is not required to configure a server. The SDK defaults to the LTS server.')
         credentials.server = 'engine.tygron.com'
     
-    print('Simulating a request from '+str(credentials.tygron_server)+' (which would be read from the referrer header), with API token '+str(credentials.tygron_api_token)+' (which would be read from the query parameters)')
+    print('Simulating a request from '+str(credentials.server)+' (which would be read from the referrer header), with API token '+str(credentials.api_token)+' (which would be read from the query parameters)')
     
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
     sdk = tygron.sdk({
@@ -42,7 +43,7 @@ def main():
         })
     print('The authentication result is: "'+str(auth_result)+'".')
         
-    #   Next, obtain information regarding the session, and perform computations with that information as desired
+    #   Next, obtain information regarding the session, and perform computations with that information as desired.
     calc_results = {
         'buildings' : 0,
         'active_stakeholder_buildings': 0,
@@ -51,6 +52,7 @@ def main():
         
     active_stakeholders = []
 
+    #   To determine wbich Buildings belong to active Stakeholders, all Buildings and all Stakeholders must be obtained.
     stakeholders = sdk.session.items.load( items.Stakeholder )
     buildings = sdk.session.items.load( 'buildings' )
 
@@ -60,6 +62,7 @@ def main():
 
     print('The following IDs correspond to stakeholders in the Session, for whom the buildings will be counted: '+ str(active_stakeholders))
 
+    #   Next, check all Buildings and, depending on their matches, count them in a number of the result outputs.
     for  item in buildings  :
         calc_results['buildings'] += 1
         if (not (item.get('ownerID') in active_stakeholders )):
