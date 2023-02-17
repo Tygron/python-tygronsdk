@@ -43,9 +43,9 @@ class Connector:
         else:
             base = base.split('?')[0]
             self.base = base.lstrip('/').rstrip('/')
-    def set_query_params( self, params ):
+    def set_query_params( self, params:dict = {}, **kwargs ):
         self.query_params = getattr( self, 'query_params', {} )
-        self.query_params = {**self.query_params, **params}
+        self.query_params = {**self.query_params, **params, **kwargs}
         self.query_params = {k: v for k, v in self.query_params.items() if v is not None}
     
     def set_request_format( self, format ):
