@@ -13,10 +13,6 @@ class Event():
         self.event_domain = str(event_domain).lower()
         self.parameters = parameters
         self.arguments = None;
-    
-    @classmethod
-    def create( *parameters ):
-        pass
         
     @staticmethod
     def generate_path( event_domain, event_name ):
@@ -34,7 +30,7 @@ class Event():
 
     def get_arguments( self, mapped:bool = False ):
         if ( not mapped ):
-            return [] if self.arguments == None else self.arguments
+            return [] if self.arguments is None else self.arguments
         parameters_arguments_map = {}
         for index, param in enumerate(self.parameters):
             arg = None
@@ -57,8 +53,3 @@ class Event():
     
     def __str__( self ):
         return 'Event:' + self.get_path() + ' - ' + str(self.get_arguments(True))
-    
-    #def execute( self, conn, *args, **kwargs ):
-    #    if ( len(args)>0 or len kwargs.keys>0 ):
-    #        self.set_arguments( *args, **kwargs)
-    #    conn.request()
