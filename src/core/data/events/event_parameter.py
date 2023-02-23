@@ -63,6 +63,9 @@ class EventParameter:
     def api_aggregation( self ):
         return self._data['api_aggregation']
     
+    @property
+    def data( self ):
+        return { **self._data }
     
     
     def validate( self, value, aggregation=0 ):

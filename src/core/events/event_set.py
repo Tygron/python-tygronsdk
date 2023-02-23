@@ -12,6 +12,7 @@ class EventSet():
             self.domain = domain
         else:
             self.domain = utilities.files.get_filename(inspect.stack()[1].filename, False)
+        self.domain = self.domain.lower()
         
         definitions = self._normalize_definitions( event_definitions )
         self._generate_definitions( definitions )
