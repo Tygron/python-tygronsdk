@@ -14,11 +14,23 @@ class EventSet():
             self.domain = utilities.files.get_filename(inspect.stack()[1].filename, False)
         self.domain = self.domain.lower()
         
+        self._definitions = {}
+        self.groups = {}
+        
         definitions = self._normalize_definitions( event_definitions )
         self._generate_definitions( definitions )
      
-     
-     
+    @property
+    def definitions( self ):
+        return self._definitions
+        
+    def get_definitions_as_grouped_list( self ):
+        definitions = []
+        for group_name, group_list in self.groups.items():
+            for def_name in group_list:
+                definitions.append(self._definitions[def_name])
+        return definitions
+        
     def get_event( self, name ):
         name = str(name).lower()
         domain = str(self.domain).lower()
@@ -40,16 +52,17 @@ class EventSet():
         except Exception as err:
             raise Exception('An exception while trying to retrieve event definition '+event_path+': '+str(err))
             
-            
 
     def _generate_definitions( self, definitions:dict = {} ):
-        self.definitions = getattr( self, 'definitions', {} )
-        
         for event_definition_name, event_definition in definitions.items():
-            self.definitions[event_definition_name] = event_definition
+            self._store_definition( event_definition )
             setattr(self, event_definition_name, event_definition )
             
-            
+    def _store_definition( self, definition:EventDefinition ):
+        self._definitions[definition.name] = definition
+        self.groups[definition.group] = self.groups.get(definition.group, [])
+        self.groups[definition.group].append(definition.name)
+        
             
     def _normalize_definitions( self, event_definitions:Union[dict,list]=[] ):
         defs = {}
@@ -64,5 +77,4 @@ class EventSet():
             if ( definition.domain is None ):
                 definition.domain = self.domain
             defs[definition.name] = definition
-            
         return defs
