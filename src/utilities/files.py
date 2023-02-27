@@ -8,7 +8,7 @@ from typing import Union
 class Files:
 
     @staticmethod
-    def write_file( directory:str, file:str, content:None, append:bool = False ):
+    def write_file( directory:str, file:str, content = '', append:bool = False ):
         if ( isinstance(content, bytes) ):
             Files.write_file_binary(
                     directory=directory,
