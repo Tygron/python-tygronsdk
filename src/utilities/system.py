@@ -1,6 +1,5 @@
 import sys
 import json as jsonlib
-from shlex import shlex
 
 from .exceptions import Exceptions
 from .files import Files
@@ -8,7 +7,7 @@ from .files import Files
 class System:
     
     @staticmethod
-    def get_args( input_args:list = None, simple=False, all_types:bool = True, file:bool = False, json:bool = False, keyvalues:bool = False ):
+    def get_args( input_args:list = None, simple=False, all_types:bool = True, file:bool = True, json:bool = False, keyvalues:bool = False ):
         if ( input_args is None ):
             input_args = sys.argv[1:]
             
@@ -16,7 +15,6 @@ class System:
             return [*input_args]
         
         result = {}
-        
         if ( len(input_args)==0 ):
             return result
             
@@ -24,7 +22,7 @@ class System:
             arg_errors = []
             arg_result = {}  
             
-            if ( all_types and json ):
+            if ( all_types or json ):
                 if (file):
                     try:
                         arg_result = Files.read_file_as_json(arg)
@@ -36,12 +34,11 @@ class System:
                 try:
                     arg_result = jsonlib.loads(arg)
                     result.update(arg_result)
-                    print('Processed as json')
                     continue
                 except Exception as err:
                     arg_errors.append(err)
                     
-            if ( all_types and keyvalues ):
+            if ( all_types or keyvalues ):
                 if (file):
                     try:
                         arg_result = Files.read_file_as_key_values(arg)
@@ -50,10 +47,10 @@ class System:
                     except Exception as err:
                         arg_errors.append(err)
                 try:
-                    lexer = shlex(arg, posix=True)
-                    lexer.whitespace = ';'
-                    lexer.wordchars += '='
-                    arg_result = dict( word.split('=', maxsplit=1) for word in lexer )
+                    sep = ';'
+                    for entry in arg.split(sep):
+                        key, value = entry.partition('=')[::2]
+                        arg_result[key] = value
                     result.update(arg_result)
                     continue
                 except Exception as err:
