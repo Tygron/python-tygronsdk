@@ -135,7 +135,9 @@ def main():
             
             close_response = connector_base_api.fire_event(event)
             print( 'The response indicates whether detaching the client succeeded or not: ' + str(close_response) )
-        
+            # Returns false if no known client token is provided (empty or unknown to session)
+            # Returns true if the client token was known and thus succesfully detached
+            # Returns true also if client token was known and now left the session without attached clients
     
     
     if ( not (critical_error is None) ):
