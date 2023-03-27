@@ -21,10 +21,8 @@ class HtmlTableWithOptionsParser(HtmlTableParser):
             #self.default = 'something from input'
             pass
         elif ( tag == 'select' ):
-            print('select '+str(attrs))
             self.values = []
         elif ( tag == 'option' ):
-            print('option '+str(attrs))
             self.curr_value = ''
         else:
             super().handle_starttag(tag, attrs)
