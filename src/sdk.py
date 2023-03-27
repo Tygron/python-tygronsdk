@@ -59,6 +59,7 @@ class sdk():
         self.session    = environments.session.ApiEnvironment( self.settings )
         self.share      = environments.share.ApiEnvironment( self.settings )
         
+        self._environments = { 'base' : self.base, 'session' : self.session, 'share' : self.share }
         # self.session    = core.ApiEnvironment( settings= self.settings, module = sessionEnv )
         pass
     
@@ -66,7 +67,12 @@ class sdk():
         
     def authenticate( self, authentication_details: dict = {}, **kwargs ):
         auth_details = { **authentication_details, **kwargs }
-        pass
+        results = {}
+        for name, env in self._environments.items():
+            result = env.authenticate(auth_details)
+            if ( not (result is None) ):
+                results[name] = result
+        return results
         
         
         
