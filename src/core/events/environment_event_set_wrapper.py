@@ -11,7 +11,7 @@ class EnvironmentEventSetWrapper():
         self._storage = storage
         
     def __getattr__( self, event_name ):
-        event_data = self._events.__getattr__( attr=event_name )
+        event_data = self._events.get_definition( name=event_name )
         settings = self._settings
         storage = self._storage
         
