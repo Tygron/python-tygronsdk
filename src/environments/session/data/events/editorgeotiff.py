@@ -2,71 +2,110 @@ from .....core.events import EventSet
 
 from .....core.data.events import EventDefinition
 from .....core.data.events import EventParameter
-from .....core.data.events import EventParameterListable
-from .....core.data.events import EventParameterMatrixable
 
-from typing import Type, Union
+from typing import Type
 
 definitions = {
+
+
+    # Add
         'add' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_name', Type[str]),
-                            EventParameter('geotiff_content_bytes', Type[bytes]),
-                            EventParameter('uploader_name', Type[str]),
-                            EventParameter('crs', Type[str], False),
-                        ]
+                group='Add',
+                parameters=[
+                        EventParameter('geotiff_name', Type[str], 
+                                        api_description='GeoTIFF Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('geotiff_content_bytes', Type[bytes], aggregation=1, 
+                                        api_description='File bytes (< 2GB)', api_type=Type[bytes], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('uploader_name', Type[str], 
+                                        api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('crs', Type[str], False, 
+                                        api_description='CRS Override (optional) ', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
             ),
         'add_ascii' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_name', Type[str]),
-                            EventParameter('ascii_content_bytes', Type[bytes]),
-                            EventParameter('uploader_name', Type[str]),
-                        ]
+                group='Add',
+                parameters=[
+                        EventParameter('geotiff_name', Type[str], 
+                                        api_description='GeoTIFF Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('ascii_content_bytes', Type[bytes], aggregation=1, 
+                                        api_description='ASCII File bytes (< 2GB)', api_type=Type[bytes], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('uploader_name', Type[str], 
+                                        api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
             ),
-        'set_geotiff' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_id', Type[int]),
-                            EventParameter('geotiff_content_bytes', Type[bytes]),
-                            EventParameter('uploader_name', Type[str]),
-                            EventParameter('crs', Type[str], False),
-                        ]
-            ),
-    
         'add_url' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_name', Type[str]),
-                            EventParameter('geotiff_url', Type[str]),
-                            EventParameter('uploader_name', Type[str]),
-                            EventParameter('crs', Type[str], False),
-                        ]
+                group='Add',
+                parameters=[
+                        EventParameter('geotiff_name', Type[str], aggregation=1, 
+                                        api_description='GeoTIFF Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('geotiff_url', Type[str], aggregation=1, 
+                                        api_description='Web URL', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('uploader_name', Type[str], aggregation=1, 
+                                        api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('crs', Type[str], False, aggregation=1, 
+                                        api_description='CRS Override (optional)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=1,  ),
+                    ]
             ),
         'add_ascii_url' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_name', Type[str]),
-                            EventParameter('ascii_url', Type[str]),
-                            EventParameter('uploader_name', Type[str]),
-                        ]
+                group='Add',
+                parameters=[
+                        EventParameter('geotiff_name', Type[str], aggregation=1, 
+                                        api_description='GeoTIFF Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('ascii_url', Type[str], aggregation=1, 
+                                        api_description='Web URL', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('uploader_name', Type[str], aggregation=1, 
+                                        api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+
+
+    # Set
+        'set_geotiff' : EventDefinition(
+                group='Set',
+                parameters=[
+                        EventParameter('geotiff_id', Type[int], 
+                                        api_description='GeoTIFF ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('geotiff_content_bytes', Type[bytes], aggregation=1, 
+                                        api_description='File bytes (< 2GB)', api_type=Type[bytes], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('uploader_name', Type[str], 
+                                        api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('crs', Type[str], False, 
+                                        api_description='CRS Override (optional)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
             ),
         'set_geotiff_url' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_id', Type[int]),
-                            EventParameter('geotiff_url', Type[str]),
-                            EventParameter('uploader_name', Type[str]),
-                            EventParameter('crs', Type[str], False),
-                        ]
+                group='Set',
+                parameters=[
+                        EventParameter('geotiff_id', Type[int], aggregation=1, 
+                                        api_description='GeoTIFF ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('geotiff_url', Type[str], aggregation=1, 
+                                        api_description='Web URL', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('uploader_name', Type[str], aggregation=1, 
+                                        api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('crs', Type[str], False, aggregation=1, 
+                                        api_description='CRS Override (optional)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=1,  ),
+                    ]
             ),
-    
+
+
+    # Export
         'export' : EventDefinition(
-                    parameters=[
-                            EventParameter('geotiff_id', Type[int]),
-                        ]
+                group='Export',
+                parameters=[
+                        EventParameter('geotiff_id', Type[int], 
+                                        api_description='GeoTIFF ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
             ),
-        
+
+
+    # Remove
         'remove' : EventDefinition(
-                    parameters=[
-                            EventParameterListable('geotiff_id', Type[int]),
-                        ]
+                group='Remove',
+                parameters=[
+                        EventParameter('geotiff_id', Type[int], aggregation=1, 
+                                        api_description='Geo Tiffs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
             ),
     }
 
-event_set = EventSet(definitions)
+event_set = EventSet(definitions, domain='editorgeotiff')

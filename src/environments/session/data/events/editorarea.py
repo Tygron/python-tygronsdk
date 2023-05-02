@@ -2,111 +2,245 @@ from .....core.events import EventSet
 
 from .....core.data.events import EventDefinition
 from .....core.data.events import EventParameter
-from .....core.data.events import EventParameterListable
-from .....core.data.events import EventParameterMatrixable
 
-from typing import Type, Union
+from typing import Type
 
 definitions = {
+
+
+    # General
         'add' : EventDefinition(
+                group='General',
                 parameters=[
-                        EventParameter('amount', Type[int], False),
+                        EventParameter('amount', Type[int], False, 
+                                        api_description='Amount (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'add_with_attribute' : EventDefinition(
+                group='General',
+                parameters=[
+                        EventParameter('attribute_name', Type[str], 
+                                        api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('attribute_values', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'duplicate' : EventDefinition(
+                group='General',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'remove' : EventDefinition(
+                group='General',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'import' : EventDefinition(
+                group='General',
                 parameters=[
-                        EventParameter('geometry_collection', Type[str]),
-                        EventParameterListable('names', Type[str]),
-                        EventParameterListable('attribute_names', Type[str]),
-                        EventParameterMatrixable('attribute_values', Type[float]),
-                        EventParameter('buffer', Type[float], False),
-                        EventParameter('source_id', Type[int], False),
+                        EventParameter('geometry_collection', 'Unknown: (geometrycollection with crs: epsg:3857)', 
+                                        api_description='Collection of Area geometries', api_type='Unknown: (geometrycollection with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('names', Type[str], aggregation=1, 
+                                        api_description='Area Names', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_names', Type[str], aggregation=1, 
+                                        api_description='Attribute Names', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_values', Type[float], aggregation=2, 
+                                        api_description='Attribute Values', api_type=Type[float], api_required=True, api_default=None, api_aggregation=2,  ),
+                        EventParameter('buffer', Type[float], False, 
+                                        api_description='Buffer for Points and Lines to make Polygons (optional)', api_type=Type[float], api_required=False, api_default=None, api_aggregation=0,  ),
+                        EventParameter('source_id', Type[int], False, 
+                                        api_description='Source (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
                     ]
-            
             ),
-            
-            
-            
+
+
+    # Information
         'set_name' : EventDefinition(
+                group='Information',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
-                        EventParameterListable('name', Type[str]),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('name', Type[str], aggregation=1, 
+                                        api_description='String[]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
+        'set_color' : EventDefinition(
+                group='Information',
+                parameters=[
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('color', 'Unknown: (tcolor or multiple values in array [a, b, c])', aggregation=1, 
+                                        api_description='TColor[]', api_type='Unknown: (tcolor or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+
+
+    # Calculation model
         'set_active' : EventDefinition(
+                group='Calculation model',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
-                        EventParameterListable('active', Type[bool]),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('active', Type[bool], aggregation=1, 
+                                        api_description='Boolean[]', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
-        'set_attributes' : EventDefinition(
+        'add_relation' : EventDefinition(
+                group='Calculation model',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
-                        EventParameterListable('attribute_name', Type[str]),
-                        EventParameterMatrixable('attribute_value', Type[float]),
-                        EventParameter('source_id', Type[int], False),
+                        EventParameter(0, Type[int], 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(1, ['BORDER_A', 'BORDER_B', 'BUILDING', 'CONSTRUCTOR', 'DEMOLISHER', 'NETOWNER', 'OWNER', 'PERMITTER', 'RECEIVER', 'SENDER'], 
+                                        api_description='Relation;{"default": null, "values": ["BORDER_A", "BORDER_B", "BUILDING", "CONSTRUCTOR", "DEMOLISHER", "NETOWNER", "OWNER", "PERMITTER", "RECEIVER", "SENDER"]}', api_type=['BORDER_A', 'BORDER_B', 'BUILDING', 'CONSTRUCTOR', 'DEMOLISHER', 'NETOWNER', 'OWNER', 'PERMITTER', 'RECEIVER', 'SENDER'], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
+        'set_relation' : EventDefinition(
+                group='Calculation model',
+                parameters=[
+                        EventParameter(0, Type[int], 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(1, ['BORDER_A', 'BORDER_B', 'BUILDING', 'CONSTRUCTOR', 'DEMOLISHER', 'NETOWNER', 'OWNER', 'PERMITTER', 'RECEIVER', 'SENDER'], 
+                                        api_description='Relation;{"default": null, "values": ["BORDER_A", "BORDER_B", "BUILDING", "CONSTRUCTOR", "DEMOLISHER", "NETOWNER", "OWNER", "PERMITTER", "RECEIVER", "SENDER"]}', api_type=['BORDER_A', 'BORDER_B', 'BUILDING', 'CONSTRUCTOR', 'DEMOLISHER', 'NETOWNER', 'OWNER', 'PERMITTER', 'RECEIVER', 'SENDER'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(2, Type[int], 
+                                        api_description='Integer', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'remove_relations' : EventDefinition(
+                group='Calculation model',
+                parameters=[
+                        EventParameter(0, Type[int], 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(1, 'Unknown: (relation or multiple values in array [a, b, c])', aggregation=1, 
+                                        api_description='Relation[]', api_type='Unknown: (relation or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+
+
+    # Polygon
         'add_polygons' : EventDefinition(
+                group='Polygon',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
-                        EventParameterListable('geometry', Type[str]),
-                    ]
-            ),
-            
-            
-         
-        'remove_attribute' : EventDefinition(
-                parameters=[
-                        EventParameterListable('area_id', Type[int]),
-                        EventParameterListable('attribute_name', Type[str]),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('geometry', 'Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', aggregation=1, 
+                                        api_description='MultiPolygon[]', api_type='Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'remove_polygons' : EventDefinition(
+                group='Polygon',
                 parameters=[
-                        EventParameterListable('area_id', Type[int]),
-                        EventParameterListable('geometry', Type[str]),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('geometry', 'Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', aggregation=1, 
+                                        api_description='MultiPolygon[]', api_type='Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
-            
-            
-          
-        'generate_border_areas' : EventDefinition(
+
+
+    # Attribute
+        'set_attributes' : EventDefinition(
+                group='Attribute',
                 parameters=[
-                        EventParameter('attribute_to_generate_for', Type[str]),
-                        EventParameter('attribute_to_add', Type[str]),
-                        EventParameter('width', Type[float], False),
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_name', Type[str], aggregation=1, 
+                                        api_description='Attribute Names', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_value', Type[float], aggregation=2, 
+                                        api_description='Attribute Values', api_type=Type[float], api_required=True, api_default=None, api_aggregation=2,  ),
+                        EventParameter('source_id', Type[int], False, 
+                                        api_description='Source (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'remove_attribute' : EventDefinition(
+                group='Attribute',
+                parameters=[
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_name', Type[str], aggregation=1, 
+                                        api_description='String[]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+        'add_group' : EventDefinition(
+                group='Attribute',
+                parameters=[
+                        EventParameter(0, Type[str], 
+                                        api_description='Attribute name to group Areas by', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'remove_all_attributes' : EventDefinition(
+                group='Attribute',
+                parameters=[
+                        EventParameter(0, Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+        'remove_filter' : EventDefinition(
+                group='Attribute',
+                parameters=[
+                        EventParameter(0, Type[str], aggregation=1, 
+                                        api_description='String[]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+        'set_attribute' : EventDefinition(
+                group='Attribute',
+                parameters=[
+                        EventParameter(0, Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter(1, Type[str], 
+                                        api_description='Attribute Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(2, Type[float], aggregation=1, 
+                                        api_description='Attribute Values', api_type=Type[float], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter(3, Type[int], False, 
+                                        api_description='Source (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+
+
+    # Generate
+        'generate_border_areas' : EventDefinition(
+                group='Generate',
+                parameters=[
+                        EventParameter('attribute_to_generate_for', Type[str], 
+                                        api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('attribute_to_add', Type[str], 
+                                        api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('width', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'generate_inundation_areas' : EventDefinition(
+                group='Generate',
                 parameters=[
-                        EventParameter('inundation_level_datum', Type[float]),
+                        EventParameter('inundation_level_datum', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'generate_sewer_areas' : EventDefinition(
+                group='Generate',
                 parameters=[
-                        EventParameter('urbanization', Type[int], False, 3),
-                        EventParameter('storage_before_1965', Type[float], False, 0.7*0.001),
-                        EventParameter('storage', Type[float], False, 4*0.001),
-                        EventParameter('pump_capacity', Type[float], False, 0.7*0.001),
-                        EventParameter('water_area_attribute', Type[str], False, ''),
+                        EventParameter('urbanization', Type[int], 
+                                        api_description='Integer', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('storage_before_1965', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('storage', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('pump_capacity', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('water_area_attribute', Type[str], 
+                                        api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'generate_water_areas' : EventDefinition(
+                group='Generate',
                 parameters=[
-                        EventParameter('inundation_level_datum', Type[float]),
+                        EventParameter('inundation_level_datum', Type[float], 
+                                        api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
-            )
+            ),
     }
-    
-event_set = EventSet(definitions)
+
+event_set = EventSet(definitions, domain='editorarea')
