@@ -33,11 +33,12 @@ class Sessions:
         return join_session_data
         
     @staticmethod
-    def close_project_session( conn: Connector, session_id:int, client_token:str = None, keep_open:bool = False ):
+    def close_project_session( conn: Connector, session_id:int, client_token:str, keep_open:bool = False ):
         response = conn.fire_event( 
             events.io.close (
                 session_id, client_token, keep_open
             ) )
+            
         return response.get_response_body_json()
         
     @staticmethod
