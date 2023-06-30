@@ -50,12 +50,21 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
         overlays = sdk.session.items.load( items.Overlay )
         geotiffs = sdk.session.items.load( items.GeoTiff )
         
+        overlay_skip_check = self.get_parameter( 'overlaySkipCheck' )
+        timeframe_skip_check = self.get_parameter( 'timeframeSkipCheck' )
+        if ( not(overlay_skip_check is None) ):
+            value = self.check_overlay_has_data( overlay_skip_check, timeframe_skip_check )
+            print(value)
+            if ( float(value) != 0 ):
+                return
+
         for overlay in overlays:
             if overlay.get('type') != 'GEO_TIFF':
                 continue
             for tiff_index, tiff_id in enumerate(overlay.get('geoTiffIDs')):      
 
-                value = sdk.session.connector.run_query( 'SELECT_GRIDVOLUME_WHERE_GRID_IS_'+ str(overlay.id)+'_AND_TIMEFRAME_IS_'+str(tiff_index) ).get_response_body()          
+                value = self.check_overlay_has_data( overlay.id, tiff_index )
+
                 if ( float(value) != 0 ):
                     print( 'Geotiff has value '+value+', skip' )
                     continue;
@@ -81,6 +90,16 @@ class TriggerGeotiffFromGeoshare(interfaces.Trigger):
                 result_urls, #json.dumps(result_urls) if len(result_urls) != 1 else result_urls[0],
                 result_uploaders #json.dumps(result_uploaders) if len(result_uploaders) != 1 else result_uploaders[0],
             ])
+
+    def check_overlay_has_data( self, overlay_id:int, timeframe_index:int = None ):
+        query = 'SELECT_GRIDVOLUME_WHERE_GRID_IS_' + str(overlay_id)
+        if ( not(timeframe_index is None) ):
+            query = query + '_AND_TIMEFRAME_IS_'+str(timeframe_index)
+
+        sdk = self.get_sdk()
+        value = sdk.session.connector.run_query( query ).get_response_body()
+
+        return value
     
     def get_geoshare_url_for_geotiff( self, tiff_id:int = None, tiff_name:str = None):
         print( 'Looking for: ' + tiff_name )
