@@ -3,12 +3,15 @@ from tygronsdk import sdk as tygron
 from tygronsdk import items as items
 from tygronsdk import utilities as utilities
 
+
 def main():
+    stored_err = None
 
     settings = {
         'origin_project_name' : 'tygron_dxf_template',
         'origin_geoplugin_name' : 'Basis NLCS interpretatie',
         'target_session_id' : None,
+        'target_session_token' : None,
         'target_geoplugin_name' : None,
         
         'fill_custom_functions' : False,
@@ -23,8 +26,7 @@ def main():
                 './credentials.json'
             ], create_if_missing=True )
     except:
-        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
-        return
+        raise Exception('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
    
     print('This script will copy a GeoPlugin from one Project to another running session.')
 
@@ -58,41 +60,44 @@ def main():
     print( 'Authenticating base API environment as '+str(credentials.username) )
     auth_result = sdk_origin.base.authenticate( credentials ) and sdk_target.base.authenticate( credentials )
     if ( auth_result is False ):
-        print('Could not authenticate with provided credentials')
-        return
+        raise Exception('Could not authenticate with provided credentials')
     
     
     
     sessions = sdk_origin.base.sessions.get_joinable_sessions()
     projects = sdk_origin.base.projects.get_startable_projects()
     
-    if ( settings['target_session_id'] is None ):
+    if ( not (settings['target_session_token'] is None and count(str(settings['target_session_token'])>=8) ) ):
+        settings['target_session_id'] = settings['target_session_token'][0:8]
+    if ( settings['target_session_id'] is None or settings['target_session_id'] == '' ):
         print( 'Missing parameter. Add target_session_id=X as argument, where X is one of the following numerical ids:' )
         for session in sessions:
             print ( session )
-        return
+        raise Exception('Missing parameter target_session_id')
         
-    if ( settings['origin_project_name'] is None ):
+    if ( settings['origin_project_name'] is None or settings['origin_project_name'] == '' ):
         print( 'Missing parameter. Add origin_project_name=X as argument, where X is one of the following:' )
         for project in projects:
             print ( project )
-        return
+        raise Exception('Missing parameter origin_project_name')
     
-    if ( settings['origin_geoplugin_name'] is None ):
+    if ( settings['origin_geoplugin_name'] is None or settings['origin_geoplugin_name'] == '' ):
         print( 'Missing parameter. Add origin_geoplugin_name=X as argument' )
+        raise Exception('Missing parameter origin_geoplugin_name')
     elif ( settings['target_geoplugin_name'] is None ):
         settings['target_geoplugin_name'] = settings['origin_geoplugin_name']
     
     try:
-        target_session = next(session for session in sessions if str(session.id) == settings['target_session_id'])
+        if ( settings['target_session_token'] is None ):
+            target_session = next(session for session in sessions if str(session.id) == settings['target_session_id'])
+        else:
+            target_session = str(settings['target_session_id']) + ' (identified by api token)'
     except StopIteration as err:
-        print('Target session with id '+str( settings['target_session_id'] )+' not found')
-        return
+        raise Exception('Target session with id '+str( settings['target_session_id'] )+' not found')
     try:
         origin_project = next(project for project in projects if str(project.file_name) == settings['origin_project_name'])
     except StopIteration as err:
-        print('Origin project names '+str( settings['origin_project_name'] )+' not found')
-        return
+        raise Exception('Origin project names '+str( settings['origin_project_name'] )+' not found')
     
     
     
@@ -101,20 +106,23 @@ def main():
     print('Copying GeoPlugin (renamed to "'+str(settings['target_geoplugin_name'])+'") to session: '+str(target_session))
     print()
     
+    
+    
     try:
     
         origin_session_id = sdk_origin.base.sessions.start_project_session(origin_project.file_name)
         origin_session_data = sdk_origin.base.sessions.join_project_session(origin_session_id)
         auth_result = sdk_origin.session.authenticate(origin_session_data)
         if ( auth_result is False ):
-            print('Could not authenticate to origin session')
-            return
+            raise Exception('Could not authenticate to origin session')
             
-        target_session_data = sdk_target.base.sessions.join_project_session(settings['target_session_id'])
+        if ( settings['target_session_token'] is None ):
+            target_session_data = sdk_target.base.sessions.join_project_session(settings['target_session_id'])
+        else:
+            target_session_data = { 'api_token': settings['target_session_token'] }
         auth_result = sdk_target.session.authenticate(target_session_data)
         if ( auth_result is False ):
-            print('Could not authenticate to target session')
-            return
+            raise Exception('Could not authenticate to target session')
             
         print('Authenticated to both origin and target')
         
@@ -234,8 +242,6 @@ def main():
             filtered_geolink_ids_functions.append( link_id )
             filtered_function_ids.append( link.function_id )
 
-
-
         sdk_target.session.connector.fire_event(
                 tygronsdk.events.editorgeolink.set_line_buffer(
                     geolink_id      = filtered_geolink_ids_points,
@@ -282,15 +288,17 @@ def main():
     
     
     
-    
-    
     except Exception as err:
-        sdk_origin.exit()
-        sdk_target.exit()
-        raise err
-        
+        print('An error has occured')
+        stored_err = err
+                
     finally:
+        print('Closing connections')
         sdk_origin.exit()
         sdk_target.exit()
-    
+        print('Connections closed')
+        
+    if ( not (stored_err is None) ):
+        raise stored_err
+        
 main()
