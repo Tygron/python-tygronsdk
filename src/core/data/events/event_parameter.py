@@ -75,7 +75,7 @@ class EventParameter:
             return value
             
         if ( value == None and (self.arg_default == None) and self.required):
-            raise TypeError( self.arg_name + ' is a required parameter' )
+            raise TypeError( str(self.arg_name) + ' is a required parameter' )
         if ( value == None ):
             return self.arg_default
         return value
