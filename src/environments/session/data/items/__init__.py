@@ -6,3 +6,6 @@ from .geo_tiff import GeoTiff
 from .stakeholder import Stakeholder
 from .indicator import Indicator
 from .panel import Panel
+
+from .geolink import Geolink
+from .geoplugin import Geoplugin
