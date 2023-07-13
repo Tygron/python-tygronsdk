@@ -4,6 +4,8 @@ class Item():
 
     #constant for reference to no other item
     NONE = -1;
+    #constant for reference start of IDs of custom data
+    CUSTOM_ID_START = 1000000;
 
     def __init__( self, data = {} ):
         super().__init__()
