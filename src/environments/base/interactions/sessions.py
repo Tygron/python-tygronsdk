@@ -1,5 +1,5 @@
 from ..connectors import Connector
-from ..data import events
+from ..data import events, objects
 
 from ..interactions.users import Users
 
@@ -9,6 +9,16 @@ import json
 
 class Sessions:
 
+    @staticmethod
+    def get_joinable_sessions( conn:Connector ):
+        response = conn.fire_event( 
+            events.io.get_my_joinable_sessions (
+            ) )
+        sessions = [objects.SessionData(session) for session in response.get_response_body_json()]   
+            
+        return sessions
+        
+    
     @staticmethod
     def start_project_session( conn: Connector, project_name:str, session_type:str = 'EDITOR', session_language:str = None, session_id:int = None, group_token:str = None ):
         response = conn.fire_event( 
@@ -48,7 +58,6 @@ class Sessions:
                 session_id
             ) )
         return response.get_response_body_json()
-
 
     @staticmethod
     def create_new_project_from_template( conn: Connector, template_name:str, new_project_name:str, session_language:str = None, attempts:int = 25 ):

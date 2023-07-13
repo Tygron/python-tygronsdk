@@ -1,5 +1,5 @@
 from ..connectors import Connector
-from ..data import events
+from ..data import events, objects
 
 from ..interactions.users import Users
 
@@ -17,8 +17,9 @@ class Projects:
             events.io.get_domain_startable_projects (
                 domain
             ) )
+        projects = [objects.ProjectData(project) for project in response.get_response_body_json()] 
             
-        return response.get_response_body_json()
+        return projects
     
     @staticmethod
     def get_startable_templates( conn: Connector ):
@@ -28,8 +29,9 @@ class Projects:
             events.io.get_domain_startable_templates (
                 domain
             ) )
+        projects = [objects.ProjectData(project) for project in response.get_response_body_json()] 
             
-        return response.get_response_body_json()
+        return projects
 
 
 
@@ -41,7 +43,7 @@ class Projects:
                 project_name
             ) )
                 
-        return response.get_response_body_json()
+        return objects.ProjectData(response.get_response_body_json())
  
     @staticmethod           
     def delete_project( conn: Connector, project_name: str ):
