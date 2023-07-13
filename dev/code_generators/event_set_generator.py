@@ -20,7 +20,7 @@ class EventSetGenerator:
         self.output_directory = 'dev_output'
         self.output_file = '{domain}.py'
         
-        self.linesep = os.linesep
+        self.linesep = '\n'
         
         self.assume_unchanged_parameters = False
     
@@ -103,7 +103,7 @@ class EventSetGenerator:
                     '',
                     '{code}',
                 ])
-                
+            
             code = self.linesep.join(code)
             return utilities.strings.format( file_content, code=code )
     
