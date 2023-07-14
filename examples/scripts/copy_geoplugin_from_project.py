@@ -67,7 +67,7 @@ def main():
     sessions = sdk_origin.base.sessions.get_joinable_sessions()
     projects = sdk_origin.base.projects.get_startable_projects()
     
-    if ( not (settings['target_session_token'] is None and count(str(settings['target_session_token'])>=8) ) ):
+    if ( not (settings['target_session_token'] is None) and len(str(settings['target_session_token']))>=8 ):
         settings['target_session_id'] = settings['target_session_token'][0:8]
     if ( settings['target_session_id'] is None or settings['target_session_id'] == '' ):
         print( 'Missing parameter. Add target_session_id=X as argument, where X is one of the following numerical ids:' )
