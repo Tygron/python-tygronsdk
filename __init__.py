@@ -1,3 +1,8 @@
+import sys
+min_version = (3,10)
+if (sys.version_info < min_version):
+    raise Exception('Minimum python version required is Python ' + '.'.join(map(str,min_version)))
+
 from .src import sdk as sdk
 from .src import core as core
 from .src import environments as environments
