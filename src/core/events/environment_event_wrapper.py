@@ -12,7 +12,8 @@ class EnvironmentEventWrapper():
         return self._connector.fire_event(self._event, **kwargs)
     
     def __call__( self, *args, **kwargs ):
-        return self._event if (not self._event( *args, **kwargs )) is self._event else self
+        self._event = self._event(*args, **kwargs)
+        return self
         
     def __getattr__( self, attr ):
         return getattr( self._event, attr )
