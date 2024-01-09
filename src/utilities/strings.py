@@ -52,19 +52,19 @@ class Strings:
         regex = regex + ( '\-' if negative_kept else '' )
         regex = regex + ( decimal_character if ( not decimal_character is None ) else '' )
         regex = '['+regex+']'
-        return re.sub(regex,'',input)
+        return re.sub(regex,'',str(input))
         
     @staticmethod
     def strip_to_letters( input:str, ):
         regex = '^a-zA-Z'
         regex = '['+regex+']'
-        return re.sub(regex,'',input)
+        return re.sub(regex,'',str(input))
     
     @staticmethod
     def parse_file_size_string( input:str, output_unit:str = 'MB' ):
-        units = {"B": 1, "KB": 10**3, "MB": 10**6, "GB": 10**9, "TB": 10**12}
-        number = int(Strings.strip_to_number(input))
-        unit = Strings.strip_to_letters(input)
+        units = {"B": 1, "KB": 2**10, "MB": 2**20, "GB": 2**30, "TB": 2**40}
+        number = int(Strings.strip_to_number(str(input)))
+        unit = Strings.strip_to_letters(str(input))
         size = number*units[unit]
         
         return size/units.get(output_unit.upper(), 1)
@@ -72,7 +72,7 @@ class Strings:
     @staticmethod
     def parse_surface_area_from_sizes_string( input:str, negative_kept:bool = False, decimal_character = None ):
         seperator_chars = [' ','x','X', 'by',':']
-        split_input = re.split('|'.join(seperator_chars),input)
+        split_input = re.split('|'.join(seperator_chars),str(input))
         value = None
         for entry in split_input:
             try:
@@ -82,7 +82,7 @@ class Strings:
                 pass
         if ( not (value is None) ):
             return value
-        raise Exception('Could not parse 2 numbers to multiply from "'+input+'"')
+        raise Exception('Could not parse 2 numbers to multiply from "'+str(input)+'"')
     
     @staticmethod
     def create_json_string( obj:dict = {} ):
