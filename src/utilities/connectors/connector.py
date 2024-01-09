@@ -149,7 +149,7 @@ class Connector:
         url+= self.get_url_part_port()
         url+= self.get_url_part_path( path )
     
-        url += self.get_url_part_query_params( path, params )
+        url+= ('?' if (path == '') else '') + self.get_url_part_query_params( path, params )
 
         return url;
     
