@@ -31,7 +31,7 @@ class DomainData:
         return self.partnership not in [None, "NONE"]
     def get_license_as_string(self):
         if ( not self.is_partner() ):
-            return self.domain
+            return self.license
         return '{}, {}'.format(self.license, self.partnership)
     
     
@@ -98,10 +98,10 @@ class DomainData:
         return self._data.get( 'contactEmail', None )
     @property
     def contact_first_name(self):
-        return self._data.get( 'contactFirstName', None )
+        return self._data.get( 'contactFirstname', None )
     @property
     def contact_last_name(self):
-        return self._data.get( 'contactLastName', None )
+        return self._data.get( 'contactLastname', None )
     @property
     def contact_phone(self):
         return self._data.get( 'contactPhone', None )
