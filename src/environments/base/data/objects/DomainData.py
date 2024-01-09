@@ -25,6 +25,9 @@ class DomainData:
     def license(self):
         return self._data.get( 'license', None )
     @property
+    def license_variables(self):
+        return self._data.get( 'licenseVariables', None )
+    @property
     def partnership(self):
         return self._data.get( 'partnership', None )
     def is_partner(self):

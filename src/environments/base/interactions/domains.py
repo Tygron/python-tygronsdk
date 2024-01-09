@@ -18,7 +18,9 @@ class Domains:
     @staticmethod 
     def get_domain_license( conn: Connector ):
         domain = Domains.get_domain(conn)
-        return Licenses.get_license(conn, domain.license)
+        license =  Licenses.get_license(conn, domain.license)
+        license = license.create_custom_license(domain.license_variables)
+        return license
 
 
     @staticmethod

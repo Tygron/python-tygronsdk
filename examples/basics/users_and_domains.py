@@ -78,14 +78,22 @@ def main():
         print( '---' )
         
         license = sdk.base.domains.get_domain_license()
+        print( 'License name: ' + license.license )
+        print( 'License enum: ' + license.license_enum )
+        print( 'Allowed users: ' + str(license.max_users) )
+        
+        print( 'Minimum allowed cell size: ' + str(license.min_cell_size) )
+        print( 'Maximum allowed project versions: ' + str(license.max_project_versions) )
+        print( 'Support level: ' + license.get_support_string().capitalize() )
+        print( 'Allowances: ' + license.get_allows_string() )
+        
+        print( '---' )
+        
         usage = sdk.base.domains.get_domain_usage()
         allowance = sdk.base.domains.get_domain_allowance()
         
-        print( license )
         print( usage )
         print( allowance )
-        print( 'License name: ' + license.license )
-        print( 'License enum: ' + license.license_enum )
         print( 'New projects per day allowed: ' + str(license.new_projects_per_day) )
         print( 'Total project area allowed: ' + str(license.max_total_area) )
         print( 'Geoshare storage usage allowed: ' + str(license.max_geoshare_storage) )
