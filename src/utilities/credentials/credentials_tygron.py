@@ -26,6 +26,9 @@ class CredentialsTygron():
     def password(self):
         return self._data.get('password', None)
     @property
+    def server(self):
+        return self._data.get('server', None)
+    @property
     def api_token(self):
         return self._data.get('api_token', None)
     @property
