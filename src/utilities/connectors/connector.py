@@ -133,7 +133,14 @@ class Connector:
         if ( self.path_has_params(path) ):
             path_params = self.parse_query_params_from_url( path )
             params.update(path_params)
-        return self.create_query_string( params )
+        query_string = self.create_query_string( params )
+        
+        if ( not ( (path == '') or (query_string == '') ) ):
+            if ( '?' in path ):
+                query_string = '&'+query_string
+            else:
+                query_string = '?'+query_string
+        return query_string
         
         
     def get_url_full( self, path = '', params = {} ):
@@ -142,8 +149,7 @@ class Connector:
         url+= self.get_url_part_port()
         url+= self.get_url_part_path( path )
     
-        param_string = self.get_url_part_query_params( path, params )
-        url += ('?'+param_string) if (len(param_string) > 0) else ''
+        url += self.get_url_part_query_params( path, params )
 
         return url;
     
@@ -175,7 +181,9 @@ class Connector:
         
         if (not self.path_is_url(url)):
             url = self.get_url_full( url, query_params )
-        
+        else:
+            url = url+self.get_url_part_query_params( url, query_params )
+
         headers = self.get_request_headers(headers);
 
         if (not (data is None)):
