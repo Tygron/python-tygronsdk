@@ -13,7 +13,8 @@ class Licenses:
         
         html_table = conn.request(
             method='GET',
-            url = url
+            url = url,
+            query_params={'all': 'true'}
         ).get_response_body()
         
         licenses_data_table = utilities.html.parse_html_table_to_dict( html= html_table )
