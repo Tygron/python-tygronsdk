@@ -24,10 +24,9 @@ class sdk():
             'delete_created_project' : False
         }
         
-        self.settings = {**settings,  **kwargs};
+        self._settings = {**settings,  **kwargs};
         
         self.create_environments()
-        
         return;
     
     
