@@ -72,7 +72,7 @@ class ProjectData:
         
     @property
     def size(self):
-        return self._data.get( 'size', None )
+        return self._data.get( 'sizeM', None )
         
     @property
     def sub_domain(self):

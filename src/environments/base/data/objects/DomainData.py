@@ -26,7 +26,7 @@ class DomainData:
         return self._data.get( 'license', None )
     @property
     def license_variables(self):
-        return self._data.get( 'licenseVariables', None )
+        return self._data.get( 'licenseVariables', {} )
     @property
     def partnership(self):
         return self._data.get( 'partnership', None )
@@ -41,7 +41,6 @@ class DomainData:
     @property
     def save_areas(self):
         return self._data.get( 'saveAreas', {} )
-        
     def get_save_areas_total(self):
         return 
     @property
@@ -66,7 +65,7 @@ class DomainData:
     def min_password_length(self):
         return self._data.get( 'minPasswdLength', None )
     @property
-    def min_password_length(self):
+    def two_factor_level(self):
         return self._data.get( 'twoFactorLevel', None )
     
     
@@ -89,9 +88,6 @@ class DomainData:
     @property
     def organisation(self):
         return self._data.get( 'organisation', None )
-    @property
-    def industry(self):
-        return self._data.get( 'industry', None )
     
     
     
