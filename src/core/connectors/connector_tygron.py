@@ -25,6 +25,8 @@ class ConnectorTygron(Connector):
     def settings(self, value: dict):
         if ( 'host' in value ):
             self.set_host(value['host'])
+        elif ( 'server' in value ):
+            self.set_host(value['server'])
         elif ( 'platform' in value ):
             self.set_platform(value['platform'])
         
