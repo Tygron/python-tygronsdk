@@ -29,6 +29,9 @@ class CredentialsTygron():
     def server(self):
         return self._data.get('server', None)
     @property
+    def platform(self):
+        return self._data.get('platform', None)
+    @property
     def api_token(self):
         return self._data.get('api_token', None)
     @property
@@ -40,7 +43,10 @@ class CredentialsTygron():
             return TygronStrings.parse_session_id_from_api_token( api_token )
         except:
             return None
-    
+    @property
+    def computer_name(self):
+        return self._data.get('computer_name', None)
+        
     @property
     def source(self):
         return self._source
@@ -50,6 +56,8 @@ class CredentialsTygron():
             'username': self._data.get( 'username', None ),
             'password': self._data.get( 'password', None ),
             'api_token': self._data.get( 'api_token', None ),
+            'server': self._data.get( 'server', None ),
+            'computer_name': self._data.get( 'computer_name', None ),
         }.items() if v is not None}
     
     
