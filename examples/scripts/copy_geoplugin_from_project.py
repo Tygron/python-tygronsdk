@@ -20,6 +20,11 @@ def main():
         **utilities.system.get_args()
     }
 
+    settings.update( 
+            (k, True if settings[k] in ['true', 'True'] else False if settings[k] in ['false', 'False'] else settings[k]) 
+            for k in settings.keys()
+        )
+
     try:
         credentials = tygronsdk.load_credentials_from_file( files=[
                 './credentials.txt',
