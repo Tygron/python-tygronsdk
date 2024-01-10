@@ -48,6 +48,8 @@ class Strings:
     
     @staticmethod
     def strip_to_number( input:str, negative_kept:bool = False, decimal_character:str = None ):
+        if (input is None):
+            return None
         regex = '^0-9'
         regex = regex + ( '\-' if negative_kept else '' )
         regex = regex + ( decimal_character if ( not decimal_character is None ) else '' )
@@ -56,12 +58,16 @@ class Strings:
         
     @staticmethod
     def strip_to_letters( input:str, ):
+        if (input is None):
+            return None
         regex = '^a-zA-Z'
         regex = '['+regex+']'
         return re.sub(regex,'',str(input))
     
     @staticmethod
     def parse_file_size_string( input:str, output_unit:str = 'MB' ):
+        if (input is None):
+            return None
         units = {"B": 1, "KB": 2**10, "MB": 2**20, "GB": 2**30, "TB": 2**40}
         number = int(Strings.strip_to_number(str(input)))
         unit = Strings.strip_to_letters(str(input))
@@ -71,6 +77,8 @@ class Strings:
         
     @staticmethod
     def parse_surface_area_from_sizes_string( input:str, negative_kept:bool = False, decimal_character = None ):
+        if (input is None):
+            return None
         seperator_chars = [' ','x','X', 'by',':']
         split_input = re.split('|'.join(seperator_chars),str(input))
         value = None
