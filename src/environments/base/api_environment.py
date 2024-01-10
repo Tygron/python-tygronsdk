@@ -13,7 +13,7 @@ class ApiEnvironment(CoreApiEnvironment):
             return None
         
         self.connector.set_http_basic_authentication( username, key )
-        
+
         success = self.connector.authenticate()
         
         return success
