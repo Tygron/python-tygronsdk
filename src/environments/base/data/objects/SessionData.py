@@ -15,6 +15,9 @@ class SessionData:
     def id(self):
         return self._data.get( 'id', None )
     @property
+    def session_id(self):
+        return self.id
+    @property
     def name(self):
         return self._data.get( 'name', None )
     @property
@@ -46,3 +49,7 @@ class SessionData:
     @property
     def token_pair(self):
         return self._data.get( 'tokenPair', None )
+        
+    @property
+    def timeout_ms(self):
+        return self._data.get( 'timeoutMS', None )
