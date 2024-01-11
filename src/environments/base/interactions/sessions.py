@@ -18,6 +18,13 @@ class Sessions:
             
         return sessions
         
+    def get_joinable_session( conn:Connector, session_id:int = None ):
+        sessions = Sessions.get_joinable_sessions(conn)
+        
+        for session in sessions:
+            if (session.session_id == session_id):
+                return session
+        
     
     @staticmethod
     def start_project_session( conn: Connector, project_name:str, session_type:str = 'EDITOR', session_language:str = None, session_id:int = None, group_token:str = None ):
@@ -39,6 +46,7 @@ class Sessions:
         if ( isinstance(join_session_data, dict) ):
             join_session_data['session_id'] = session_id
             join_session_data['api_token'] = join_session_data['apiToken']
+            join_session_data['client_token'] = join_session_data['client']['clientToken']
             
         return join_session_data
         
@@ -121,14 +129,24 @@ class Sessions:
         return response
  
     @staticmethod
-    def set_session_keep_alive( conn: Connector, session_id: int, keep_alive = True):
-        mode = 'NONE'
-        if ( keep_alive ):
+    def set_session_keep_alive( conn: Connector, session_id: int, keep_alive = 'SHORT'):
+        mode = keep_alive
+        if (keep_alive is True):
             mode = 'SHORT'
-        
+        elif (keep_alive is False):
+            mode = 'NEVER'
+    
         response = conn.fire_event( 
-            events.io.save_project (
+            events.io.set_session_keep_alive (
                 session_id,
                 mode
             ) )
         return response
+    
+    @staticmethod
+    def get_session_keep_alive( conn: Connector, session_id: int ):
+        response = conn.fire_event(
+            events.io.get_session_keep_alive (
+                session_id
+            ) )
+        return response.get_response_body_json()
