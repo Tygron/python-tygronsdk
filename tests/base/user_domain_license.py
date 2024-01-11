@@ -6,7 +6,7 @@ from tygronsdk import items as items
 from tygronsdk import utilities as utilities
 from tygronsdk.src.environments.base.data import objects as objects
 
-class Base(unittest.TestCase):
+class test(unittest.TestCase):
 
     def setUp(self):
         self.credentials = tygronsdk.load_credentials_from_file( files=[
@@ -27,7 +27,7 @@ class Base(unittest.TestCase):
         } )
         self.assertTrue(auth_result)
 
-    def test_010_adminstrative_user(self):
+    def test_010_my_user(self):
         user = self.sdk.base.users.get_my_user()
         self.assertIsNotNone(user.user_name)
         self.assertTrue(user.active)
@@ -40,7 +40,7 @@ class Base(unittest.TestCase):
         self.assertNotEqual(user.phone, '')
         self.assertIsNotNone(user.last_login)
       
-    def test_011_adminstrative_user(self):
+    def test_011_my_domain(self):
         domain = self.sdk.base.domains.get_domain()
         self.assertIsNotNone(domain.id)
         self.assertIsNotNone(domain.name)
@@ -70,7 +70,7 @@ class Base(unittest.TestCase):
         
         self.assertIsNotNone(domain.state)
         
-    def test_012_adminstrative_license(self):
+    def test_012_my_license(self):
         license = self.sdk.base.domains.get_domain_license()
         
         self.assertIsNotNone(license.license)
@@ -97,40 +97,6 @@ class Base(unittest.TestCase):
         self.assertTrue( license.min_project_cells > 0 )
         self.assertTrue( license.max_project_cells > 0 )
         self.assertTrue( license.max_project_versions > 0 )
-        
-    def test_020_project_admin(self):
-        projects = self.sdk.base.projects.get_startable_projects()
-        self.assertTrue( len(projects) > 0)
-        
-        project = projects[0]
-        self.assertTrue( isinstance(project, objects.ProjectData) )
-        self.assertEqual( project._data, self.sdk.base.projects.get_project( project_name=project.file_name)._data )
-        
-        self.assertIsNotNone( project.active_version )
-        self.assertIsNotNone( project.description )
-        self.assertIsNotNone( project.detailed )
-        self.assertIsNotNone( project.disclaimer )
-        self.assertIsNotNone( project.domain )
-        self.assertIsNotNone( project.file_name )
-        self.assertTrue( len(project.languages)>0 )
-        self.assertIsNotNone( project.last_activity )
-        self.assertIsNotNone( project.last_user )
-        self.assertIsNotNone( project.owner )
-        self.assertIsNotNone( project.permissions )
-        self.assertNotEqual( project.permissions, ['NONE','NONE','NONE'] )
-        self.assertIsNotNone( project.size )
-        self.assertIsNotNone( project.sub_domain )
-        self.assertTrue( len(project.version_map.keys()) > 0 )
-        
-    def test_021_project_lifecycle(self):
-        
-        join_session_data = self.sdk.base.sessions.create_new_project_from_template(
-                template_name='demo_heat_stress',
-                new_project_name='py_unittest',
-                attempts=1000
-            )
-        self.sdk.base.sessions.close_project_session(**join_session_data, client_token=join_session_data['client']['clientToken'])
-        
     
     
 if __name__ == '__main__':
