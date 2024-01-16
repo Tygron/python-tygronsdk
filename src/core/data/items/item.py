@@ -26,7 +26,7 @@ class Item():
             return obj.get_item_maplink()
         if ( isinstance(obj, Item) ):
             return obj.get_item_maplink()
-        raise Exception( 'Could not obtain maplink from object of type '+type(obj) )
+        raise Exception( 'Could not obtain maplink from object of type '+str(type(obj)) )
     
     @classmethod
     def get_item_type( cls ):
