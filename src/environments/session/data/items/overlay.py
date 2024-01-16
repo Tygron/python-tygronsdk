@@ -48,7 +48,7 @@ class Overlay(Item):
         if ( target_timeframe < 0):
             raise Exception( 'Timeframe at index ' + str(index) + ' comes out to '+str(target_timeframe)+' before first timeframe at index 0 for Overlay ' + self.get_printable_id() )
         if ( target_timeframe >= timeframes):
-            raise Exception( 'Timeframe at index ' + str(index) + ' comes out to '+str(target_timeframe)+' after last timeframe at index ' + (str(timeframes)-1) + ' for Overlay ' + self.get_printable_id() )
+            raise Exception( 'Timeframe at index ' + str(index) + ' comes out to '+str(target_timeframe)+' after last timeframe at index ' + (str(timeframes-1)) + ' for Overlay ' + self.get_printable_id() )
         return int(target_timeframe)
     
     def get_timeframes_range( self, indexes = True ):
