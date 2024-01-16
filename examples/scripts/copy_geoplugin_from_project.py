@@ -25,21 +25,23 @@ def main():
             for k in settings.keys()
         )
 
+    settings['origin_platform'] = settings.get('origin_platform',settings.get('platform'))
+    settings['target_platform'] = settings.get('target_platform',settings.get('platform'))
+
     try:
-        credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=True )
+        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
     except:
         raise Exception('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
    
     print('This script will copy a GeoPlugin from one Project to another running session.')
 
+    data = tygronsdk.load_data_from_file( )
 
 
     sdk_origin = tygron.sdk( {
-            'platform' : settings['platform'],
             'computer_name' : 'Python SDK Script - Copy Geoplugin from Project (Origin)',
+            **data,
+            'platform' : settings['origin_platform']
         } )
     sdk_origin.configure_exit( {
             'save_project': False,
@@ -51,8 +53,9 @@ def main():
         
         
     sdk_target = tygron.sdk( {
-            'platform' : settings['platform'],
             'computer_name' : 'Python SDK Script - Copy Geoplugin from Project (Target)',
+            **data,
+            'platform' : settings['target_platform']
         } )
     sdk_target.configure_exit( {
             'save_project': False,

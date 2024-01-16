@@ -15,10 +15,7 @@ from pathlib import Path
 def main():
 
     try:
-        credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=True )
+        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
     except:
         print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
         return
@@ -28,9 +25,12 @@ def main():
     print( 'This example will attempt to start, read out details from, and gracefully close, a session for a specific project: "' + project_to_run + '".' )
     print( 'Although it is recommended to use the "sdk" object and its interactions where possible, this example will do so through using the lower-level SDK components' )
 
+    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
+    data = tygronsdk.load_data_from_file()
+        
     connection_settings = {
-            'platform' : 'engine',
             'computer_name' : 'Python SDK Example',
+            **data
         }
 
     #   The API has multiple levels, which the SDK has seperate environments for.

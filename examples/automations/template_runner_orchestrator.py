@@ -17,14 +17,14 @@ from pathlib import Path
 def main():
 
     try:
-        credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=True )
+        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
     except:
         print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
         return
-        
+    
+    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
+    data = tygronsdk.load_data_from_file()
+    
     print( 'This example will demonstrate how the TemplateRunnerOrchestrator can be used to automatically perform repeated calculations.' )
     
     print( os.linesep, 'Preface' )
@@ -85,7 +85,7 @@ def main():
         }) # InputGenerator allows more settings, and can run without any settings as well.
     
     print('After setting the TemplateRunnerInputGenerator up, it can be run')
-    input_generator.run()
+    input_generator.run(overwrite_data=data)
     
     for directory in [ template_dir, input_dir, data_dir ]:
         print( 'The following files now exist in {dir}: {list}'.format(

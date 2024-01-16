@@ -15,20 +15,20 @@ from pathlib import Path
 def main():
 
     try:
-        credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=True )
+        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
     except:
         print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
         return
    
     print('This example will read out details about the current user, about the domain, and explore a number of operations associated with them.')
 
+    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
+    data = tygronsdk.load_data_from_file()
+    
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
     sdk = tygron.sdk( {
-            'platform' : 'engine',
             'computer_name' : 'Python SDK Example',
+            **data
         } );
 
     #   Good practice is to set up rules on what to do when the SDK exits, either through completion or through error.
@@ -44,13 +44,8 @@ def main():
     #   Each environment may require its own authentication, which must be explicitly set, and is separate from the SDK's settings.
     
     #   The base environment requires username-and-password authentication.
-    username = str(credentials.username)
-    password = str(credentials.password)
-    print('Authenticating base API environment as '+username)
-    auth_result = sdk.base.authenticate( {
-            'username' : username,
-            'password' : password,
-        } )  
+    print('Authenticating base API environment as '+ str(credentials.username) )
+    auth_result = sdk.base.authenticate( credentials )  
              
     print('The authentication result is: "'+str(auth_result)+'".')
     

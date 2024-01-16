@@ -2,6 +2,7 @@ from ..connectors import Connector
 from ..data import events, objects
 
 from ..interactions.users import Users
+from ..interactions.projects import Projects
 
 from ....utilities.strings import Strings
 
@@ -17,7 +18,8 @@ class Sessions:
         sessions = [objects.SessionData(session) for session in response.get_response_body_json()]   
             
         return sessions
-        
+    
+    @staticmethod
     def get_joinable_session( conn:Connector, session_id:int = None ):
         sessions = Sessions.get_joinable_sessions(conn)
         
@@ -97,6 +99,42 @@ class Sessions:
             
         return join_session_data
  
+ 
+    @staticmethod
+    def create_new_project( conn: Connector, new_project_name:str, language:str = 'EN', high_detail:bool = True, attempts:int = 25 ):
+        response = Projects.add_project(
+                conn = conn,
+                new_project_name = new_project_name, 
+                language = language,
+                high_detail = high_detail
+            )
+        created_project_name = response.file_name
+        
+        try:
+            session_id = Sessions.start_project_session(
+                    conn = conn,
+                    project_name = response.file_name
+                )
+            try:    
+                join_session_data = Sessions.join_project_session(
+                        conn = conn,
+                        session_id = session_id
+                    )
+                join_session_data['new_project_name'] = created_project_name
+            except Exception as err:
+                Sessions.kill_project_session(
+                        conn = conn,
+                        session_id = session_id
+                    )
+                raise err
+        except Exception as err:
+            Projects.delete_project(
+                    conn = conn,
+                    project_name = new_project_name
+                )
+            raise err
+                
+        return join_session_data
  
     @staticmethod
     def save_project_as( conn: Connector, session_id: int, new_project_name: str, clear_map: bool = False, attempts:int = 25 ):

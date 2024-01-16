@@ -5,16 +5,16 @@ from . import environments
 
 class sdk():
 
-    def __init__( self, settings = {}, **kwargs ):
-              
-        self._settings = {
+    def __init__( self, settings:dict = {}, **kwargs ):
+        
+        self._data = utilities.data.CollectiveDataStore({
             'platform' : 'engine',
             'computer_name' : 'Python SDK',
             'client_token' : utilities.strings.generate_random_token(),
             
             'session_id': None,
             'new_project_name' : None
-        };
+        })
         
         self._on_exit_settings = {
             'save_project' : False,
@@ -24,21 +24,29 @@ class sdk():
             'delete_created_project' : False
         }
         
-        self.settings = {**settings,  **kwargs};
+        self.data = {**settings,  **kwargs};
         
         self.create_environments()
         return;
     
     
     
+        
     @property
-    def settings(self):
-        """Get all current settings of this SDK"""
-        return self._settings
-    @settings.setter
-    def settings(self, value: dict):
-        self._settings.update(**value)
-        #TODO: propagate settings to environments
+    def data(self):
+        """Get all current data of this SDK"""
+        return self._data.keys()
+    @data.setter
+    def data(self, value: dict):
+        self._data.update(**value)
+        
+    #@property
+    #def settings(self):
+    #    """Get all current data of this SDK"""
+    #    return self.data
+    #@settings.setter
+    #def settings(self, value: dict):
+    #    self.data = value
 
     @property
     def on_exit_settings(self):
@@ -54,9 +62,9 @@ class sdk():
         
         
     def create_environments(self):
-        self.base       = environments.base.ApiEnvironment( self.settings )
-        self.session    = environments.session.ApiEnvironment( self.settings )
-        self.share      = environments.share.ApiEnvironment( self.settings )
+        self.base       = environments.base.ApiEnvironment( self._data.get_data_store() )
+        self.session    = environments.session.ApiEnvironment( self._data.get_data_store() )
+        self.share      = environments.share.ApiEnvironment( self._data.get_data_store() )
         
         self._environments = { 'base' : self.base, 'session' : self.session, 'share' : self.share }
         # self.session    = core.ApiEnvironment( settings= self.settings, module = sessionEnv )
@@ -82,7 +90,7 @@ class sdk():
         if ( self.base.connector.authenticate() ):
             try:
                 if (
-                        (exit_settings['save_created_project'] and self.settings['new_project_name'])
+                        (exit_settings['save_created_project'] and self.data['new_project_name'])
                         or exit_settings['save_project']
                     ):
                     self.base.sessions.save_project()
@@ -90,19 +98,19 @@ class sdk():
                 errors.append(err)
                 
             try:
-                if ( exit_settings['close_session'] and self.settings['session_id']):
+                if ( exit_settings['close_session'] and self.data['session_id']):
                     self.base.sessions.close_project_session( )
             except Exception as err:
                 errors.append(err)
             try:
-                if ( exit_settings['kill_session'] and self.settings['session_id']):
+                if ( exit_settings['kill_session'] and self.data['session_id']):
                     self.base.sessions.kill_project_session( )
             except Exception as err:
                 errors.append(err)
 
             try:
-                if ( exit_settings['delete_created_project'] and self.settings['new_project_name']):
-                    self.base.projects.delete_project( self.settings['new_project_name'] )
+                if ( exit_settings['delete_created_project'] and self.data['new_project_name']):
+                    self.base.projects.delete_project( self.data['new_project_name'] )
             except Exception as err:
                 errors.append(err)
         if ( len(errors) > 0 ):

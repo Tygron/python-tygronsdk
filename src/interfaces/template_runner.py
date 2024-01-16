@@ -316,7 +316,7 @@ class TemplateRunner:
         self.log( 'Created a new project named: ' +str(creation_response['project']) )
         self.log( 'Session is running with session id: '+str(creation_response['session_id']) )
         
-        sdk.settings = creation_response
+        sdk.data = creation_response
         
         sdk.session.authenticate( creation_response )
         self.log( 'Authenticated with the session succesfully.')
@@ -330,8 +330,8 @@ class TemplateRunner:
         
         if ( not self.settings['keep_alive'] ):
             return
-            
-        sdk.base.sessions.set_session_keep_alive( **self.settings )
+        
+        sdk.base.sessions.set_session_keep_alive( **sdk.data )
         self.log( 'Running session in Keep Alive mode.')
             
     def _generate( self ):

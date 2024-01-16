@@ -79,7 +79,7 @@ class TemplateRunnerInputGenerator:
     
 
     
-    def run( self, input_file_name:str = None, geojson_file_name:str = None ):    
+    def run( self, input_file_name:str = None, geojson_file_name:str = None, overwrite_data:dict={} ):    
         if (input_file_name is None):
             input_file_name = self.settings['input_file']
         if (geojson_file_name is None):
@@ -100,6 +100,7 @@ class TemplateRunnerInputGenerator:
         
             individual_input = self.create_individual_run_file( input_data, individual_geojson, index, terms )
             
+            individual_input.update(overwrite_data)
             terms.update(individual_input)
             
             individual_input_file_name = self.format_string( self.settings['json_name'], terms )

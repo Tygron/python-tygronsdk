@@ -44,6 +44,18 @@ class Projects:
             ) )
                 
         return objects.ProjectData(response.get_response_body_json())
+
+
+    @staticmethod
+    def add_project( conn: Connector, new_project_name:str, language:str = 'EN', high_detail:bool = True ):
+        response = conn.fire_event( 
+                events.io.add_project (
+                         project_name=new_project_name, 
+                         language=language,
+                         high_detail=high_detail
+                    )
+            )
+        return objects.ProjectData(response.get_response_body_json())
  
     @staticmethod           
     def delete_project( conn: Connector, project_name: str ):

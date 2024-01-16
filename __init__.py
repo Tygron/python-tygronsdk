@@ -21,11 +21,22 @@ events = core.events.EventSetCollection(**{
 
 
 
-def load_credentials_from_file( file:str = None, files:list=[], create_if_missing:bool = False ):
+def load_data_from_file( file:str = None, files:list=['./data.txt','./data.json','./config.txt','./config.json',], fail_if_missing:bool=False ):
     files_to_try = [ f for f in utilities.lists.coerce(files)+utilities.lists.coerce(file) if f is not None ]
     for f in ( files_to_try ):
         try :
-            return utilities.credentials.CredentialsTygron( file=f )
+            return utilities.data.DataStore( file=f )
+        except FileNotFoundError:
+            pass
+    if ( fail_if_missing ):
+        raise FileNotFoundError( files_to_try )
+    return utilities.data.DataStore()
+    
+def load_credentials_from_file( file:str = None, files:list=['./credentials.txt','./credentials.json'], create_if_missing:bool = False ):
+    files_to_try = [ f for f in utilities.lists.coerce(files)+utilities.lists.coerce(file) if f is not None ]
+    for f in ( files_to_try ):
+        try :
+            return utilities.data.CredentialsStore( file=f )
         except FileNotFoundError:
             pass
     if ( create_if_missing ):

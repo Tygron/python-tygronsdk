@@ -16,10 +16,7 @@ import json
 def main():
 
     try:
-        credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=True )
+        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
     except Exception as err:
         print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
         return
@@ -28,16 +25,19 @@ def main():
     
     if ( not hasattr(credentials, 'api_token') ):
         print('A running session\'s API token is required in order to interact with it.')
-    if ( not hasattr(credentials, 'server') ):
-        print('It is not required to configure a server. The SDK defaults to the LTS server.')
-        credentials.server = 'engine.tygron.com'
+      
+    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
+    data = tygronsdk.load_data_from_file()        
+    if ( not ('server' in data or 'host' in data or 'platform' in data) ):
+        print('The SDK defaults to the LTS server.')
     
-    print('Simulating a request from '+str(credentials.server)+' (which would be read from the referrer header), with API token '+str(credentials.api_token)+' (which would be read from the query parameters)')
+    origin = data.get('server', data.get('host', data.get('platform', 'engine.tygron.com (by default)')))
+    
+    print('Simulating a request from '+str( origin )+' (which would be read from the referrer header), with API token '+str(credentials.api_token)+' (which would be read from the query parameters)')
     
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
-    sdk = tygron.sdk({
-             'host' : credentials.server
-        })
+    sdk = tygron.sdk(data)
+    
     auth_result = sdk.session.authenticate({
             'api_token' : credentials.api_token
         })
