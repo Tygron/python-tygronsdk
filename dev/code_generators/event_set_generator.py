@@ -82,14 +82,20 @@ class EventSetGenerator:
     
     
     def write_event_set_files( self, event_sets:dict ):
+        files = []
         for domain, event_set in event_sets.items():
 
             generated_code = self.generate_event_set_code( event_set )
+            
+            file_name = utilities.strings.format( self.output_file, domain=domain )
+            files.append( os.path.join( self.output_directory, file_name ) )
+            
             utilities.files.write_file(
                 directory=  self.output_directory,
-                file=       utilities.strings.format( self.output_file, domain=domain ),
+                file=       file_name,
                 content=    self.generate_event_set_file( event_set )
             )
+        return files
     
     def generate_event_set_file( self, event_set:EventSet, lines_as_list=True ):
             code = self.generate_event_set_code( event_set )
