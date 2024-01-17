@@ -40,13 +40,15 @@ class sdk():
     def data(self, value: dict):
         self._data.update(**value)
         
-    #@property
-    #def settings(self):
-    #    """Get all current data of this SDK"""
-    #    return self.data
-    #@settings.setter
-    #def settings(self, value: dict):
-    #    self.data = value
+    @property
+    def settings(self):
+        """Get all current data of this SDK"""
+        print('DEPRECATION WARNING: replace sdk.settings with sdk.data')
+        return self.data
+    @settings.setter
+    def settings(self, value: dict):
+        print('DEPRECATION WARNING: replace sdk.settings with sdk.data')
+        self.data = value
 
     @property
     def on_exit_settings(self):
