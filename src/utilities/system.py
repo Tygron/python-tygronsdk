@@ -7,7 +7,7 @@ from .files import Files
 class System:
     
     @staticmethod
-    def get_args( input_args:list = None, simple=False, all_types:bool = True, file:bool = True, json:bool = False, keyvalues:bool = False ):
+    def get_args( input_args:list = None, simple=False, all_types:bool = True, file:bool = True, json:bool = False, keyvalues:bool = False, parse_bool:bool = True ):
         if ( input_args is None ):
             input_args = sys.argv[1:]
             
@@ -57,5 +57,11 @@ class System:
                     arg_errors.append(err)
 
             Exceptions.raise_multiple_exceptions( arg_errors )
+
+        if (parse_bool):
+            result.update( 
+                    (k, True if result[k] in ['true', 'True'] else False if result[k] in ['false', 'False'] else result[k]) 
+                    for k in result.keys()
+                )
 
         return result
