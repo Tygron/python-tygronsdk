@@ -93,6 +93,10 @@ class Strings:
         raise Exception('Could not parse 2 numbers to multiply from "'+str(input)+'"')
     
     @staticmethod
+    def create_multiline_string( obj:list = [] ):
+        return os.linesep.join([v for v in obj])
+    
+    @staticmethod
     def create_json_string( obj:dict = {} ):
         return json.dumps(obj)
     
