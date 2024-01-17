@@ -34,7 +34,7 @@ class Exceptions:
         if ( len(exceptions) == 1):
             description = 'An exception occured'
         else:
-            description = len(exceptions)+' exceptions occured'
+            description = str(len(exceptions))+' exceptions occured'
 
         if ( not (operation is None) ):
             description+= ' while '+str(operation)
