@@ -59,7 +59,11 @@ def main():
         connector_base_api.set_http_basic_authentication( username, password )    
         success = connector_base_api.authenticate()
     
+        print('The server now connected is: "'+connector_base_api.get_host()+'".')
     
+        #   To work with events, event definitions are directly accessible.
+        #   If there is a difference in platform, a specific platform's collection of events can be selected.
+        events.set_collection( connector_base_api.get_platform() )
     
         #   First, obtain data about the Project. This verifies it exists, but is not required.
         event = events.io.get_project_data( project_name = project_to_run )
