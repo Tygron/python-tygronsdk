@@ -226,22 +226,35 @@ class ApiReaderEventSet:
     
     def parameter_term_to_parameter_type( self, term, default = None, options = None ):
         term = term.lower()
-        term = term.lower()
         
         found_type = 'Unknown: '+str(term)
-        for string, ptype in {
+        
+        match=0
+        types = {
                 'id' : Type[int],
                 'string' : Type[str],
                 'integer' : Type[int],
                 'true, false' : Type[bool],
+                'false = ' : Type[bool],
                 'floating point' : Type[float],
                 'byte' : Type[bytes],
-                'type' : 'TYPE?',
-                'enumeration': 'ENUM'
-            }.items():
-                if ( string in term ):
-                    found_type = ptype
-                    break
+                #'type' : 'TYPE?',
+                'enumeration': 'ENUM',
+                
+                'geolinktype': ['AREA', 'BUILDING', 'ROAD', 'TERRAIN_HEIGHT', 'WATER_BOTTOM'],
+                'geometrymode': ['RADIUS_CENTERPOINT', 'NORMAL'],
+                
+                'actiontype' : ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'],
+                
+                'nettype': ['HEAT', 'INTERNET', 'SEWER', 'GAS', 'ELECTRICITY'],
+                'netsetting' : ['INTERNET_ACTIVE', ' SEWER_NETWORK_OWNER_ID', ' ELECTRICITY_NETWORK_OWNER_ID', ' REQUIRE_UTILITY_CORPORATION_APPROVAL', ' INTERNET_FLOW_ATTRIBUTE', ' FIRST_CONNECT_ACCEPT', ' RESTRICT_TO_NET_OVERLAY', ' LOAD_TO_NODE_LINES_ENABLED', ' CLUSTER_MODELS_ENABLED', ' SEWER_ACTIVE', ' ELECTRICITY_ACTIVE', ' HEAT_ACTIVE', ' INTERNET_NETWORK_OWNER_ID', ' SEWER_FLOW_ATTRIBUTE', ' ELECTRICITY_FLOW_ATTRIBUTE', ' HEAT_FLOW_ATTRIBUTE', ' GAS_NETWORK_OWNER_ID', ' HEAT_NETWORK_OWNER_ID', ' GAS_ACTIVE', ' CLUSTER_FRACTION_CONNECTED', ' GAS_FLOW_ATTRIBUTE'],
+ 
+                'overlaytype' : ['AREAS', 'ATTRIBUTE', 'AVG', 'COMBO', 'DISTANCE_SIGHT', 'DISTANCE_ZONE', 'DISTURBANCE_DISTANCE', 'FLOODING', 'FUNCTION_HIGHLIGHT', 'GEO_TIFF', 'GROUNDWATER', 'HEAT_STRESS', 'HEIGHTMAP', 'IMAGE', 'LIVABILITY', 'MUNICIPALITIES', 'NEIGHBORHOODS', 'NETWORK_DISTANCE', 'NETWORK_OVERVIEW', 'NETWORK_OWNERSHIP', 'OWNERSHIP', 'OWNERSHIP_GRID', 'RAINFALL', 'RESULT_CHILD', 'SAFETY_DISTANCE', 'SOURCE', 'SUBSIDENCE', 'TEST', 'TRAFFIC_DENSITY', 'TRAFFIC_NO2', 'TRAFFIC_NOISE', 'TRAVEL_DISTANCE', 'UNDERGROUND', 'VACANCY', 'WATERSHED', 'WCS', 'WMS', 'ZIP_CODES', 'ZONING'],
+            }
+        
+        for string, ptype in types.items():
+            if ( string in term and len(string)>match ):
+                found_type = ptype
                     
         if ( found_type == 'ENUM' ):
             found_type = options
