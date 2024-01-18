@@ -42,6 +42,7 @@ def main():
             'api_token' : credentials.api_token
         })
     print('The authentication result is: "'+str(auth_result)+'".')
+    print('The server now connected is: "'+sdk.base.connector.get_host()+'".')
         
     #   Next, obtain information regarding the session, and perform computations with that information as desired.
     calc_results = {

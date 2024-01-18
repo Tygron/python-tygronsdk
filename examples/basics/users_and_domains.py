@@ -48,6 +48,7 @@ def main():
     auth_result = sdk.base.authenticate( credentials )  
              
     print('The authentication result is: "'+str(auth_result)+'".')
+    print('The server now connected is: "'+sdk.base.connector.get_host()+'".')
     
     try:
     
