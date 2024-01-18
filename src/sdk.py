@@ -62,11 +62,17 @@ class sdk():
         self.on_exit_settings = { **value, **kwargs }
         
         
-        
+    def platform_module_name( self, platform:str = 'engine', module:str = '' ):
+        from .. import platform_module_name
+        return platform_module_name(platform, module)
+    
     def create_environments(self):
-        self.base       = environments.base.ApiEnvironment( self._data.get_data_store() )
-        self.session    = environments.session.ApiEnvironment( self._data.get_data_store() )
-        self.share      = environments.share.ApiEnvironment( self._data.get_data_store() )
+        data_store = self._data.get_data_store()
+        postfix = sdk.platform_module_name(self.data['platform'])
+        
+        self.base       = environments.base.ApiEnvironment      ( data_store, platform_postfix=postfix )
+        self.session    = environments.session.ApiEnvironment   ( data_store, platform_postfix=postfix )
+        self.share      = environments.share.ApiEnvironment     ( data_store, platform_postfix=postfix )
         
         self._environments = { 'base' : self.base, 'session' : self.session, 'share' : self.share }
         # self.session    = core.ApiEnvironment( settings= self.settings, module = sessionEnv )

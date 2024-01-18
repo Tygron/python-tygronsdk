@@ -13,12 +13,18 @@ from .src import utilities as utilities
 from .src.environments.session.data import items as items
 
 
-events = core.events.EventSetCollection(**{
-    **utilities.modules.get_content_from_module(getattr(environments.base.data,'events',[]), core.events.EventSet),
-    **utilities.modules.get_content_from_module(getattr(environments.session.data,'events',[]), core.events.EventSet),
-    **utilities.modules.get_content_from_module(getattr(environments.share.data,'events',[]), core.events.EventSet),
-})
+def platform_module_name( platform:str = 'engine', module:str = '' ):
+    return str(module+'_'+platform).replace('_engine','')
 
+events = core.events.EventSetMultiCollection()
+for platform in ['engine', 'preview']:
+    module=platform_module_name(platform, 'events')
+    
+    events.add_event_sets(platform, **{
+        **utilities.modules.get_content_from_module(getattr(environments.base.data,module,[]), core.events.EventSet),
+        **utilities.modules.get_content_from_module(getattr(environments.session.data,module,[]), core.events.EventSet),
+        **utilities.modules.get_content_from_module(getattr(environments.share.data,module,[]), core.events.EventSet),
+    })
 
 
 def load_data_from_file( file:str = None, files:list=['./data.txt','./data.json','./config.txt','./config.json',], fail_if_missing:bool=False ):

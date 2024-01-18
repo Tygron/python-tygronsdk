@@ -7,6 +7,8 @@ class EventSetCollection():
 
     def __init__( self, *event_sets_list, **event_sets_dict ):
         self.add_event_sets(*event_sets_list, **event_sets_dict)
+        
+        self.domains = []
         pass
     
     def add_event_sets( self, *event_sets_list, **event_sets_dict ):
@@ -18,3 +20,5 @@ class EventSetCollection():
     def add_event_set( self, event_set:EventSet, event_domain:str = None ):
         event_domain = event_set.event_domain if event_domain == None else event_domain
         setattr( self, event_domain, event_set )
+        
+        self.domains.append(event_domain)

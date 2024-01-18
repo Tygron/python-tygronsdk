@@ -7,10 +7,10 @@ import sys, inspect
 
 class ApiEnvironment():
 
-    def __init__( self, settings = {}, module = None ):
+    def __init__( self, settings = {}, module = None, platform_postfix:str = '' ):
         self._settings = settings
         self.module = module
-        self.generate_module_references(self.module)
+        self.generate_module_references(self.module, platform_postfix)
 
     @property
     def settings(self):
@@ -60,9 +60,9 @@ class ApiEnvironment():
     
     
     
-    def generate_module_references( self, module ):
+    def generate_module_references( self, module, platform_postfix ):
         self.generate_interaction_wrappers( getattr(module, 'interactions', None) )
-        self.generate_event_collection( getattr(getattr(module, 'data', module), 'events', None) )
+        self.generate_event_collection( getattr(getattr(module, 'data', module), 'events'+platform_postfix, None) )
             
     def generate_interaction_wrappers( self, interactions_module ):
         if ( interactions_module == None):

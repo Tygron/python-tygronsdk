@@ -1,4 +1,5 @@
 from .event_set_collection import EventSetCollection
+from .event_set_multi_collection import EventSetMultiCollection
 
 from .event_set import EventSet
 from .environment_event_wrapper import EnvironmentEventWrapper
