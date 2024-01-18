@@ -209,7 +209,7 @@ definitions = {
                 group='Levees',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
-                                        api_description='Building IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('levee_spatial_id', Type[int], aggregation=1, 
                                         api_description='Levee Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
@@ -261,7 +261,7 @@ definitions = {
                 group='Spatials',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
-                                        api_description='Building IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('spatial_id', Type[int], aggregation=1, 
                                         api_description='Terrain Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
@@ -339,7 +339,7 @@ definitions = {
                 group='Tiffs',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
-                                        api_description='Building IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], aggregation=1, 
                                         api_description='Tiff Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
@@ -402,7 +402,7 @@ definitions = {
                 group='Upgrades',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
-                                        api_description='Building IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('upgrade_spatial_id', Type[int], aggregation=1, 
                                         api_description='Upgrade Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]

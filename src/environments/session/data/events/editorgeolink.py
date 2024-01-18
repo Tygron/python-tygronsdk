@@ -13,7 +13,7 @@ definitions = {
                 group='General',
                 parameters=[
                         EventParameter('type', ['AREA', 'BUILDING', 'ROAD', 'TERRAIN_HEIGHT', 'WATER_BOTTOM'], aggregation=1, 
-                                        api_description='GeoLinkType[]', api_type='TYPE?', api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='GeoLinkType[]', api_type=['AREA', 'BUILDING', 'ROAD', 'TERRAIN_HEIGHT', 'WATER_BOTTOM'], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('name', Type[str], aggregation=1, 
                                         api_description='String[]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
@@ -72,7 +72,7 @@ definitions = {
                         EventParameter('geolink_id', Type[int], aggregation=1, 
                                         api_description='Geo Links', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('geometry_mode', ['RADIUS_CENTERPOINT', 'NORMAL'], aggregation=1, 
-                                        api_description='GeometryMode[]', api_type='Unknown: (geometrymode or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='GeometryMode[]', api_type=['RADIUS_CENTERPOINT', 'NORMAL'], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'set_line_buffer' : EventDefinition(

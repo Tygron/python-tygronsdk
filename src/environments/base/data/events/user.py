@@ -175,14 +175,14 @@ definitions = {
 
 
     # Identity
-        'get_domain_logo' : EventDefinition(
+        'get_domain_icon' : EventDefinition(
                 group='Identity',
                 parameters=[
                         EventParameter('domain', Type[str], 
                                         api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_domain_logo' : EventDefinition(
+        'set_domain_icon' : EventDefinition(
                 group='Identity',
                 parameters=[
                         EventParameter('domain', Type[str], 

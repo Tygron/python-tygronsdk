@@ -452,8 +452,8 @@ definitions = {
                 parameters=[
                         EventParameter('net_cluster_id', Type[int], aggregation=1, 
                                         api_description='NetCluster IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('net_type', 'TYPE?', aggregation=1, 
-                                        api_description='NetType of loads to be changed.', api_type='TYPE?', api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('net_type', ['HEAT', 'INTERNET', 'SEWER', 'GAS', 'ELECTRICITY'], aggregation=1, 
+                                        api_description='NetType of loads to be changed.', api_type=['HEAT', 'INTERNET', 'SEWER', 'GAS', 'ELECTRICITY'], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('state', 'Unknown: (timestate or multiple values in array [a, b, c])', aggregation=1, 
                                         api_description='Time State (NOTHING, REQUEST_CONSTRUCTION_APPROVAL, REQUEST_ZONING_APPROVAL, READY)', api_type='Unknown: (timestate or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
@@ -494,8 +494,8 @@ definitions = {
         'set_net_setting_boolean' : EventDefinition(
                 group='Network',
                 parameters=[
-                        EventParameter('net_type', 'TYPE?', aggregation=1, 
-                                        api_description='NetSetting Type', api_type='TYPE?', api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('net_type', 'Unknown: (type or multiple values in array [a, b, c])', aggregation=1, 
+                                        api_description='NetSetting Type', api_type='Unknown: (type or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('active', Type[bool], aggregation=1, 
                                         api_description='True or false', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
