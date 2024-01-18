@@ -40,6 +40,10 @@ class ConnectorTygron(Connector):
     
     def set_platform( self, platform ):
         self.set_host( platform + '.tygron.com' )
+        
+    def get_platform( self ):
+        if ( '.tygron.com' in self.get_host() ):
+            return self.get_host().replace('.tygron.com', '')
     
     def fire_event( self, event, **kwargs ):
         response =  self.request(
