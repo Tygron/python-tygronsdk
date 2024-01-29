@@ -1,11 +1,11 @@
-from . import utilities
+from . import utilities as utilities
 
 from . import core
 from . import environments
 
 class sdk():
 
-    def __init__( self, settings:dict = {}, **kwargs ):
+    def __init__( self, settings={}, **kwargs ):
         
         self._data = utilities.data.CollectiveDataStore({
             'platform' : 'engine',
@@ -16,6 +16,15 @@ class sdk():
             'new_project_name' : None
         })
         
+        try:
+            settings = settings.data(data=True, credentials=True)
+        except:
+            pass
+            
+        self.data = {**settings,  **kwargs};
+        
+        
+        
         self._on_exit_settings = {
             'save_project' : False,
             'save_created_project' : False,
@@ -23,8 +32,6 @@ class sdk():
             'kill_session' : False,
             'delete_created_project' : False
         }
-        
-        self.data = {**settings,  **kwargs};
         
         self.create_environments()
         return;
@@ -63,12 +70,13 @@ class sdk():
         
         
     def platform_module_name( self, platform:str = 'engine', module:str = '' ):
+        platform = self.data.get('platform_'+str(platform)) or platform
         from .. import platform_module_name
         return platform_module_name(platform, module)
     
     def create_environments(self):
         data_store = self._data.get_data_store()
-        postfix = sdk.platform_module_name(self.data['platform'])
+        postfix = self.platform_module_name(self.data['platform'])
         
         self.base       = environments.base.ApiEnvironment      ( data_store, platform_postfix=postfix )
         self.session    = environments.session.ApiEnvironment   ( data_store, platform_postfix=postfix )
@@ -81,7 +89,9 @@ class sdk():
     
         
     def authenticate( self, authentication_details: dict = {}, **kwargs ):
-        auth_details = { **authentication_details, **kwargs }
+        sdk_credentials = self._data.get_credentials_store()._data
+        auth_details = { **sdk_credentials, **authentication_details, **kwargs }
+        
         results = {}
         for name, env in self._environments.items():
             result = env.authenticate(auth_details)

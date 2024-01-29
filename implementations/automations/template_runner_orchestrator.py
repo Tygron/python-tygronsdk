@@ -101,8 +101,8 @@ class TemplateRunnerOrchestrator:
             target_file = self.settings['default_credentials_file']
         else:
             target_file = self.get_credentials_dir_or_file(credentials_file)
-            
-        credentials = tygronsdk.load_credentials_from_file( files=target_file )
+        
+        credentials = tygronsdk.init.load_credentials_from_file( files=target_file, require=True )
         
         if ( not getattr(credentials, 'username', False) and getattr(credentials, 'password', False) ):
             raise Exception( 'Credentials file must define both a "username" and a "password"' )

@@ -10,12 +10,31 @@ from .src import environments as environments
 from .src import interfaces as interfaces
 from .src import utilities as utilities
 
+from .src.utilities import init as init
+
 from .src.environments.session.data import items as items
 
 
-def platform_module_name( platform:str = 'engine', module:str = '' ):
-    return str(module+'_'+platform).replace('_engine','')
 
+def init_data( init_file_data:str = None, init_file_credentials:str = None, use_data:bool = True, use_credentials:bool = True, use_args:bool = True, credentials_create_if_missing:bool = False, **kwargs):
+    return init.init_data(
+            init_file_data=init_file_data, 
+            init_file_credentials=init_file_credentials,
+            use_data=use_data,
+            use_credentials=use_credentials,
+            use_args=use_args,
+            credentials_create_if_missing=credentials_create_if_missing,
+            **kwargs
+        )
+
+
+
+def platform_module_name( platform:str = 'engine', module:str = '' ):
+    return init.platform_module_name(
+            platform=platform,
+            module=module
+        )
+        
 events = core.events.EventSetMultiCollection()
 for platform in ['engine', 'preview']:
     module=platform_module_name(platform, 'events')
@@ -25,42 +44,3 @@ for platform in ['engine', 'preview']:
         **utilities.modules.get_content_from_module(getattr(environments.session.data,module,[]), core.events.EventSet),
         **utilities.modules.get_content_from_module(getattr(environments.share.data,module,[]), core.events.EventSet),
     })
-
-
-def load_data_from_file( file:str = None, files:list=['./data.txt','./data.json','./config.txt','./config.json',], fail_if_missing:bool=False ):
-    files_to_try = [ f for f in utilities.lists.coerce(files)+utilities.lists.coerce(file) if f is not None ]
-    for f in ( files_to_try ):
-        try :
-            return utilities.data.DataStore( file=f )
-        except FileNotFoundError:
-            pass
-    if ( fail_if_missing ):
-        raise FileNotFoundError( files_to_try )
-    return utilities.data.DataStore()
-    
-def load_credentials_from_file( file:str = None, files:list=['./credentials.txt','./credentials.json'], create_if_missing:bool = False ):
-    files_to_try = [ f for f in utilities.lists.coerce(files)+utilities.lists.coerce(file) if f is not None ]
-    for f in ( files_to_try ):
-        try :
-            return utilities.data.CredentialsStore( file=f )
-        except FileNotFoundError:
-            pass
-    if ( create_if_missing ):
-        create_default_credentials_file()
-        return load_credentials_from_file( files=files_to_try, create_if_missing=False )
-    raise FileNotFoundError( files_to_try )
-
-
-def create_default_credentials_file( file:str = 'credentials.json' ):
-    print('Creating a credentials file named '+file+'. SECURITY WARNING that this stores credentials in plaintext, albeit base64 encoded!')
-    import base64
-    credentials = {
-        'base64_username': base64.b64encode(input('Enter username: ').encode('ASCII')).decode('ASCII'),
-        'base64_password': base64.b64encode(input('Enter password: ').encode('ASCII')).decode('ASCII')
-    }
-    if ( utilities.files.get_extention(file) == '.json' ):
-        content = utilities.strings.create_json_string(credentials)
-        utilities.files.write_file( directory = './', file = file, content=content )
-    else:
-        content = utilities.strings.create_keys_values_string(credentials)
-        utilities.files.write_file( directory = './', file = file, content=content )

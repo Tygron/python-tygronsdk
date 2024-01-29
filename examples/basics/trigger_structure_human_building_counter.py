@@ -14,35 +14,38 @@ from pathlib import Path
 import json
 
 def main():
-
-    try:
-        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
-    except Exception as err:
-        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
-        return
         
     print('This is an example for an API trigger functions. This example does not include a full webservice but will demonstrate what the webservice has to do.')
     
-    if ( not hasattr(credentials, 'api_token') ):
-        print('A running session\'s API token is required in order to interact with it.')
-      
-    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
-    data = tygronsdk.load_data_from_file()        
-    if ( not ('server' in data or 'host' in data or 'platform' in data) ):
+    #First, data should be loaded. This will include command-line arguments, a data file with settings/configurations, and a credentials file
+    print('The "init_data" call will load arguments from the command line, data from a data.json or data.txt file, and credentials from a credentials.json or credentials.txt file.')
+    data = tygronsdk.init_data( credentials_create_if_missing=True )
+    print('Created a '+str(data))
+    
+    
+    
+    if ( not ( data.get('server', None) or data.get('host', None) or data.get('platform', None) ) ):
         print('The SDK defaults to the LTS server.')
     
     origin = data.get('server', data.get('host', data.get('platform', 'engine.tygron.com (by default)')))
+    api_token = data.get('api_token', None)
+    print('Simulating a request from '+str( origin )+' (which would be read from the referrer header), with API token '+str(api_token)+' (which would be read from the query parameters)')
     
-    print('Simulating a request from '+str( origin )+' (which would be read from the referrer header), with API token '+str(credentials.api_token)+' (which would be read from the query parameters)')
+    
     
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
-    sdk = tygron.sdk(data)
-    
-    auth_result = sdk.session.authenticate({
-            'api_token' : credentials.api_token
-        })
+    sdk = tygron.sdk( data, computer_name='Python SDK Example' );
+
+
+        
+    #   The core of the SDK is an SDK object. Settings can be provided to configure it.
+    print('Using the credentials set in the sdk, authentication can occur.' )
+    auth_result = sdk.authenticate()
     print('The authentication result is: "'+str(auth_result)+'".')
-    print('The server now connected is: "'+sdk.base.connector.get_host()+'".')
+    if ( not auth_result['session'] ):
+        print('A running session\'s API token is required in order to interact with it.')
+    
+    print('The server now connected is: "'+sdk.session.connector.get_host()+'".')
         
     #   Next, obtain information regarding the session, and perform computations with that information as desired.
     calc_results = {

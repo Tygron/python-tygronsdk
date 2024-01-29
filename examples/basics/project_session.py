@@ -14,25 +14,33 @@ from pathlib import Path
 
 def main():
 
-    try:
-        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
-    except:
-        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
-        return
-
     project_to_run = 'demo_heat_stress'
-    
     print('This example will attempt to start, read out details from, and gracefully close, a session for a specific project: "' + project_to_run + '".')
 
-    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
-    data = tygronsdk.load_data_from_file()
+    #First, data should be loaded. This will include command-line arguments, a data file with settings/configurations, and a credentials file
+    print('The "init_data" call will load arguments from the command line, data from a data.json or data.txt file, and credentials from a credentials.json or credentials.txt file.')
+    data = tygronsdk.init_data( credentials_create_if_missing=True )
+    print('Created a '+str(data))
+    
+
 
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
-    sdk = tygron.sdk( {
-            'computer_name' : 'Python SDK Example',
-            **data
-        } );
+    sdk = tygron.sdk( data, computer_name='Python SDK Example' );
 
+    #   The API has multiple levels, which the SDK has seperate environments for.
+    
+    #   The base environment requires username-and-password authentication.
+    print('Using the credentials set in the sdk, authentication can occur.' )
+    auth_result = sdk.authenticate()  
+             
+    print('The authentication result is: "'+str(auth_result)+'".')
+    if ( not auth_result['base'] ):
+        print( 'Could not authenticate against the base API. This means the username and password are missing or incorrect.' )
+        return
+        
+    print('The server now connected is: "'+sdk.base.connector.get_host()+'".')
+    
+    
     #   Good practice is to set up rules on what to do when the SDK exits, either through completion or through error.
     sdk.configure_exit( {
             'save_project': False,
@@ -41,16 +49,6 @@ def main():
             'kill_session': True,
             'delete_created_project': False
         } )
-
-    #   The API has multiple levels, which the SDK has seperate environments for.
-    #   Each environment may require its own authentication, which must be explicitly set, and is separate from the SDK's settings.
-    
-    #   The base environment requires username-and-password authentication.
-    print('Authenticating base API environment as '+ str(credentials.username) )
-    auth_result = sdk.base.authenticate( credentials )  
-             
-    print('The authentication result is: "'+str(auth_result)+'".')
-    print('The server now connected is: "'+sdk.base.connector.get_host()+'".')
     
     try:
     
@@ -67,9 +65,9 @@ def main():
         #   Joining the session will provide details of the running session, and the API token neccesary to authenticate to the session environment.
         join_session_data = sdk.base.sessions.join_project_session( session_id )
         print('The Session\'s join data is the following: ' + str(join_session_data) + '.')
-        auth_result = sdk.session.authenticate( {
-                'api_token' :join_session_data['apiToken'],
-            } )  
+        
+        sdk.data = {'api_token' : join_session_data['apiToken']}
+        auth_result = sdk.authenticate()
         print('The authentication result is: "'+str(auth_result)+'".')
         
         
@@ -100,6 +98,7 @@ def main():
 
     try:
         stakeholders = sdk.session.items.load( items.Stakeholder );
+        print('If this line is reached, the session did not close down correctly.')
     except Exception as err:
         print('Could no longer retrieve data after exit. An erorr was thrown as a result of the call: '+str(err) )
         

@@ -13,53 +13,60 @@ ConnectorSessionApi = environments.session.Connector
 from pathlib import Path
 
 def main():
-
-    try:
-        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
-    except:
-        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
-        return
-        
     project_to_run = 'demo_heat_stress'
     
     print( 'This example will attempt to start, read out details from, and gracefully close, a session for a specific project: "' + project_to_run + '".' )
-    print( 'Although it is recommended to use the "sdk" object and its interactions where possible, this example will do so through using the lower-level SDK components' )
+    print( 'Although it is recommended to use the "sdk" object and its interactions where possible, this example will do so through using the lower-level SDK components.' )
 
-    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
-    data = tygronsdk.load_data_from_file()
-        
+
+
+    #First, data is read in from the command-line, and from a 
     connection_settings = {
-            'computer_name' : 'Python SDK Example',
-            **data
+            **tygronsdk.utilities.init.load_credentials_from_file().data(), 
+            **tygronsdk.utilities.init.load_data_from_file().data(),
+            **tygronsdk.utilities.system.get_args()
+        }
+        
+    print( 'Loaded '+str(len(connection_settings))+' settings from command-line, data file, and credentials file.' )
+
+    connection_settings = {
+            **connection_settings,
+            'computer_name' : 'Python SDK Example'
         }
 
-    #   The API has multiple levels, which the SDK has seperate environments for.
-    #   Each environment also includes a specialized collection of low-level components for that specific level of the API.
+
 
     #   Get the connector for interacting with the base API
     connector_base_api = ConnectorBaseApi(connection_settings);
     #   Get a connector for interaction with the session API, as soon as it's set up
     connector_session_api = ConnectorSessionApi(connection_settings);
-    
-    
+
     #   Establish a session_id scoped such that it can be set by the running script, but also by any cleanup functionality
     session_id = None
     #   Do the same with the client_token, again so that during cleanup the client_token can be used to detach tidely
     client_token = None
     #   If an error occurs while running the example, store it so we can rethrow it after cleanup
     critical_error = None
+
+
     
     try:
     
         #   The base API requires authentication for http-basic authentication using a username and password
-        username = str(credentials.username)
-        password = str(credentials.password)
+        username = str(connection_settings['username'])
+        password = str(connection_settings['password'])
         
         print( 'Authenticating base API environment as '+username )
-        connector_base_api.set_http_basic_authentication( username, password )    
-        success = connector_base_api.authenticate()
+        connector_base_api.set_http_basic_authentication( username, password ) 
+        
+        auth_result = connector_base_api.authenticate()
+        print('The authentication result is: "'+str(auth_result)+'".')
+        if ( not auth_result ):
+            raise Exception( 'Could not authenticate against the base API. This means the username and password are missing or incorrect.' )
     
         print('The server now connected is: "'+connector_base_api.get_host()+'".')
+    
+    
     
         #   To work with events, event definitions are directly accessible.
         #   If there is a difference in platform, a specific platform's collection of events can be selected.
@@ -93,13 +100,14 @@ def main():
         
         
         
-        
-        
-        
         #   The session API requires authentication in the form of an API token
         print( 'Authenticating session API environment with token '+api_token )
-        connector_session_api.set_api_token( api_token )    
-        success = connector_session_api.authenticate()
+        connector_session_api.set_api_token( api_token )   
+        
+        auth_result = connector_session_api.authenticate()
+        print('The authentication result is: "'+str(auth_result)+'".')
+        if ( not auth_result ):
+            raise Exception( 'Could not authenticate against the session API. This means something went wrong with starting the session.' )     
         
         
         
@@ -144,6 +152,7 @@ def main():
             # Returns true also if client token was known and now left the session without attached clients
     
     
+    
     if ( not (critical_error is None) ):
         raise critical_error    
         
@@ -154,6 +163,7 @@ def main():
                 method='GET',
                 url='items/'+str( items.Item.maplink_from( items.Stakeholder ) )
             )
+        print('If this line is reached, the session did not close down correctly.')
     except Exception as err:
         print( 'After closing the session, further calls to the session will fail. An erorr was thrown as a result of the call: '+str(err) )
     

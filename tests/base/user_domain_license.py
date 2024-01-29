@@ -1,29 +1,18 @@
 import unittest
 
 import tygronsdk
+from tygronsdk.tests.generic.tygron_test import TygronTest
 from tygronsdk import sdk as tygron
 from tygronsdk import items as items
 from tygronsdk import utilities as utilities
 from tygronsdk.src.environments.base.data import objects as objects
 
-class test(unittest.TestCase):
-
-    def setUp(self):
-        self.credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=False )
-        self.sdk = tygron.sdk( self.credentials.keys() );
-        auth_result = self.sdk.base.authenticate( {
-            'username' : self.credentials.username,
-            'password' : self.credentials.password,
-        } )
-        self.assertTrue(auth_result)
+class test(TygronTest):
 
     def test_000_base_authenticate(self):
         auth_result = self.sdk.base.authenticate( {
-            'username' : self.credentials.username,
-            'password' : self.credentials.password,
+            'username' : self.data.get_credentials_store().get('username'),
+            'password' : self.data.get_credentials_store().get('password'),
         } )
         self.assertTrue(auth_result)
 

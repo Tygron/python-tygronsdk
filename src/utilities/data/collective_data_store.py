@@ -7,9 +7,10 @@ import json, base64
 
 class CollectiveDataStore(DataStore):
 
-    def __init__( self, data:dict = None, file:str = None ):
-        self._credentials_store = CredentialsStore.create()
-        self._data_store = DataStore.create()
+    def __init__( self, data:dict = None, file:str = None, data_store:DataStore = None, credentials_store:CredentialsStore = None ):
+        self._credentials_store = credentials_store or CredentialsStore.create()
+        self._data_store = data_store or DataStore.create()
+        
         self._source = None
         self.update( 
                 data=data,
@@ -23,7 +24,7 @@ class CollectiveDataStore(DataStore):
     def update( self, data:dict = {}, clear:bool = False, file:str = None, **kwargs ):
         if ( len(kwargs) > 0 ):
             data = { **kwargs } if data is None else { **data, **kwargs }
-        
+
         if ( not (isinstance(data, dict) or isinstance(file,str) ) ):
             return
             
@@ -61,8 +62,21 @@ class CollectiveDataStore(DataStore):
     def get_credentials_store(self):
         return self._credentials_store
      
-    def keys(self):
-        return self.get_data_store().keys()
+    def data(self, data:bool = True, credentials:bool = False):
+        output = {}
+        if ( data ):
+            output.update( **self.get_data_store().data() )
+        if ( credentials ):
+            output.update( **self.get_credentials_store().data() )
+        return output
+        
+    def get(self, key, default=None):
+        if ( key in self._credentials_store ):
+            return self._credentials_store.get(key, default)
+        if ( key in self._data_store ):
+            return self._data_store.get(key, default)
+        return default
+        
     def __getitem__(self, key):
         return self._data[key]
     def __setitem__(self, key, value):
@@ -74,6 +88,6 @@ class CollectiveDataStore(DataStore):
         
     def __str__(self):
         output = []
-        output.append(self._data_store)
-        output.append(self._credentials_store)
-        return 'Collective Data Store with '+ (', '.join(output))
+        output.append( str(self._data_store) )
+        output.append( str(self._credentials_store) )
+        return 'CollectiveDataStore with: '+ (', '.join(output))+''

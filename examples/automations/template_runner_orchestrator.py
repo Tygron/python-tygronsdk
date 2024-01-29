@@ -16,14 +16,21 @@ from pathlib import Path
 
 def main():
 
-    try:
-        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
-    except:
-        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
-        return
+    #First, data should be loaded. This will include command-line arguments, a data file with settings/configurations, and a credentials file
+    print('The "init_data" call will load arguments from the command line, data from a data.json or data.txt file, and credentials from a credentials.json or credentials.txt file.')
+    data = tygronsdk.init_data( credentials_create_if_missing=True )
+    print('Created a '+str(data))
     
-    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
-    data = tygronsdk.load_data_from_file()
+    #Before kicking off the entire process, check the data allows for authentication:
+    sdk = tygron.sdk( data, computer_name='Python SDK Example' );
+    auth_result = sdk.authenticate()  
+             
+    print('The authentication result is: "'+str(auth_result)+'".')
+    if ( not auth_result['base'] ):
+        print( 'Could not authenticate against the base API. This means the username and password are missing or incorrect.' )
+        return    
+    
+    
     
     print( 'This example will demonstrate how the TemplateRunnerOrchestrator can be used to automatically perform repeated calculations.' )
     
@@ -85,7 +92,7 @@ def main():
         }) # InputGenerator allows more settings, and can run without any settings as well.
     
     print('After setting the TemplateRunnerInputGenerator up, it can be run')
-    input_generator.run(overwrite_data=data)
+    input_generator.run(overwrite_data=data.get_data_store())
     
     for directory in [ template_dir, input_dir, data_dir ]:
         print( 'The following files now exist in {dir}: {list}'.format(
@@ -104,7 +111,7 @@ def main():
             'on_start_clean_output' : True,
             'domain_projects_limit_fraction' : 0.5,
             'base_directory' : base_directory,
-            'default_credentials_file' : credentials.source
+            'default_credentials_file' : data.get_credentials_store().source
         }) # Orchestrator allows more settings, and can run without any settings as well.
     
     print('As an additional config when running as part of a program, explicitly set it to log its output by printing them to the terminal')

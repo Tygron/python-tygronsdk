@@ -46,6 +46,7 @@ class EventSetMultiCollection():
             self.add_event_set(collection, event_set)
         for event_domain, event_set in event_sets_dict.items():
             self.add_event_set(collection, event_set, event_domain)
+        self.set_event_set_collection(self.collection)
     
     def add_event_set( self, collection:str, event_set:EventSet, event_domain:str = None ):
         self.collection = self.collection or collection

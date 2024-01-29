@@ -14,22 +14,18 @@ from pathlib import Path
 
 def main():
 
-    try:
-        credentials = tygronsdk.load_credentials_from_file( create_if_missing=True )
-    except:
-        print('Credentials must be provided, defining "username" and "password". Can either be a json object in "credentials.json", or key-value pairs in "credentials.txt".')
-        return
-        
     template_project_name = 'demo_heat_stress'
+    print('This example will use the TemplateRunner automation to automatically create, calculate, save results of, close and discard a project based on the following template: "' + template_project_name + '".')
 
-    #   More data can be loaded in through configuration or data files. By default, the files sought are data.txt, data.json, config.txt, config.json
-    data = tygronsdk.load_data_from_file()
+    #First, data should be loaded. This will include command-line arguments, a data file with settings/configurations, and a credentials file
+    print('The "init_data" call will load arguments from the command line, data from a data.json or data.txt file, and credentials from a credentials.json or credentials.txt file.')
+    data = tygronsdk.init_data( credentials_create_if_missing=True )
+    print('Created a '+str(data))
+    
+    
     
     #   The core of the SDK is an SDK object. Settings can be provided to configure it.
-    sdk = tygron.sdk( {
-            'computer_name' : 'Python SDK Example',
-            **data
-        } );
+    sdk = tygron.sdk( data, computer_name='Python SDK Example' );
         
     runner = interfaces.TemplateRunner()
     
@@ -40,7 +36,7 @@ def main():
     runner.set_formatted_logging_function( print )
     
     #   Whether to, as the process runs, a log entry should be included which includes the api token
-    runner.set_log_api_token( True)
+    runner.set_log_api_token( True )
     
     
     #   The configuration of what template to run:
@@ -90,16 +86,13 @@ def main():
             formats=['PNG', 'GEOTIFF']    #Function which takes the item and the timeframe as input, and returns 
         )
     
-    username = str(credentials.username)
-    password = str(credentials.password)
+    username = str(data.get_credentials_store().username)
+    password = str(data.get_credentials_store().password)
     
     #   After all configurations are made, the runner can be started by using .run(), providing the credentials to authenticate
     runner.log( 'Starting the template runner with credentials for '+username )
     try:
-        runner.run({
-                'username' : username,
-                'password' : password,
-            })
+        runner.run( data.get_credentials_store() )
     except Exception as err:
         print( 'An unexpected error occured while running the example' )
         print( utilities.exceptions.stringify(err) )

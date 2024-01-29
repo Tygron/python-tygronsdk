@@ -1,34 +1,13 @@
 import unittest
 
 import tygronsdk
+from tygronsdk.tests.generic.tygron_test import TygronTest
 from tygronsdk import sdk as tygron
 from tygronsdk import items as items
 from tygronsdk import utilities as utilities
 from tygronsdk.src.environments.base.data import objects as objects
 
-class test(unittest.TestCase):
-
-    def setUp(self):
-        self.credentials = tygronsdk.load_credentials_from_file( files=[
-                './credentials.txt',
-                './credentials.json'
-            ], create_if_missing=False )
-        self.sdk = tygron.sdk( self.credentials.keys() );
-        auth_result = self.sdk.base.authenticate( {
-            'username' : self.credentials.username,
-            'password' : self.credentials.password,
-        } )
-        self.assertTrue(auth_result)
-    
-    def tearDown(self):
-        self.sdk.configure_exit( {
-                'save_project': False,
-                'save_created_project': False,
-                'close_session': True,
-                'kill_session': True,
-                'delete_created_project': True
-            } )
-        self.sdk.exit()
+class test(TygronTest):
         
         
     def test_000_session_simple_lifecycle(self):

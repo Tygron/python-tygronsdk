@@ -24,8 +24,6 @@ class CredentialsStore(DataStore):
     def create( file:str = None ):
         return CredentialsStore( file=file )
     
-    
-    
     @property
     def username(self):
         return self._data.get('username', None)
@@ -57,7 +55,7 @@ class CredentialsStore(DataStore):
     def parse_keys( self, data ):
         new_data = super().parse_keys( data )
         
-        return { key: new_data.get(key, None) for key in self._credential_keys }
+        return { key: new_data.get(key, None) for key in self._credential_keys if key in new_data }
         
     def __str__(self):
         output = []
@@ -71,4 +69,4 @@ class CredentialsStore(DataStore):
         if   ( self.api_token ):
             output.append('API token for session ' + str(self.session_id) )
         
-        return 'Credentials: ' + (', '.join(output))
+        return 'CredentialsStore: ' + (', '.join(output))

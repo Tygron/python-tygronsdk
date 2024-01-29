@@ -42,6 +42,7 @@ class DataStore():
             raise Exception('File read succesfully, but did not contain valid data. Must be either a JSON, or key value pairs')           
  
         self._data.update( self.parse_keys(data) )
+        
         if ( from_file ):
             self._source = file
             
@@ -92,8 +93,11 @@ class DataStore():
     def get(self, key, default=None):
         return self._data.get(key,default)
         
-    def keys(self):
+    def data(self):
         return self._data
+        
+    def keys(self):
+        return self.data()
     def __getitem__(self, key):
         return self._data[key]
     def __setitem__(self, key, value):
@@ -104,4 +108,4 @@ class DataStore():
         return iter(self._data)
         
     def __str__(self):
-        return 'Data store with: ' + str( len(self._data) ) + ' entries'
+        return 'DataStore with: ' + str( len(self._data) ) + ' entries'
