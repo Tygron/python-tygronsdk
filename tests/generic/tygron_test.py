@@ -59,11 +59,11 @@ class TygronTest(unittest.TestCase):
         self.sdk.configure_exit( {
                 'save_project': False,
                 'save_created_project': False,
-                'close_session': True,
+                'close_session': False,
                 'kill_session': True,
                 'delete_created_project': True
             } )
         try:
             self.sdk.exit()
         except Exception as err:
-            pass
+            raise Exception(utilities.exceptions.stringify(err))
