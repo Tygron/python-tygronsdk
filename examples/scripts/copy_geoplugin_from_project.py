@@ -46,7 +46,7 @@ class Script(interfaces.Script):
                 'save_project': False,
                 'save_created_project': False,
                 'close_session': True,
-                'kill_session': True,
+                'kill_session': False,
                 'delete_created_project': False
             } )
             
@@ -123,7 +123,8 @@ class Script(interfaces.Script):
             auth_result = sdk_origin.session.authenticate(origin_session_data)
             if ( auth_result is False ):
                 raise Exception('Could not authenticate to origin session')
-                
+            sdk_origin.data = origin_session_data
+            
             if ( settings['target_session_token'] is None ):
                 target_session_data = sdk_target.base.sessions.join_project_session(settings['target_session_id'])
             else:
