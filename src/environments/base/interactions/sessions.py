@@ -53,7 +53,9 @@ class Sessions:
         return join_session_data
         
     @staticmethod
-    def close_project_session( conn: Connector, session_id:int, client_token:str, keep_open:bool = False ):
+    def close_project_session( conn: Connector, session_id:int, client_token:str, keep_open:bool = False, error_on_missing:bool = False ):
+        if ( (not error_on_missing) and (Sessions.get_joinable_session(conn=conn, session_id=session_id) is None) ):
+            return None
         response = conn.fire_event( 
             events.io.close (
                 session_id, client_token, keep_open
@@ -62,7 +64,9 @@ class Sessions:
         return response.get_response_body_json()
         
     @staticmethod
-    def kill_project_session( conn: Connector, session_id:int ):
+    def kill_project_session( conn: Connector, session_id:int, error_on_missing:bool = False ):
+        if ( (not error_on_missing) and (Sessions.get_joinable_session(conn=conn, session_id=session_id) is None) ):
+            return None
         response = conn.fire_event( 
             events.io.kill (
                 session_id
