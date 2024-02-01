@@ -5,6 +5,7 @@ from ..interactions.users import Users
 from ..interactions.projects import Projects
 
 from ....utilities.strings import Strings
+from ....utilities.exceptions import Exceptions
 
 import json
 
@@ -158,7 +159,7 @@ class Sessions:
                 else:
                     raise Exception( response );
             except Exception as err:
-                last_err = Exception('Could not set name: '+new_project_name+', with '+str(attempts)+' attempts', err )
+                last_err = Exception('Could not set name: '+new_project_name+', with '+str(attempts)+' attempts', utilities.Exceptions.stringify(err) )
                 continue
         raise last_err
  

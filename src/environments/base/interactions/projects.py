@@ -58,7 +58,7 @@ class Projects:
         return objects.ProjectData(response.get_response_body_json())
  
     @staticmethod           
-    def delete_project( conn: Connector, project_name: str ):
+    def delete_project( conn: Connector, project_name: str, error_on_missing:bool = False ):
         response = conn.fire_event( 
             events.io.trash_project (
                 project_name, True
@@ -66,8 +66,10 @@ class Projects:
                 
         if response.is_success():
             return True
-        else:
+        elif error_on_missing:
             raise Exception( response );
+        else
+            return false
             
     @staticmethod           
     def undelete_project( conn: Connector, project_name: str ):
