@@ -53,9 +53,12 @@ class test(TygronTest):
         geoplugins = self.sdk.session.items.load(items.Geoplugin)
         geoplugins_start_count = geoplugins.count()
 
-        script.start(
-            **kwargs
-        )
+        try:
+            script.start(
+                **kwargs
+            )
+        except Exception as err:
+            raise Exception(utilities.exceptions.stringify(err))
         
         geoplugins = self.sdk.session.items.load(items.Geoplugin)
         newest_geoplugin = geoplugins.get(geoplugins.size()-1)
