@@ -68,7 +68,7 @@ class Projects:
             return True
         elif error_on_missing:
             raise Exception( response );
-        else
+        else:
             return false
             
     @staticmethod           
