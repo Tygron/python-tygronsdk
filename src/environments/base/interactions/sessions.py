@@ -146,7 +146,7 @@ class Sessions:
         
         last_err = None
         for i in range(attempts):
-            attempt_name = new_project_name + ('' if i==0 else '-'+str(i))
+            attempt_name = new_project_name + ('' if i==0 else str(i))
             try:
                 response = conn.fire_event( 
                     events.io.save_project_as (
