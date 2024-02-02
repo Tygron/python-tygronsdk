@@ -51,10 +51,9 @@ class Script(interfaces.Script):
         
         session_id = sdk.base.sessions.start_project_session( 'demo_heat_stress' )
         join_session_data = sdk.base.sessions.join_project_session( session_id )
+        sdk.data = join_session_data
 
-        auth_result = sdk.session.authenticate( {
-                'api_token' :join_session_data['apiToken'],
-            } )
+        auth_result = sdk.session.authenticate( join_session_data )
         sdk.on_exit_settings = {
                     'close_session' : True,
                 }
