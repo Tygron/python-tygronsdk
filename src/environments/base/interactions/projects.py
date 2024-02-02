@@ -59,6 +59,14 @@ class Projects:
  
     @staticmethod           
     def delete_project( conn: Connector, project_name: str, error_on_missing:bool = False ):
+        try:
+            Projects.get_project(conn=conn, project_name=project_name)
+        except Exception as err:
+            if (not error_on_missing):
+                return False
+            else:
+                raise err
+                
         response = conn.fire_event( 
             events.io.trash_project (
                 project_name, True
@@ -66,10 +74,8 @@ class Projects:
                 
         if response.is_success():
             return True
-        elif error_on_missing:
-            raise Exception( response );
         else:
-            return false
+            raise Exception( response );
             
     @staticmethod           
     def undelete_project( conn: Connector, project_name: str ):

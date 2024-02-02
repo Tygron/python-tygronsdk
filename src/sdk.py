@@ -132,4 +132,4 @@ class sdk():
             except Exception as err:
                 errors.append(err)
         if ( len(errors) > 0 ):
-            raise Exception( 'One or more exceptions occured while exiting the SDK.', *errors)
+            raise Exception( 'One or more exceptions occured while exiting the SDK.', *errors )
