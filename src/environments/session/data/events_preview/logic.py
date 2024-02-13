@@ -50,8 +50,8 @@ definitions = {
         'dismiss_error' : EventDefinition(
                 group='Information',
                 parameters=[
-                        EventParameter('error_log_id', Type[int], 
-                                        api_description='ErrorLog ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('error_log_id', Type[int], aggregation=1, 
+                                        api_description='ErrorLog ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'search' : EventDefinition(
