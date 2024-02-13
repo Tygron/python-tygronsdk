@@ -8,31 +8,32 @@ Add as a module to a python project, ideally in a folder named "tygronsdk". It i
 
 ```python
 # Import Tygron SDK
+import tygronsdk
 from tygronsdk import sdk as tygron
 from tygronsdk import items
-```
 
-And use the sdk as follows:
+# Load credentials.txt for credentials, and data.txt for other connection settings
+data = tygronsdk.init.init_data()
 
-```python
-# Starting with the Tygron SDK
-sdk = tygron.sdk( {
+# Optionally overwrite or add additional data
+data.update( {
         'platform' : 'engine',
         'computer_name' : 'PythonSDK',
-    } );
+} )
 
-username = '' # Your Tygron Platform username
-password = '' # Your Tygron Platform password
+# Starting the Tygron SDK with the initialized data
+sdk = tygron.sdk( data );
 
-sdk.base.authenticate( {'username' : username, 'password' : password} )
+# Authenticate using the credentials data in the data store
+sdk.authenticate( )
 
 # Start and access session
 sdk.base.projects.get_startable_projects()
 session_id = sdk.base.sessions.start_project_session( 'demo_heat_stress' )
-api_token = sdk.base.sessions.join_project_session( session_id )['apiToken']
+join_data = sdk.base.sessions.join_project_session( session_id )
 
 # Interact with session
-sdk.session.authenticate( {'api_token': api_token} )
+sdk.authenticate( join_data )
 stakeholders = sdk.session.items.load(items.Stakeholder)
 print ('There are '+str(stakeholders.count())+' Stakeholders: ' + str([item.name for item in stakeholders]) )
 
