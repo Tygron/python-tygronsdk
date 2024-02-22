@@ -33,7 +33,7 @@
 			"export_key" : "example-{item_type}-{item_name}-{item_id}{extention}"
 		},
 		"overlay": {
-			"ids" : {"PE Temperature": [0,1,-2,-1] },
+			"ids" : { "PE Temperature": [0,1,-2,-1], "40": true },
 			"formats" : ["GEOTIFF","PNG"],
 			"export_key" : "{item_type}-{item_name}-{run_name}-{item_id}{extention}"
 		}
