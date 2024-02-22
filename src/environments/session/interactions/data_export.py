@@ -194,7 +194,15 @@ class DataExport:
                 item_type=Overlay, 
                 item_id=item_id
             )
-        timeframes = item.get_timeframes_range(timeframes)
+        timeframe_id = item.get_controlling_overlay_id()
+        timeframe_item = item
+        if ( not (timeframe_id is item_id) ):
+            timeframe_item = Items.get(
+                    conn=conn,
+                    item_type=Overlay,
+                    item_id=timeframe_id
+                )
+        timeframes = timeframe_item.get_timeframes_range(timeframes)
  
         base_url = conn.get_url_part_protocol()+conn.get_url_part_host()
         base_url += '/web/'+Overlay.get_item_type().lower()+'.png'
@@ -218,7 +226,15 @@ class DataExport:
                 item_type=Overlay, 
                 item_id=item_id
             )
-        timeframes = item.get_timeframes_range(timeframes)
+        timeframe_id = item.get_controlling_overlay_id()
+        timeframe_item = item
+        if ( not (timeframe_id is item_id) ):
+            timeframe_item = Items.get(
+                    conn=conn,
+                    item_type=Overlay,
+                    item_id=timeframe_id
+                )
+        timeframes = timeframe_item.get_timeframes_range(timeframes)
         
         results = {}
         for  timeframe in timeframes:
