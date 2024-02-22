@@ -55,8 +55,8 @@ class Init:
             except FileNotFoundError:
                 pass
         if ( create_if_missing ):
-            create_default_credentials_file()
-            return load_credentials_from_file( files=files_to_try, create_if_missing=False )
+            Init.create_default_credentials_file()
+            return Init.load_credentials_from_file( files=files_to_try, create_if_missing=False )
         if (require):
             raise FileNotFoundError( files_to_try )
         return CredentialsStore()
