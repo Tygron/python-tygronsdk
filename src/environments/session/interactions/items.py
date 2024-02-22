@@ -80,7 +80,7 @@ class Items:
     
     @staticmethod
     def get_matching( conn: Connector, item_type, matchables, timeout_in_seconds = 30, 
-            try_match_on_id:bool = True,  try_match_on_name:bool = True,  try_match_on_attribute:bool = True ):
+            try_match_on_id:bool = True,  try_match_on_name:bool = True,  try_match_on_attribute:bool = True, try_str_as_int:bool = True ):
         if ( matchables == False ):
             return ItemMap([], as_item = item_type)
             
@@ -92,7 +92,14 @@ class Items:
             return items
             
         matched_items = []        
-        matchables = Lists.coerce(matchables)
+        matchables = list(Lists.coerce(matchables))
+        if (try_str_as_int):
+            for matchable in matchables:
+                try:
+                    if int(matchable) not in matchables:
+                        matchables.append( int(matchable) ) 
+                except:
+                    pass
         
         for item in items:
             if (try_match_on_id and item.id in matchables):
