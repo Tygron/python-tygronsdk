@@ -429,6 +429,8 @@ class TemplateRunner:
         
         for overlay_id in item_ids:
             for overlay in sdk.session.items.get_matching( item_type=items.Overlay, matchables=overlay_id ):
+                self.log( 'Overlay identified by ' + str(overlay_id)+ ' is Overlay with ID ' + str(overlay.id) )
+                self.log( 'Overlay identified by ' + str(overlay_id)+ ' is set to export timeframes: ' + str(timeframes[overlay_id]) )
                 for export_format in export_formats:
                     try:
                         single_item_results = sdk.session.data_export.export(
@@ -438,6 +440,7 @@ class TemplateRunner:
                                 indexes =       timeframes[overlay_id],
                                 identifier =    export_key
                             )
+                        self.log('Amount of results for Overlay identified by ' + str(overlay_id) + ' in format ' + str(export_format) + ': '+str(len(single_item_results.keys())))
                         all_item_results.update(single_item_results)
                     except Exception as err:
                         try:
