@@ -20,7 +20,7 @@ class TriggerRemoveDefaultTrees(interfaces.Trigger):
         return 'Trees, the only source of which is a default source, are removed from the project.'   
     def get_documented_parameters( self ):
         return {
-            'functions' : 'A list of the function ids of all functions considered trees. Default is '+str(default_function_values)+'.'
+            'functions' : 'A list of the function ids of all functions considered trees. Default is '+str(self.default_function_ids())+'.'
         };
     def get_instructions_usage( self ):
         pass
