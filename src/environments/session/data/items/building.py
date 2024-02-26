@@ -9,12 +9,15 @@ class Building(Item):
     @property
     def center(self):
         return self._data.get( 'center', None )
+        
     @property
     def custom_geometries(self):
         return self._data.get( 'customGeometries', None )
+        
     @property
     def demolisher_id(self):
         return self._data.get( 'demolisherID', Item.NONE )
+        
     @property
     def function_id(self):
         return self._data.get( 'functionID', None )
@@ -29,7 +32,7 @@ class Building(Item):
         
     @property
     def override_categories(self):
-        return self._data.get( 'overrideCategories', None )
+        return self._data.get( 'overrideCategories', [] )
         
     @property
     def override_decals(self):
