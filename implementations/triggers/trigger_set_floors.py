@@ -86,6 +86,8 @@ class TriggerSetFloors(interfaces.Trigger):
             removal_building_ids.append( building.id )  
             removal_names.append( attribute )  
             
+        if ( len(section_building_ids) == 0 ):
+            return
         
         attributes_event = sdk.session.events.editorbuilding.set_attributes( attribute_building_ids, attribute_names, attribute_values )
         section_floors_event = sdk.session.events.editorbuilding.set_floors( section_building_ids, section_section_ids, section_floors )
