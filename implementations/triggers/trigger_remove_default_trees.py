@@ -13,7 +13,7 @@ class TriggerRemoveDefaultTrees(interfaces.Trigger):
     
     def get_description( self ):
         return '''<p>
-        Checks which trees have been automatically generated, and remove them from the Project. This prepares the Project for nautomatically adding custom tree datasets.</p>
+        Checks which trees have been automatically generated, and remove them from the Project. This prepares the Project for automatically adding custom tree datasets.</p>
         <p>'''
     
     def get_documented_results( self ):
