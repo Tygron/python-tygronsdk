@@ -53,12 +53,14 @@ class Overlay(Item):
     
     def get_timeframes_range( self, indexes = True ):
         timeframes = []
-        number_of_timeframe = self.get_timeframes()
-        if (number_of_timeframe is None):
+        number_of_timeframes = self.get_timeframes()
+        if (number_of_timeframes is None):
             raise Exception( 'Unable to establish timeframes range for Overlay '+self.get_printable_id()+', of type '+overlay_type )
         
+        number_of_timeframes = int(number_of_timeframes)
+        
         if ( indexes is True ):
-            timeframes = list(range(0, number_of_timeframe))
+            timeframes = list(range(0, number_of_timeframes))
         elif ( isinstance(indexes, int) ):
             timeframes = self.get_timeframe(indexes)
         elif ( isinstance(indexes, list) ):
