@@ -241,6 +241,22 @@ definitions = {
                                         api_description='Double', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
+
+
+    # 
+        'append_attribute' : EventDefinition(
+                group='',
+                parameters=[
+                        EventParameter('area_id', Type[int], aggregation=1, 
+                                        api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_name', Type[str], 
+                                        api_description='Attribute Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('attribute_value', Type[float], aggregation=1, 
+                                        api_description='Attribute Values appended to existing values', api_type=Type[float], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('source_id', Type[int], False, 
+                                        api_description='Source (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
     }
 
 event_set = EventSet(definitions, domain='editorarea')

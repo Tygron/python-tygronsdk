@@ -31,6 +31,8 @@ definitions = {
                                         api_description='ASCII File bytes (< 2GB)', api_type=Type[bytes], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('uploader_name', Type[str], 
                                         api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('crs', Type[str], 
+                                        api_description='CRS', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'add_url' : EventDefinition(
@@ -52,9 +54,11 @@ definitions = {
                         EventParameter('geotiff_name', Type[str], aggregation=1, 
                                         api_description='GeoTIFF Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('ascii_url', Type[str], aggregation=1, 
-                                        api_description='Web URL', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='Web ASCII URL', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('uploader_name', Type[str], aggregation=1, 
                                         api_description='Uploader', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('crs', Type[str], aggregation=1, 
+                                        api_description='CRS', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 

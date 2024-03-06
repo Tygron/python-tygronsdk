@@ -83,8 +83,6 @@ definitions = {
         'get_domain_sessions' : EventDefinition(
                 group='Running session data',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'set_session_keep_alive' : EventDefinition(
@@ -138,8 +136,8 @@ definitions = {
                 parameters=[
                         EventParameter('session_id', Type[int], 
                                         api_description='Session ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('new_project_name', Type[str], 
                                         api_description='New Project Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('clear_map', Type[bool], 
@@ -186,8 +184,6 @@ definitions = {
         'get_visible_domain_projects' : EventDefinition(
                 group='Available projects data',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_my_startable_projects' : EventDefinition(
@@ -198,22 +194,18 @@ definitions = {
         'get_domain_startable_projects' : EventDefinition(
                 group='Available projects data',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_domain_startable_templates' : EventDefinition(
                 group='Available projects data',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_project_saved_sessions' : EventDefinition(
                 group='Available projects data',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('project_name', Type[str], 
                                         api_description='Project Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -314,8 +306,8 @@ definitions = {
         'get_domain_usage' : EventDefinition(
                 group='Domain',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('subdomain', Type[str], False, 
                                         api_description='Subdomain Name (optional)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                     ]
@@ -323,8 +315,8 @@ definitions = {
         'remove_sub_domain' : EventDefinition(
                 group='Domain',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('subdomain', Type[str], 
                                         api_description='Sub Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -361,8 +353,6 @@ definitions = {
         'get_domain_message' : EventDefinition(
                 group='Communication',
                 parameters=[
-                        EventParameter(0, Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_domain_messages' : EventDefinition(

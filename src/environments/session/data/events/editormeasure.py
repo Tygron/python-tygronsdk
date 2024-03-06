@@ -159,38 +159,38 @@ definitions = {
         'add_event' : EventDefinition(
                 group='Events',
                 parameters=[
-                        EventParameter('measure_id', Type[int], 
-                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('event_side', Type[bool], True, True, 
-                                        api_description='Server Side (false = Client Side);{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('measure_action', ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], True, 'CONSTRUCTION_PLAN', 
-                                        api_description='Action Type;{"default": null, "values": ["CONSTRUCTION_PLAN", "CONSTRUCTION_PLAN_CANCEL"]}', api_type=['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('measure_id', Type[int], aggregation=1, 
+                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('event_server_side', Type[bool], True, True, aggregation=1, 
+                                        api_description='Server Side (false = Client Side)', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('measure_action', ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], True, 'CONSTRUCTION_PLAN', aggregation=1, 
+                                        api_description='Action Type', api_type=['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'remove_event' : EventDefinition(
                 group='Events',
                 parameters=[
-                        EventParameter('measure_id', Type[int], 
-                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('event_side', Type[bool], True, True, 
-                                        api_description='Server Side (false = Client Side);{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('measure_action', ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], True, 'CONSTRUCTION_PLAN', 
-                                        api_description='Action Type;{"default": null, "values": ["CONSTRUCTION_PLAN", "CONSTRUCTION_PLAN_CANCEL"]}', api_type=['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('event_id', Type[int], 
-                                        api_description='Event ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('measure_id', Type[int], aggregation=1, 
+                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('event_server_side', Type[bool], True, True, aggregation=1, 
+                                        api_description='Server Side (false = Client Side)', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('measure_action', ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], True, 'CONSTRUCTION_PLAN', aggregation=1, 
+                                        api_description='Action Type', api_type=['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('event_id', Type[int], aggregation=1, 
+                                        api_description='Event ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'set_event' : EventDefinition(
                 group='Events',
                 parameters=[
-                        EventParameter('measure_id', Type[int], 
-                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('event_side', Type[bool], True, True, 
-                                        api_description='Server Side (false = Client Side);{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('measure_Action', ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], True, 'CONSTRUCTION_PLAN', 
-                                        api_description='Action Type;{"default": null, "values": ["CONSTRUCTION_PLAN", "CONSTRUCTION_PLAN_CANCEL"]}', api_type=['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('coded_event', 'Unknown: (codedevent)', 
-                                        api_description='CodedEvent contents', api_type='Unknown: (codedevent)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('measure_id', Type[int], aggregation=1, 
+                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('event_server_side', Type[bool], True, True, aggregation=1, 
+                                        api_description='Server Side (false = Client Side)', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('measure_action', ['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], True, 'CONSTRUCTION_PLAN', aggregation=1, 
+                                        api_description='Action Type', api_type=['CONSTRUCTION_PLAN', 'CONSTRUCTION_PLAN_CANCEL'], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('coded_event', 'Unknown: (codedevent or multiple values in array [a, b, c])', aggregation=1, 
+                                        api_description='CodedEvent contents', api_type='Unknown: (codedevent or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 
@@ -249,16 +249,16 @@ definitions = {
             ),
 
 
-    # Spatials
-        'add_spatial' : EventDefinition(
-                group='Spatials',
+    # Terrains
+        'add_terrain' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'remove_spatial' : EventDefinition(
-                group='Spatials',
+        'remove_terrain' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
@@ -266,8 +266,8 @@ definitions = {
                                         api_description='Terrain Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
-        'add_spatial_polygons' : EventDefinition(
-                group='Spatials',
+        'add_terrain_polygons' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
@@ -279,8 +279,8 @@ definitions = {
                                         api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'remove_spatial_polygons' : EventDefinition(
-                group='Spatials',
+        'remove_terrain_polygons' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
@@ -292,19 +292,19 @@ definitions = {
                                         api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_spatial_type' : EventDefinition(
-                group='Spatials',
+        'set_terrain_edit_type' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('spatial_id', Type[int], 
                                         api_description='Terrain Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('spatial_type', ['BUILDING', 'FLATTEN', 'LEVEE', 'RAISE', 'TIFF', 'UPGRADE', 'WATER'], 
-                                        api_description='Measure Edit Type;{"default": null, "values": ["BUILDING", "FLATTEN", "LEVEE", "RAISE", "TIFF", "UPGRADE", "WATER"]}', api_type=['BUILDING', 'FLATTEN', 'LEVEE', 'RAISE', 'TIFF', 'UPGRADE', 'WATER'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('spatial_type', ['BUILDING', 'FLATTEN', 'GEOTIFF', 'LEVEE', 'RAISE', 'UPGRADE', 'WATER'], 
+                                        api_description='Edit Type;{"default": null, "values": ["BUILDING", "FLATTEN", "GEOTIFF", "LEVEE", "RAISE", "UPGRADE", "WATER"]}', api_type=['BUILDING', 'FLATTEN', 'GEOTIFF', 'LEVEE', 'RAISE', 'UPGRADE', 'WATER'], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_spatial_terrain_type' : EventDefinition(
-                group='Spatials',
+        'set_terrain_type' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
@@ -314,8 +314,8 @@ definitions = {
                                         api_description='Terrain Type ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_spatial_height' : EventDefinition(
-                group='Spatials',
+        'set_terrain_height' : EventDefinition(
+                group='Terrains',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
@@ -328,20 +328,20 @@ definitions = {
 
 
     # Tiffs
-        'add_tiff_spatial' : EventDefinition(
+        'add_geotiff' : EventDefinition(
                 group='Tiffs',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'remove_tiff_spatial' : EventDefinition(
+        'remove_geotiff_terrain_type' : EventDefinition(
                 group='Tiffs',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
-                                        api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('tiff_spatial_id', Type[int], aggregation=1, 
-                                        api_description='Tiff Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tiff_spatial_id', Type[int], 
+                                        api_description='GeoTIFF Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'set_geotiff' : EventDefinition(
@@ -350,42 +350,62 @@ definitions = {
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], 
-                                        api_description='TIFF-Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='GeoTIFF Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('geotiff_id', Type[int], aggregation=1, 
-                                        api_description='Unique GeoTIFF IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='GeoTIFF IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
-        'add_tiff_polygons' : EventDefinition(
+        'add_geotiff_polygons' : EventDefinition(
                 group='Tiffs',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], 
-                                        api_description='Tiff Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='GeoTIFF Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
                                         api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'remove_tiff_polygons' : EventDefinition(
+        'remove_geotiff_polygons' : EventDefinition(
                 group='Tiffs',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], 
-                                        api_description='Tiff Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='GeoTIFFs Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
                                         api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_automatic_tiff_polygons' : EventDefinition(
+        'set_geotiff_automatic_polygons' : EventDefinition(
                 group='Tiffs',
                 parameters=[
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], 
-                                        api_description='Tiff Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='GeoTIFF Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('automatic_polygon_calculation', Type[bool], 
                                         api_description='Automatic calculation;{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_geotiff_terrain_type' : EventDefinition(
+                group='Tiffs',
+                parameters=[
+                        EventParameter('measure_id', Type[int], 
+                                        api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tiff_spatial_id', Type[int], 
+                                        api_description='GeoTIFF Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('terrain_type_id', Type[int], 
+                                        api_description='Terrain Type ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'remove_geotiff' : EventDefinition(
+                group='Tiffs',
+                parameters=[
+                        EventParameter('measure_id', Type[int], 
+                                        api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tiff_spatial_id', Type[int], aggregation=1, 
+                                        api_description='GeoTIFF Spatial IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 

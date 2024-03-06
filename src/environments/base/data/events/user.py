@@ -9,11 +9,6 @@ definitions = {
 
 
     # User
-        'get_my_domain' : EventDefinition(
-                group='User',
-                parameters=[
-                    ]
-            ),
         'get_my_login_key' : EventDefinition(
                 group='User',
                 parameters=[
@@ -39,22 +34,16 @@ definitions = {
         'get_domain' : EventDefinition(
                 group='Domain info',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_domain_user_names' : EventDefinition(
                 group='Domain info',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_domain_users' : EventDefinition(
                 group='Domain info',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
 
@@ -63,8 +52,8 @@ definitions = {
         'add_user' : EventDefinition(
                 group='Management',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('username', Type[str], 
                                         api_description='Username', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -79,8 +68,8 @@ definitions = {
         'set_user_active' : EventDefinition(
                 group='Management',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('username', Type[str], 
                                         api_description='Username', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('active', Type[bool], 
@@ -90,8 +79,8 @@ definitions = {
         'set_user_data' : EventDefinition(
                 group='Management',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('username', Type[str], 
                                         api_description='Username', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('forum_name', Type[str], 
@@ -109,8 +98,8 @@ definitions = {
         'set_user_sub_domain' : EventDefinition(
                 group='Management',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('username', Type[str], 
                                         api_description='Username', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('subdomain', Type[str], 
@@ -120,8 +109,8 @@ definitions = {
         'add_sub_domain' : EventDefinition(
                 group='Management',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('subdomain', Type[str], 
                                         api_description='Subdomain name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('max_project_area_total', Type[int], 
@@ -143,8 +132,6 @@ definitions = {
         'get_domain_new_projects_for_license_year' : EventDefinition(
                 group='Usage',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
 
@@ -155,8 +142,8 @@ definitions = {
                 parameters=[
                         EventParameter('domain', Type[str], 
                                         api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('log_type', ['SECURITY', 'SESSIONS', 'USERS'], 
-                                        api_description='Type;{"default": null, "values": ["SECURITY", "SESSIONS", "USERS"]}', api_type=['SECURITY', 'SESSIONS', 'USERS'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('log_type', ['BACKUP', 'SECURITY', 'SESSIONS', 'USERS'], 
+                                        api_description='Type;{"default": null, "values": ["BACKUP", "SECURITY", "SESSIONS", "USERS"]}', api_type=['BACKUP', 'SECURITY', 'SESSIONS', 'USERS'], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('log_id_token', Type[str], 
                                         api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -164,10 +151,10 @@ definitions = {
         'get_logs' : EventDefinition(
                 group='Logging',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('log_type', ['SECURITY', 'SESSIONS', 'USERS'], 
-                                        api_description='Type;{"default": null, "values": ["SECURITY", "SESSIONS", "USERS"]}', api_type=['SECURITY', 'SESSIONS', 'USERS'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
+                        EventParameter('log_type', ['BACKUP', 'SECURITY', 'SESSIONS', 'USERS'], 
+                                        api_description='Type;{"default": null, "values": ["BACKUP", "SECURITY", "SESSIONS", "USERS"]}', api_type=['BACKUP', 'SECURITY', 'SESSIONS', 'USERS'], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('start_time_in_millis', Type[int], 
                                         api_description='Date in millis', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -178,15 +165,13 @@ definitions = {
         'get_domain_icon' : EventDefinition(
                 group='Identity',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'set_domain_icon' : EventDefinition(
                 group='Identity',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='Domain Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('file_data', Type[bytes], aggregation=1, 
                                         api_description='.png file', api_type=Type[bytes], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]

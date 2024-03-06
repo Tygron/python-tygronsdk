@@ -12,8 +12,8 @@ definitions = {
         'add' : EventDefinition(
                 group='General',
                 parameters=[
-                        EventParameter('overlay_type', ['AREAS', 'ATTRIBUTE', 'AVG', 'COMBO', 'DISTANCE_SIGHT', 'DISTANCE_ZONE', 'DISTURBANCE_DISTANCE', 'FLOODING', 'FUNCTION_HIGHLIGHT', 'GEO_TIFF', 'GROUNDWATER', 'HEAT_STRESS', 'HEIGHTMAP', 'IMAGE', 'LIVABILITY', 'MUNICIPALITIES', 'NEIGHBORHOODS', 'NETWORK_DISTANCE', 'NETWORK_OVERVIEW', 'NETWORK_OWNERSHIP', 'OWNERSHIP', 'OWNERSHIP_GRID', 'RAINFALL', 'RESULT_CHILD', 'SAFETY_DISTANCE', 'SOURCE', 'SUBSIDENCE', 'TEST', 'TRAFFIC_DENSITY', 'TRAFFIC_NO2', 'TRAFFIC_NOISE', 'TRAVEL_DISTANCE', 'UNDERGROUND', 'VACANCY', 'WATERSHED', 'WCS', 'WMS', 'ZIP_CODES', 'ZONING'], 
-                                        api_description='OverlayType;{"default": null, "values": ["AREAS", "ATTRIBUTE", "AVG", "COMBO", "DISTANCE_SIGHT", "DISTANCE_ZONE", "DISTURBANCE_DISTANCE", "FLOODING", "FUNCTION_HIGHLIGHT", "GEO_TIFF", "GROUNDWATER", "HEAT_STRESS", "HEIGHTMAP", "IMAGE", "LIVABILITY", "MUNICIPALITIES", "NEIGHBORHOODS", "NETWORK_DISTANCE", "NETWORK_OVERVIEW", "NETWORK_OWNERSHIP", "OWNERSHIP", "OWNERSHIP_GRID", "RAINFALL", "RESULT_CHILD", "SAFETY_DISTANCE", "SOURCE", "SUBSIDENCE", "TEST", "TRAFFIC_DENSITY", "TRAFFIC_NO2", "TRAFFIC_NOISE", "TRAVEL_DISTANCE", "UNDERGROUND", "VACANCY", "WATERSHED", "WCS", "WMS", "ZIP_CODES", "ZONING"]}', api_type=['AREAS', 'ATTRIBUTE', 'AVG', 'COMBO', 'DISTANCE_SIGHT', 'DISTANCE_ZONE', 'DISTURBANCE_DISTANCE', 'FLOODING', 'FUNCTION_HIGHLIGHT', 'GEO_TIFF', 'GROUNDWATER', 'HEAT_STRESS', 'HEIGHTMAP', 'IMAGE', 'LIVABILITY', 'MUNICIPALITIES', 'NEIGHBORHOODS', 'NETWORK_DISTANCE', 'NETWORK_OVERVIEW', 'NETWORK_OWNERSHIP', 'OWNERSHIP', 'OWNERSHIP_GRID', 'RAINFALL', 'RESULT_CHILD', 'SAFETY_DISTANCE', 'SOURCE', 'SUBSIDENCE', 'TEST', 'TRAFFIC_DENSITY', 'TRAFFIC_NO2', 'TRAFFIC_NOISE', 'TRAVEL_DISTANCE', 'UNDERGROUND', 'VACANCY', 'WATERSHED', 'WCS', 'WMS', 'ZIP_CODES', 'ZONING'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('overlay_type', ['AREA', 'ATTRIBUTE', 'AVG', 'COMBO', 'DISTANCE', 'FLOODING', 'FUNCTION', 'GEO_TIFF', 'GROUNDWATER', 'HEAT_STRESS', 'HEIGHTMAP', 'IMAGE', 'LIVABILITY', 'MUNICIPALITIES', 'NEIGHBORHOODS', 'NETWORK_DISTANCE', 'NETWORK_OVERVIEW', 'NETWORK_OWNERSHIP', 'OWNERSHIP', 'OWNERSHIP_GRID', 'RAINFALL', 'RESULT_CHILD', 'SIGHT_DISTANCE', 'SOURCE', 'SUBSIDENCE', 'TEST', 'TRAFFIC_DENSITY', 'TRAFFIC_NO2', 'TRAFFIC_NOISE', 'TRAVEL_DISTANCE', 'UNDERGROUND', 'VACANCY', 'WATERSHED', 'WCS', 'WMS', 'ZIP_CODES', 'ZONING'], 
+                                        api_description='OverlayType;{"default": null, "values": ["AREA", "ATTRIBUTE", "AVG", "COMBO", "DISTANCE", "FLOODING", "FUNCTION", "GEO_TIFF", "GROUNDWATER", "HEAT_STRESS", "HEIGHTMAP", "IMAGE", "LIVABILITY", "MUNICIPALITIES", "NEIGHBORHOODS", "NETWORK_DISTANCE", "NETWORK_OVERVIEW", "NETWORK_OWNERSHIP", "OWNERSHIP", "OWNERSHIP_GRID", "RAINFALL", "RESULT_CHILD", "SIGHT_DISTANCE", "SOURCE", "SUBSIDENCE", "TEST", "TRAFFIC_DENSITY", "TRAFFIC_NO2", "TRAFFIC_NOISE", "TRAVEL_DISTANCE", "UNDERGROUND", "VACANCY", "WATERSHED", "WCS", "WMS", "ZIP_CODES", "ZONING"]}', api_type=['AREA', 'ATTRIBUTE', 'AVG', 'COMBO', 'DISTANCE', 'FLOODING', 'FUNCTION', 'GEO_TIFF', 'GROUNDWATER', 'HEAT_STRESS', 'HEIGHTMAP', 'IMAGE', 'LIVABILITY', 'MUNICIPALITIES', 'NEIGHBORHOODS', 'NETWORK_DISTANCE', 'NETWORK_OVERVIEW', 'NETWORK_OWNERSHIP', 'OWNERSHIP', 'OWNERSHIP_GRID', 'RAINFALL', 'RESULT_CHILD', 'SIGHT_DISTANCE', 'SOURCE', 'SUBSIDENCE', 'TEST', 'TRAFFIC_DENSITY', 'TRAFFIC_NO2', 'TRAFFIC_NOISE', 'TRAVEL_DISTANCE', 'UNDERGROUND', 'VACANCY', 'WATERSHED', 'WCS', 'WMS', 'ZIP_CODES', 'ZONING'], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'add_type' : EventDefinition(
@@ -23,7 +23,7 @@ definitions = {
                                         api_description='Array of OverlayTypes', api_type=['AREAS', 'ATTRIBUTE', 'AVG', 'COMBO', 'DISTANCE_SIGHT', 'DISTANCE_ZONE', 'DISTURBANCE_DISTANCE', 'FLOODING', 'FUNCTION_HIGHLIGHT', 'GEO_TIFF', 'GROUNDWATER', 'HEAT_STRESS', 'HEIGHTMAP', 'IMAGE', 'LIVABILITY', 'MUNICIPALITIES', 'NEIGHBORHOODS', 'NETWORK_DISTANCE', 'NETWORK_OVERVIEW', 'NETWORK_OWNERSHIP', 'OWNERSHIP', 'OWNERSHIP_GRID', 'RAINFALL', 'RESULT_CHILD', 'SAFETY_DISTANCE', 'SOURCE', 'SUBSIDENCE', 'TEST', 'TRAFFIC_DENSITY', 'TRAFFIC_NO2', 'TRAFFIC_NOISE', 'TRAVEL_DISTANCE', 'UNDERGROUND', 'VACANCY', 'WATERSHED', 'WCS', 'WMS', 'ZIP_CODES', 'ZONING'], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
-        'add_result_child_overlay' : EventDefinition(
+        'add_result_child' : EventDefinition(
                 group='General',
                 parameters=[
                         EventParameter('overlay_id', Type[int], 
@@ -76,18 +76,40 @@ definitions = {
                                         api_description='Overlay ID of parent (overlays without a parent should have their parent Overlay ID set to -1)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_icon' : EventDefinition(
+        'set_overlay_image' : EventDefinition(
                 group='Information',
                 parameters=[
                         EventParameter('overlay_id', Type[int], aggregation=1, 
-                                        api_description='Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('asset_path', Type[str], aggregation=1, 
-                                        api_description='Project asset name, omitting the directory', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='Overlay IDs (must relate to an IMAGE Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('asset_path', Type[str], aggregation=2, 
+                                        api_description='Array of Project asset names, omitting the directory', api_type=Type[str], api_required=True, api_default=None, api_aggregation=2,  ),
+                    ]
+            ),
+        'swap_order' : EventDefinition(
+                group='Information',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Overlays', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('overlay_target_id', Type[int], aggregation=1, 
+                                        api_description='Overlays', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 
 
     # Attribute
+        'append_attribute' : EventDefinition(
+                group='Attribute',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Overlays', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('attribute_name', Type[str], 
+                                        api_description='Attribute Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('attribute_values', Type[float], aggregation=1, 
+                                        api_description='Attribute Values appended to existing values', api_type=Type[float], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('source_id', Type[int], False, 
+                                        api_description='Source (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
         'set_attribute' : EventDefinition(
                 group='Attribute',
                 parameters=[
@@ -160,19 +182,19 @@ definitions = {
         'set_result_type' : EventDefinition(
                 group='Calculation Model',
                 parameters=[
-                        EventParameter('overlay_id', Type[int], 
-                                        api_description='Overlay ID (must relate to a grid Overlay with result types)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('result_type', Type[str], 
-                                        api_description='Result type for the Overlay (must be a valid result type of the Overlay type)', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Overlay ID (must relate to a grid Overlay with result types)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('result_type', Type[str], aggregation=1, 
+                                        api_description='Result type for the Overlay (must be a valid result type of the Overlay type)', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'set_show_difference' : EventDefinition(
                 group='Calculation Model',
                 parameters=[
-                        EventParameter('overlay_id', Type[int], 
-                                        api_description='Overlay ID (must relate to a grid Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('difference', Type[bool], 
-                                        api_description='Has a difference option (false means there is no difference option for this Overlay);{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Overlay ID (must relate to a grid Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('difference', Type[bool], aggregation=1, 
+                                        api_description='Has a difference option (false means there is no difference option for this Overlay)', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'set_key_value' : EventDefinition(
@@ -192,8 +214,8 @@ definitions = {
         'save_grid' : EventDefinition(
                 group='Export',
                 parameters=[
-                        EventParameter('overlay_id', Type[int], 
-                                        api_description='Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 
@@ -307,7 +329,7 @@ definitions = {
                                         api_description='Color', api_type='Unknown: (tcolor)', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_overlay_rest_color' : EventDefinition(
+        'set_overlay_remainder_color' : EventDefinition(
                 group='Overlay: Functions',
                 parameters=[
                         EventParameter('overlay_id', Type[int], 
@@ -351,8 +373,8 @@ definitions = {
                 parameters=[
                         EventParameter('overlay_id', Type[int], 
                                         api_description='Overlay ID (must relate to an ATTRIBUTE Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('maplink', ['ACTION_LOGS', 'ACTION_MENUS', 'ADDRESSES', 'AREAS', 'ATTRIBUTE_ACTIONS', 'BUILDINGS', 'CHAT_MESSAGES', 'CINEMATIC_DATAS', 'CLIENT_WORDS', 'COSTS', 'CUSTOM_GEOMETRIES', 'DEFAULT_WORDS', 'ERROR_LOGS', 'EVENT_BUNDLES', 'EXCEL_SHEETS', 'FUNCTION_OVERRIDES', 'FUNCTIONS', 'GEO_LINKS', 'GEO_OPTIONS', 'GEO_PLUGINS', 'GEO_TIFFS', 'GLOBALS', 'HEIGHTS', 'INCOMES', 'INDICATORS', 'LEVEES', 'MEASUREMENTS', 'MEASURES', 'MODEL_DATAS', 'MODEL_SETS', 'MONEY_TRANSFERS', 'NEIGHBORHOODS', 'NET_CLUSTERS', 'NET_FUNCTIONS', 'NET_LINES', 'NET_LOADS', 'NET_NODES', 'NET_SETTINGS', 'OVERLAYS', 'PANELS', 'PARAMETRIC_DESIGNS', 'PARAMETRIC_EXAMPLES', 'PARTICLE_EMITTERS', 'PLOTS', 'POPUPS', 'PROGRESS', 'PROJECT_ASSETS', 'RECORDINGS', 'SCENARIOS', 'SERVER_WORDS', 'SETTINGS', 'SOUNDS', 'SOURCES', 'SPECIAL_EFFECTS', 'SPECIAL_OPTIONS', 'STAKEHOLDERS', 'TERRAIN_TYPE_OVERRIDES', 'TERRAIN_TYPES', 'TERRAINS', 'TEXTURES', 'TIMES', 'TRIGGERS', 'UNIT_DATA_OVERRIDES', 'UNIT_DATAS', 'UPGRADE_TYPES', 'WATER_VALUES', 'WEATHERS', 'ZIP_CODES', 'ZONES', 'ZOOMLEVELS'], 
-                                        api_description='MapLink: AREAS, BUILDINGS, NEIGHBORHOODS, NET_LOADS, TERRAINS, ZONES;{"default": null, "values": ["ACTION_LOGS", "ACTION_MENUS", "ADDRESSES", "AREAS", "ATTRIBUTE_ACTIONS", "BUILDINGS", "CHAT_MESSAGES", "CINEMATIC_DATAS", "CLIENT_WORDS", "COSTS", "CUSTOM_GEOMETRIES", "DEFAULT_WORDS", "ERROR_LOGS", "EVENT_BUNDLES", "EXCEL_SHEETS", "FUNCTION_OVERRIDES", "FUNCTIONS", "GEO_LINKS", "GEO_OPTIONS", "GEO_PLUGINS", "GEO_TIFFS", "GLOBALS", "HEIGHTS", "INCOMES", "INDICATORS", "LEVEES", "MEASUREMENTS", "MEASURES", "MODEL_DATAS", "MODEL_SETS", "MONEY_TRANSFERS", "NEIGHBORHOODS", "NET_CLUSTERS", "NET_FUNCTIONS", "NET_LINES", "NET_LOADS", "NET_NODES", "NET_SETTINGS", "OVERLAYS", "PANELS", "PARAMETRIC_DESIGNS", "PARAMETRIC_EXAMPLES", "PARTICLE_EMITTERS", "PLOTS", "POPUPS", "PROGRESS", "PROJECT_ASSETS", "RECORDINGS", "SCENARIOS", "SERVER_WORDS", "SETTINGS", "SOUNDS", "SOURCES", "SPECIAL_EFFECTS", "SPECIAL_OPTIONS", "STAKEHOLDERS", "TERRAIN_TYPE_OVERRIDES", "TERRAIN_TYPES", "TERRAINS", "TEXTURES", "TIMES", "TRIGGERS", "UNIT_DATA_OVERRIDES", "UNIT_DATAS", "UPGRADE_TYPES", "WATER_VALUES", "WEATHERS", "ZIP_CODES", "ZONES", "ZOOMLEVELS"]}', api_type=['ACTION_LOGS', 'ACTION_MENUS', 'ADDRESSES', 'AREAS', 'ATTRIBUTE_ACTIONS', 'BUILDINGS', 'CHAT_MESSAGES', 'CINEMATIC_DATAS', 'CLIENT_WORDS', 'COSTS', 'CUSTOM_GEOMETRIES', 'DEFAULT_WORDS', 'ERROR_LOGS', 'EVENT_BUNDLES', 'EXCEL_SHEETS', 'FUNCTION_OVERRIDES', 'FUNCTIONS', 'GEO_LINKS', 'GEO_OPTIONS', 'GEO_PLUGINS', 'GEO_TIFFS', 'GLOBALS', 'HEIGHTS', 'INCOMES', 'INDICATORS', 'LEVEES', 'MEASUREMENTS', 'MEASURES', 'MODEL_DATAS', 'MODEL_SETS', 'MONEY_TRANSFERS', 'NEIGHBORHOODS', 'NET_CLUSTERS', 'NET_FUNCTIONS', 'NET_LINES', 'NET_LOADS', 'NET_NODES', 'NET_SETTINGS', 'OVERLAYS', 'PANELS', 'PARAMETRIC_DESIGNS', 'PARAMETRIC_EXAMPLES', 'PARTICLE_EMITTERS', 'PLOTS', 'POPUPS', 'PROGRESS', 'PROJECT_ASSETS', 'RECORDINGS', 'SCENARIOS', 'SERVER_WORDS', 'SETTINGS', 'SOUNDS', 'SOURCES', 'SPECIAL_EFFECTS', 'SPECIAL_OPTIONS', 'STAKEHOLDERS', 'TERRAIN_TYPE_OVERRIDES', 'TERRAIN_TYPES', 'TERRAINS', 'TEXTURES', 'TIMES', 'TRIGGERS', 'UNIT_DATA_OVERRIDES', 'UNIT_DATAS', 'UPGRADE_TYPES', 'WATER_VALUES', 'WEATHERS', 'ZIP_CODES', 'ZONES', 'ZOOMLEVELS'], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('maplink', ['ACTION_LOGS', 'ACTION_MENUS', 'ADDRESSES', 'AREAS', 'ATTRIBUTE_ACTIONS', 'BUILDINGS', 'CHAT_MESSAGES', 'CINEMATIC_DATAS', 'CLIENT_WORDS', 'COSTS', 'CUSTOM_GEOMETRIES', 'DEFAULT_WORDS', 'ERROR_LOGS', 'EVENT_BUNDLES', 'EXCEL_SHEETS', 'FUNCTION_OVERRIDES', 'FUNCTIONS', 'GEO_LINKS', 'GEO_OPTIONS', 'GEO_PLUGINS', 'GEO_TIFFS', 'GLOBALS', 'HEIGHTS', 'INCOMES', 'INDICATORS', 'LEVEES', 'MEASUREMENTS', 'MEASURES', 'MODEL_DATAS', 'MODEL_SETS', 'MONEY_TRANSFERS', 'NEIGHBORHOODS', 'NET_CLUSTERS', 'NET_FUNCTIONS', 'NET_LINES', 'NET_LOADS', 'NET_NODES', 'NET_SETTINGS', 'OVERLAYS', 'PANELS', 'PARAMETRIC_DESIGNS', 'PARAMETRIC_EXAMPLES', 'PARTICLE_EMITTERS', 'PLOTS', 'POPUPS', 'PROGRESS', 'PROJECT_ASSETS', 'RECORDINGS', 'SCENARIOS', 'SERVER_WORDS', 'SETTINGS', 'SOUNDS', 'SOURCES', 'SPECIAL_EFFECTS', 'SPECIAL_OPTIONS', 'STAKEHOLDERS', 'TERRAIN_TYPE_OVERRIDES', 'TERRAIN_TYPES', 'TERRAINS', 'TEXTURES', 'TIMES', 'TRIGGERS', 'UNIT_DATA_OVERRIDES', 'UNIT_DATAS', 'UPGRADE_TYPES', 'WATER_VALUES', 'WEATHERS', 'ZIP_CODES', 'ZONES'], 
+                                        api_description='MapLink: AREAS, BUILDINGS, NEIGHBORHOODS, NET_LOADS, TERRAINS, ZONES;{"default": null, "values": ["ACTION_LOGS", "ACTION_MENUS", "ADDRESSES", "AREAS", "ATTRIBUTE_ACTIONS", "BUILDINGS", "CHAT_MESSAGES", "CINEMATIC_DATAS", "CLIENT_WORDS", "COSTS", "CUSTOM_GEOMETRIES", "DEFAULT_WORDS", "ERROR_LOGS", "EVENT_BUNDLES", "EXCEL_SHEETS", "FUNCTION_OVERRIDES", "FUNCTIONS", "GEO_LINKS", "GEO_OPTIONS", "GEO_PLUGINS", "GEO_TIFFS", "GLOBALS", "HEIGHTS", "INCOMES", "INDICATORS", "LEVEES", "MEASUREMENTS", "MEASURES", "MODEL_DATAS", "MODEL_SETS", "MONEY_TRANSFERS", "NEIGHBORHOODS", "NET_CLUSTERS", "NET_FUNCTIONS", "NET_LINES", "NET_LOADS", "NET_NODES", "NET_SETTINGS", "OVERLAYS", "PANELS", "PARAMETRIC_DESIGNS", "PARAMETRIC_EXAMPLES", "PARTICLE_EMITTERS", "PLOTS", "POPUPS", "PROGRESS", "PROJECT_ASSETS", "RECORDINGS", "SCENARIOS", "SERVER_WORDS", "SETTINGS", "SOUNDS", "SOURCES", "SPECIAL_EFFECTS", "SPECIAL_OPTIONS", "STAKEHOLDERS", "TERRAIN_TYPE_OVERRIDES", "TERRAIN_TYPES", "TERRAINS", "TEXTURES", "TIMES", "TRIGGERS", "UNIT_DATA_OVERRIDES", "UNIT_DATAS", "UPGRADE_TYPES", "WATER_VALUES", "WEATHERS", "ZIP_CODES", "ZONES"]}', api_type=['ACTION_LOGS', 'ACTION_MENUS', 'ADDRESSES', 'AREAS', 'ATTRIBUTE_ACTIONS', 'BUILDINGS', 'CHAT_MESSAGES', 'CINEMATIC_DATAS', 'CLIENT_WORDS', 'COSTS', 'CUSTOM_GEOMETRIES', 'DEFAULT_WORDS', 'ERROR_LOGS', 'EVENT_BUNDLES', 'EXCEL_SHEETS', 'FUNCTION_OVERRIDES', 'FUNCTIONS', 'GEO_LINKS', 'GEO_OPTIONS', 'GEO_PLUGINS', 'GEO_TIFFS', 'GLOBALS', 'HEIGHTS', 'INCOMES', 'INDICATORS', 'LEVEES', 'MEASUREMENTS', 'MEASURES', 'MODEL_DATAS', 'MODEL_SETS', 'MONEY_TRANSFERS', 'NEIGHBORHOODS', 'NET_CLUSTERS', 'NET_FUNCTIONS', 'NET_LINES', 'NET_LOADS', 'NET_NODES', 'NET_SETTINGS', 'OVERLAYS', 'PANELS', 'PARAMETRIC_DESIGNS', 'PARAMETRIC_EXAMPLES', 'PARTICLE_EMITTERS', 'PLOTS', 'POPUPS', 'PROGRESS', 'PROJECT_ASSETS', 'RECORDINGS', 'SCENARIOS', 'SERVER_WORDS', 'SETTINGS', 'SOUNDS', 'SOURCES', 'SPECIAL_EFFECTS', 'SPECIAL_OPTIONS', 'STAKEHOLDERS', 'TERRAIN_TYPE_OVERRIDES', 'TERRAIN_TYPES', 'TERRAINS', 'TEXTURES', 'TIMES', 'TRIGGERS', 'UNIT_DATA_OVERRIDES', 'UNIT_DATAS', 'UPGRADE_TYPES', 'WATER_VALUES', 'WEATHERS', 'ZIP_CODES', 'ZONES'], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('attribute', Type[str], 
                                         api_description='Attribute to look for', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -364,9 +386,9 @@ definitions = {
                 group='Overlay: Image',
                 parameters=[
                         EventParameter('overlay_id', Type[int], aggregation=1, 
-                                        api_description='Overlay IDs (must relate to an IMAGE Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('asset_name', Type[str], aggregation=2, 
-                                        api_description='Array of Project asset names, omitting the directory', api_type=Type[str], api_required=True, api_default=None, api_aggregation=2,  ),
+                                        api_description='Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('asset_name', Type[str], aggregation=1, 
+                                        api_description='Project asset name, omitting the directory', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 
@@ -414,22 +436,40 @@ definitions = {
 
 
     # Overlay: WMS/WCS
-        'set_source' : EventDefinition(
+        'set_service_source' : EventDefinition(
                 group='Overlay: WMS/WCS',
                 parameters=[
                         EventParameter('overlay_id', Type[int], 
-                                        api_description='Service Source Overlay ID ', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Service Overlay ID ', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('source_id', Type[int], 
                                         api_description='Source ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_source_layer' : EventDefinition(
+        'set_service_layer' : EventDefinition(
                 group='Overlay: WMS/WCS',
                 parameters=[
                         EventParameter('overlay_id', Type[int], 
-                                        api_description='Service Source Overlay ID ', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('source_layer', Type[str], 
-                                        api_description='Layer name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Service Overlay ID ', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('source_layer', Type[str], aggregation=1, 
+                                        api_description='Layer name(s)', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+        'set_service_crs' : EventDefinition(
+                group='Overlay: WMS/WCS',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Service Overlay ID ', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('crs', Type[str], aggregation=1, 
+                                        api_description='CRS name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                    ]
+            ),
+        'set_service_force_xy' : EventDefinition(
+                group='Overlay: WMS/WCS',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], aggregation=1, 
+                                        api_description='Service Overlay ID ', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('force_xy', Type[bool], aggregation=1, 
+                                        api_description='Longitude first (force XY)', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 
@@ -444,15 +484,15 @@ definitions = {
                                         api_description='Averaging distance', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'set_avg_type' : EventDefinition(
+        'set_rasterization' : EventDefinition(
                 group='Overlay: Avg',
                 parameters=[
                         EventParameter('overlay_id', Type[int], 
-                                        api_description='Overlay ID (must relate to an AVG Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Overlay ID (must relate to an AVG or Distance Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('average_type', ['FIRST', 'MAX', 'MIN', 'SINGLE_LAYER', 'GRID'], 
-                                        api_description='Averaging type: FIRST, MIN, MAX, SINGLE_LAYER;{"default": null, "values": ["FIRST", "MAX", "MIN", "SINGLE_LAYER", "GRID"]}', api_type=['FIRST', 'MAX', 'MIN', 'SINGLE_LAYER', 'GRID'], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Rasterization type: FIRST, MIN, MAX, SINGLE_LAYER, GRID;{"default": null, "values": ["FIRST", "MAX", "MIN", "SINGLE_LAYER", "GRID"]}', api_type=['FIRST', 'MAX', 'MIN', 'SINGLE_LAYER', 'GRID'], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('maplink', None, False, 
-                                        api_description='MapLink (will only affect the SINGLE_LAYER averaging type): BUILDINGS, TERRAINS, AREAS, NEIGHBORHOODS', api_type=None, api_required=False, api_default=None, api_aggregation=0,  ),
+                                        api_description='MapLink (will only affect the SINGLE_LAYER rasterization type): BUILDINGS, TERRAINS, AREAS, NEIGHBORHOODS', api_type=None, api_required=False, api_default=None, api_aggregation=0,  ),
                     ]
             ),
 

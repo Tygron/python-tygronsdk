@@ -128,17 +128,6 @@ definitions = {
 
 
     # Attribute
-        'append_attribute' : EventDefinition(
-                group='Attribute',
-                parameters=[
-                        EventParameter('geolink_id', Type[int], aggregation=1, 
-                                        api_description='Geo Links', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('attribute', Type[str], aggregation=1, 
-                                        api_description='String[]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('attribute_value', Type[str], aggregation=2, 
-                                        api_description='String[][]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=2,  ),
-                    ]
-            ),
         'remove_attribute' : EventDefinition(
                 group='Attribute',
                 parameters=[
@@ -163,13 +152,13 @@ definitions = {
                 group='Attribute',
                 parameters=[
                         EventParameter('geolink_id', Type[int], aggregation=1, 
-                                        api_description='Geo Links', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='GeoLinks', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('attribute', Type[str], aggregation=1, 
-                                        api_description='String[]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
+                                        api_description='Attribute Names', api_type=Type[str], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('attribute_value', Type[str], aggregation=2, 
-                                        api_description='String[][]', api_type=Type[str], api_required=True, api_default=None, api_aggregation=2,  ),
+                                        api_description='Attribute Values', api_type=Type[str], api_required=True, api_default=None, api_aggregation=2,  ),
                         EventParameter('source_id', Type[int], False, 
-                                        api_description='Sources', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                                        api_description='Source (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
                     ]
             ),
     }
