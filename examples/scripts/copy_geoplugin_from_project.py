@@ -239,10 +239,10 @@ class Script(interfaces.Script):
                     
                 if ( not (link.point_buffer is None) ):
                     filtered_geolink_ids_points.append( link_id )
-                    filtered_buffers_points.append( link.point )
+                    filtered_buffers_points.append( link.point_buffer )
                 if ( not (link.line_buffer is None) ):
                     filtered_geolink_ids_lines.append( link_id )
-                    filtered_buffers_lines.append( link.point_buffer )
+                    filtered_buffers_lines.append( link.line_buffer )
                     
                 if ( link.function_id == items.Item.NONE ):
                     continue
