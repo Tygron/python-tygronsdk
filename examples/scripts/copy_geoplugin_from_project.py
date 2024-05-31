@@ -14,6 +14,7 @@ class Script(interfaces.Script):
 
         settings = {
             'origin_project_name' : 'tygron_dxf_template',
+            'origin_session_token' : None,
             'origin_geoplugin_name' : 'Basis NLCS interpretatie',
             'target_session_id' : None,
             'target_session_token' : None,
@@ -70,10 +71,11 @@ class Script(interfaces.Script):
         if ( auth_result is False ):
             raise Exception('Could not authenticate origin, target, or both, with provided credentials')
         
+        if ( (settings['target_session_token'] is None) ):
+            sessions = sdk_target.base.sessions.get_joinable_sessions()
+        if ( (settings['origin_session_token'] is None) ):
+            projects = sdk_origin.base.projects.get_startable_projects()
         
-        
-        sessions = sdk_target.base.sessions.get_joinable_sessions()
-        projects = sdk_origin.base.projects.get_startable_projects()
 
         if ( not (settings['target_session_token'] is None) and len(str(settings['target_session_token']))>=8 ):
             settings['target_session_id'] = settings['target_session_token'][0:8]
@@ -82,8 +84,10 @@ class Script(interfaces.Script):
             for session in sessions:
                 self.log ( session )
             raise Exception('Missing parameter target_session_id')
-            
-        if ( settings['origin_project_name'] is None or settings['origin_project_name'] == '' ):
+        
+        if ( not (settings['origin_session_token'] is None) and len(str(settings['origin_session_token']))>=8 ):
+            settings['origin_session_id'] = settings['origin_session_token'][0:8]
+        elif ( settings['origin_project_name'] is None or settings['origin_project_name'] == '' ):
             self.log( 'Missing parameter. Add origin_project_name=X as argument, where X is one of the following:' )
             for project in projects:
                 self.log ( project )
@@ -97,32 +101,52 @@ class Script(interfaces.Script):
         
         try:
             if ( settings['target_session_token'] is None ):
-                target_session = next(session for session in sessions if str(session.id) == str(settings['target_session_id']))
+                target_session = 'session: '+str(next(session for session in sessions if str(session.id) == str(settings['target_session_id'])))
             else:
-                target_session = str(settings['target_session_id']) + ' (identified by api token)'
+                target_session = 'session: '+str(settings['target_session_id']) + ' (identified by api token)'
         except StopIteration as err:
             raise Exception('Target session with id '+str( settings['target_session_id'] )+' not found')
         try:
-            origin_project = next(project for project in projects if str(project.file_name) == settings['origin_project_name'])
+            if ( settings['origin_session_token'] is None ):
+                origin_project = 'project: '+str(next(project for project in projects if str(project.file_name) == settings['origin_project_name']))
+            else:
+                origin_project = 'session: '+str(settings['origin_session_id'])+' (identified by api token)'
         except StopIteration as err:
-            raise Exception('Origin project names '+str( settings['origin_project_name'] )+' not found')
+            raise Exception('Origin project name '+str( settings['origin_project_name'] )+' not found')
         
         
         
         self.log()
-        self.log('Copying GeoPlugin ("'+str(settings['origin_geoplugin_name'])+'") from project: '+str(origin_project))
-        self.log('Copying GeoPlugin (renamed to "'+str(settings['target_geoplugin_name'])+'") to session: '+str(target_session))
+        self.log('Copying GeoPlugin ("'+str(settings['origin_geoplugin_name'])+'") from '+str(origin_project))
+        self.log('Copying GeoPlugin (renamed to "'+str(settings['target_geoplugin_name'])+'") to '+str(target_session))
         self.log()
         
         
         
         try:
         
-            origin_session_id = sdk_origin.base.sessions.start_project_session(origin_project.file_name)
-            origin_session_data = sdk_origin.base.sessions.join_project_session(origin_session_id)
+            if ( settings['origin_session_token'] is None ):
+                if ( settings['origin_session_id'] is None ):
+                    origin_session_id = sdk_origin.base.sessions.start_project_session(origin_project.file_name)
+                else:
+                    origin_session_id=settings['origin_session_id']
+                origin_session_data = sdk_origin.base.sessions.join_project_session(origin_session_id)
+            else:
+                origin_session_data = { 'api_token' : settings['origin_session_token'] }
+                sdk_origin.configure_exit( {
+                'save_project': False,
+                'save_created_project': False,
+                'close_session': False,
+                'kill_session': False,
+                'delete_created_project': False
+            } )
+            
             auth_result = sdk_origin.session.authenticate(origin_session_data)
             if ( auth_result is False ):
                 raise Exception('Could not authenticate to origin session')
+                    
+                    
+                    
             sdk_origin.data = origin_session_data
             
             if ( settings['target_session_token'] is None ):
@@ -242,7 +266,7 @@ class Script(interfaces.Script):
                     filtered_buffers_points.append( link.point_buffer )
                 if ( not (link.line_buffer is None) ):
                     filtered_geolink_ids_lines.append( link_id )
-                    filtered_buffers_lines.append( link.line_buffer )
+                    filtered_buffers_lines.append( link.point_buffer )
                     
                 if ( link.function_id == items.Item.NONE ):
                     continue
