@@ -14,8 +14,10 @@ class Script(interfaces.Script):
 
         settings = {
             'origin_project_name' : 'tygron_dxf_template',
+            'origin_session_id' : None,
             'origin_session_token' : None,
             'origin_geoplugin_name' : 'Basis NLCS interpretatie',
+            
             'target_session_id' : None,
             'target_session_token' : None,
             'target_geoplugin_name' : None,
