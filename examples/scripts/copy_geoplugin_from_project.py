@@ -103,24 +103,24 @@ class Script(interfaces.Script):
         
         try:
             if ( settings['target_session_token'] is None ):
-                target_session = 'session: '+str(next(session for session in sessions if str(session.id) == str(settings['target_session_id'])))
+                to_session_text = 'session: '+str(next(session for session in sessions if str(session.id) == str(settings['target_session_id'])))
             else:
-                target_session = 'session: '+str(settings['target_session_id']) + ' (identified by api token)'
+                to_session_text = 'session: '+str(settings['target_session_id']) + ' (identified by api token)'
         except StopIteration as err:
             raise Exception('Target session with id '+str( settings['target_session_id'] )+' not found')
         try:
             if ( settings['origin_session_token'] is None ):
-                origin_project = 'project: '+str(next(project for project in projects if str(project.file_name) == settings['origin_project_name']))
+                from_project_text = 'project: '+str(next(project for project in projects if str(project.file_name) == settings['origin_project_name']))
             else:
-                origin_project = 'session: '+str(settings['origin_session_id'])+' (identified by api token)'
+                from_project_text = 'session: '+str(settings['origin_session_id'])+' (identified by api token)'
         except StopIteration as err:
             raise Exception('Origin project name '+str( settings['origin_project_name'] )+' not found')
         
         
         
         self.log()
-        self.log('Copying GeoPlugin ("'+str(settings['origin_geoplugin_name'])+'") from '+str(origin_project))
-        self.log('Copying GeoPlugin (renamed to "'+str(settings['target_geoplugin_name'])+'") to '+str(target_session))
+        self.log('Copying GeoPlugin ("'+str(settings['origin_geoplugin_name'])+'") from '+str(from_project_text))
+        self.log('Copying GeoPlugin (renamed to "'+str(settings['target_geoplugin_name'])+'") to '+str(to_session_text))
         self.log()
         
         
@@ -129,7 +129,7 @@ class Script(interfaces.Script):
         
             if ( settings['origin_session_token'] is None ):
                 if ( settings['origin_session_id'] is None ):
-                    origin_session_id = sdk_origin.base.sessions.start_project_session(origin_project.file_name)
+                    origin_session_id = sdk_origin.base.sessions.start_project_session(settings['origin_project_name'])
                 else:
                     origin_session_id=settings['origin_session_id']
                 origin_session_data = sdk_origin.base.sessions.join_project_session(origin_session_id)
@@ -169,7 +169,6 @@ class Script(interfaces.Script):
             origin_geoplugin = next(item for item in origin_geoplugin)
             self.log(origin_geoplugin.get_data())
         
-            #origin_geolinks = sdk_origin.session.items.get_matching('geolinks', origin_geoplugin.geo_link_ids)
             origin_geolinks = sdk_origin.session.items.get_matching(items.Geolink, origin_geoplugin.geolink_ids)
             for geolink in origin_geolinks:
                 self.log(geolink.get_data())
@@ -189,13 +188,13 @@ class Script(interfaces.Script):
             sdk_target.session.connector.fire_event(
                     tygronsdk.events.editorgeoplugin.set_name(
                         geoplugin_id=target_plugin_id,
-                        name=settings['target_geoplugin_name']                    
+                        name=settings['target_geoplugin_name']
                     )
                 )
             sdk_target.session.connector.fire_event(
                     tygronsdk.events.editorgeoplugin.set_new_project(
                         geoplugin_id=target_plugin_id,
-                        new_project=origin_geoplugin.new_project                    
+                        new_project=origin_geoplugin.new_project
                     )
                 )
                 
@@ -221,7 +220,7 @@ class Script(interfaces.Script):
             sdk_target.session.connector.fire_event(
                     tygronsdk.events.editorgeolink.set_name(
                         geolink_id=target_geolink_ids,
-                        name=origin_geolink_names                   
+                        name=origin_geolink_names
                     )
                 )
                 
@@ -319,7 +318,7 @@ class Script(interfaces.Script):
                 target_link=geolink
                 self.log('-----')
                 self.log(origin_link.get_data())
-                self.log(target_link.get_data())        
+                self.log(target_link.get_data())
         
         
         
