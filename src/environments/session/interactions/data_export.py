@@ -125,25 +125,25 @@ class DataExport:
         maplink = Item.maplink_from( item_type )
         
         result = conn.request(
-                url = '/items/'+maplink+'/'+str(item_id)
+                url = 'items/'+maplink+'/'+str(item_id)
             ).get_response_body()
         return result
         
         
     @staticmethod
-    def export_as_content( conn: Connector, item_type:str, item_id:int ):
+    def export_as_content( conn: Connector, item_type:str, item_id:int, maptype:str='maquette' ):
         if ( not (item_type.lower() in ['indicator', 'panel']) ):
             raise Exception( 'Cannot export content from '+item_type )
             
         maplink = Item.maplink_from( item_type )
             
         property = {
-                'indicator' : 'explanation',
+                'indicator' : str(maptype.lower())+'Explanation',
                 'panel' : 'text',
             }[item_type]
         
         return conn.request(
-                url = '/items/'+maplink+'/'+str(item_id)+'/'+property
+                url = 'items/'+maplink+'/'+str(item_id)+'/'+property
             ).get_response_body_json()
         
         
@@ -182,7 +182,7 @@ class DataExport:
             
         return conn.request(
             method='POST',
-            url='/events/editor'+item_type+'/debug_excel_file',
+            url='events/editor'+item_type+'/debug_excel_file',
             data=[item_id]
         ).get_response_body()
         
