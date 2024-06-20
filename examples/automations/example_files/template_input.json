@@ -29,7 +29,7 @@
 	"exports" : {
 		"indicator": {
 			"ids" : true,
-			"formats" : ["HTML"],
+			"formats" : ["HTML","content"],
 			"export_key" : "example-{item_type}-{item_name}-{item_id}{extention}"
 		},
 		"overlay": {
