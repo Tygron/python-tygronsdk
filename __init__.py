@@ -16,13 +16,14 @@ from .src.environments.session.data import items as items
 
 
 
-def init_data( init_file_data:str = None, init_file_credentials:str = None, use_data:bool = True, use_credentials:bool = True, use_args:bool = True, credentials_create_if_missing:bool = False, **kwargs):
+def init_data( init_file_data:str = None, init_file_credentials:str = None, use_data:bool = True, use_credentials:bool = True, use_sys_args:bool = True, use_provided_args:bool = True, credentials_create_if_missing:bool = False, **kwargs):
     return init.init_data(
             init_file_data=init_file_data, 
             init_file_credentials=init_file_credentials,
             use_data=use_data,
             use_credentials=use_credentials,
-            use_args=use_args,
+            use_sys_args=use_sys_args,
+            use_provided_args=use_provided_args,
             credentials_create_if_missing=credentials_create_if_missing,
             **kwargs
         )
