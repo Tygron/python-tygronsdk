@@ -41,7 +41,22 @@ class Files:
         f.close()
 
 
-        
+    @staticmethod
+    def read_file_as_data ( file ):
+        errors = []
+        attempts = [
+                Files.read_file_as_json,
+                Files.read_file_as_key_values
+            ]
+        for func in attempts:
+            try:
+                return func( file )
+            except Exception as err:
+                errors.append(err)
+            
+        Exceptions.raise_multiple_exceptions('read file as data', *errors)
+    
+    
     @staticmethod
     def read_file_as_text( file ):            
         with open(file, encoding='utf8') as f:
@@ -57,6 +72,8 @@ class Files:
         data = {}
         with open(file, encoding='utf8') as f:
             for line in f:
+                if (line.strip().startswith('#')):
+                    continue
                 key, value = line.partition('=')[::2]
                 data[key.strip()] = value.strip()
         return data
