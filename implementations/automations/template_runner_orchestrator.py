@@ -518,7 +518,7 @@ def main():
         settings = None
         input_args = sys.argv[1]
         try:
-            settings = utilities.files.read_file_as_json(input_args)
+            settings = utilities.files.read_file_as_data(input_args)
         except Exception as err:
             settings = json.loads(input_args)
         
