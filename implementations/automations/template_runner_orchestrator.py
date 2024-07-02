@@ -437,7 +437,7 @@ class TemplateRunnerOrchestrator:
             runner.add_importable_areas_geojson(
                 areas_geojson=geojson,
                 areas_buffer=entry['buffer'],
-                areas_name_attribute=entry['name_attribute']                
+                areas_name_attribute=entry['name_attribute']
             )
             definitions_count+=1
         return definitions_count
