@@ -68,14 +68,23 @@ class Files:
         return json.loads( content )
         
     @staticmethod
-    def read_file_as_key_values( file ):        
+    def read_file_as_key_values( file, to_number=True ):        
         data = {}
         with open(file, encoding='utf8') as f:
             for line in f:
                 if (line.strip().startswith('#')):
                     continue
                 key, value = line.partition('=')[::2]
-                data[key.strip()] = value.strip()
+                
+                key = key.strip()
+                value = value.strip()
+                try:
+                    if to_number:
+                        value = float(value)
+                except:
+                    pass
+                
+                data[key] = value
         return data
     
  
