@@ -13,3 +13,5 @@ from .panel import Panel
 
 from .geolink import Geolink
 from .geoplugin import Geoplugin
+
+from .progress import Progress
