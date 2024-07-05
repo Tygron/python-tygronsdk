@@ -90,12 +90,15 @@ class TemplateRunnerInputGenerator:
     
         individual_geojsons = self.create_individual_geojsons( geojson_data )
         
+        random_tokens = self.generate_random_token_terms()
+        
         for index, individual_geojson in enumerate(individual_geojsons):
         
             terms = {
                     **self.settings,
                     'input_file_name': utilities.files.get_filename( input_file_name, False ),
-                    'geojson_file_name': utilities.files.get_filename( geojson_file_name, False )
+                    'geojson_file_name': utilities.files.get_filename( geojson_file_name, False ),
+                    **random_tokens
                 }
         
             individual_input = self.create_individual_run_file( input_data, individual_geojson, index, terms )
@@ -133,7 +136,10 @@ class TemplateRunnerInputGenerator:
         run_data['feature_name'] = self.get_feature_name(feature, index)
     
         run_data['run_name'] = self.format_string( run_data.get('run_name', self.settings['run_name']), {**terms, **run_data} )
-    
+        
+        new_project_name = run_data.get('new_project_name', self.settings.get('new_project_name', False))
+        if (new_project_name):
+            run_data['new_project_name'] = self.format_string( new_project_name, {**terms, **run_data} )
         return run_data
     
     
@@ -166,6 +172,12 @@ class TemplateRunnerInputGenerator:
         return 'Unnamed feature '+str(index)
         
         
+    def generate_random_token_terms( self ):
+        random_tokens = {}
+        for i in range(1,10):
+            random_tokens['randomtoken'+str(i)] = utilities.strings.generate_random_token(i)
+        return random_tokens
+        
     def format_string( self, string_to_format:str, terms:dict ):
         return utilities.strings.format( string_to_format, **terms )
         
@@ -188,4 +200,4 @@ def main():
     input_generator.run()
 
 if __name__ == '__main__':
-    main()       
+    main()
