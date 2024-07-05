@@ -3,7 +3,7 @@ from .. import utilities as utilities
 
 from ..environments.session.data import items as items
 
-import json
+import json, math
 from typing import List, Callable
 
 class TemplateRunner:
@@ -61,6 +61,7 @@ class TemplateRunner:
             'export_location': '',
             
             'log_api_token' : False,
+            'log_generation_progress' : False,
             'keep_session_active' : False,
             'keep_project' : False,
         }
@@ -110,6 +111,8 @@ class TemplateRunner:
             
     def set_log_api_token( self, token_in_log:bool = True ):
         self.settings['log_api_token'] = token_in_log
+    def set_log_generation_progress( self, generation_in_log:bool = True ):
+        self.settings['log_generation_progress'] = token_in_log
     
     
     
@@ -343,13 +346,54 @@ class TemplateRunner:
             return
             
         self.log( 'Initiating the map generation process.' )
-        result = sdk.session.creation.generate_map( **self.settings )
+        
+        progress_log_function = self._create_progress_log_function()
+        
+        result = sdk.session.creation.generate_map( **self.settings, progress_function=progress_log_function )
         
         if ( result == 0 ):
             self.log( 'Map generated succesfully and without errors.' )
         else:
             self.log( 'Map generated with this many errors: ' + str(result) )
     
+    def _create_progress_log_function( self ):
+        def progress_log_function(progress_items):
+            return
+        if ( self.settings['log_generation_progress'] ):
+            runner = self
+            
+            progress_steps = 0
+            progress_step_size = 0.1
+            progress_id = None
+            def progress_log_function(progress_items):
+            
+                nonlocal runner
+                nonlocal progress_steps, progress_step_size, progress_id
+                
+                for item in progress_items:
+                    progress_id = progress_id or item.id
+                    if ( not (item.id==progress_id) ):
+                        continue
+                    
+                    if (math.floor(item.progress/progress_step_size)<=progress_steps):
+                        return
+                    progress_steps = math.floor(item.progress/progress_step_size)
+                    
+                    message = '{name} ({id}): {progress}%'
+                    message = utilities.strings.format( message, **{
+                            'id': item.id,
+                            'name': item.name,
+                            'progress': str(round((progress_steps*progress_step_size)*100))
+                        } )
+                    
+                    self.log(message)
+                    if ( not (item.failText == '') ):
+                        self.log('Error ('+str(item.name)+'): '+str(item.failText))
+                        
+                    if (item.progress == 1.0):
+                        progress_id = progress_id + 1
+                        progress_steps=0
+        return progress_log_function
     
     
     def _add_data( self ):

@@ -13,7 +13,7 @@
 	
 	
 	"log_api_token" : true,
-	
+	"log_generation_progress": true,
 	
 	"generate" : true,
 	"size_x" : 2000,
