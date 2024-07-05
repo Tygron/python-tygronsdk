@@ -1,5 +1,7 @@
 from ..connectors import Connector
 from .session import Session
+from ..data.items import Item, ItemMap
+from ..data.items import Progress
 from ....utilities.timing import Timing
 
 from typing import Callable
@@ -48,6 +50,7 @@ class Creation:
             
             progress_items = []   
             
+            response = None;
             try:
                 response = conn.request(
                         method='GET',
@@ -80,6 +83,8 @@ class Creation:
             
             last_item = progress_items[-1]
             if (last_item['progress'] < 1):
+                if ( callable(progress_function) ):
+                    progress_function(ItemMap(progress_items, as_item=Progress))
                 return None
             failed_progress_count = len( [elem for elem in progress_items if (not elem['failText'] == '')] )
             return failed_progress_count
