@@ -1,5 +1,6 @@
 from .lists import Lists
 from .exceptions import Exceptions
+from .bools import Bools
 
 import json, os, re, shutil
 from pathlib import Path
@@ -68,7 +69,7 @@ class Files:
         return json.loads( content )
         
     @staticmethod
-    def read_file_as_key_values( file, to_number=True ):        
+    def read_file_as_key_values( file, to_number=True, to_bool=True ):
         data = {}
         with open(file, encoding='utf8') as f:
             for line in f:
@@ -79,7 +80,9 @@ class Files:
                 key = key.strip()
                 value = value.strip()
                 try:
-                    if to_number:
+                    if to_bool and isinstance(value, str):
+                        value = Bools.to_bool(value)
+                    if to_number and isinstance(value, str):
                         value = float(value)
                 except:
                     pass
