@@ -35,8 +35,10 @@ class TemplateRunner:
             'area_geojson_buffers' : [],
             
             'timeout_in_seconds' : None,
+            'scheduled_timeout_in_seconds' : None,
             'recalculate_reset_sequence' : [True],
             'recalculate_scheduled_sequence' : False,
+            'recalculate_overlay_active' : [],
             
             'exports' : { 
                 'indicator' : {
@@ -243,7 +245,7 @@ class TemplateRunner:
             self._keep_alive()
             self._generate()
             self._add_data()
-            self._recalculate()
+            self._recalculate_cycle()
             self._export()
         except Exception as err:
             self.log( 'An unexpected exception has occured, so stopping the process.')
@@ -323,8 +325,7 @@ class TemplateRunner:
         
         if ( self.settings['log_api_token'] ):
             self.log( 'Connected to session at: ' + sdk.session.connector.get_url_full() )
-        
-            
+    
     def _keep_alive( self ):
         sdk = self.sdk
         
@@ -333,7 +334,7 @@ class TemplateRunner:
         
         sdk.base.sessions.set_session_keep_alive( **sdk.data )
         self.log( 'Running session in Keep Alive mode.')
-            
+    
     def _generate( self ):
         sdk = self.sdk
         
@@ -348,8 +349,9 @@ class TemplateRunner:
             self.log( 'Map generated succesfully and without errors.' )
         else:
             self.log( 'Map generated with this many errors: ' + str(result) )
-            
-            
+    
+    
+    
     def _add_data( self ):
         sdk = self.sdk
         self.log( 'Adding additional Areas from provided geojsons.' )
@@ -359,25 +361,79 @@ class TemplateRunner:
                 area_name_attributes = self.settings.get('area_geojson_names',[])
             )
         self.log( 'Geojson Areas import completed, adding this many areas: ' + str(result) )
-            
-            
-    def _recalculate( self ):
+    
+    
+    
+    def _recalculate_cycle( self ):
         sdk = self.sdk
 
-        self.log( 'Starting recalculation cycles. This may take a while.' )
+        self.log( 'Starting recalculation cycles.' )
+        
+        overlays_active_changers = self._get_overlay_active_changers()
+        if ( len(overlays_active_changers)>0 ):
+            self.log( 'During the calculation cycle, '+str(len(overlays_active_changers))+' Overlay(s) will toggle active state' )
         
         for index, reset in enumerate(self.settings['recalculate_reset_sequence']):
-            scheduled = utilities.lists.get( self.settings['recalculate_scheduled_sequence'], index, False )
-            
-            self.log( 'Recalculation '+str(index+1)+' starting'+(' (reset)' if reset else '')+(' (scheduled)' if scheduled else '') )
-            result = sdk.session.calculation.recalculate( 
-                    reset = reset, 
-                    scheduled = scheduled, 
-                    timeout_in_seconds = self.settings['timeout_in_seconds']
-                )
-            
+            self._set_overlays_active( index, overlays_active_changers )
+            self._recalculate( index=index )
+        
         self.log( 'Completed cycle of recalculations.' )
-         
+    
+    def _recalculate( self, index=0 ):
+        sdk = self.sdk
+        
+        reset = utilities.lists.get( self.settings['recalculate_reset_sequence'], index, False ) 
+        scheduled = utilities.lists.get( self.settings['recalculate_scheduled_sequence'], index, False ) 
+        
+        self.log( 'Recalculation '+str(index+1)+' starting'+(' (reset)' if reset else '')+(' (scheduled)' if scheduled else '') )
+        
+        result = sdk.session.calculation.recalculate( 
+                reset = reset, 
+                scheduled = scheduled, 
+                #timeout_in_seconds = self.settings['timeout_in_seconds'],
+                #scheduled_timeout_in_seconds = self.settings['scheduled_timeout_in_seconds']
+            )
+        
+        self.log( 'Recalculation '+str(index+1)+' complete' )
+    
+    def _set_overlays_active( self, index=0, overlay_active_changers=[] ):
+        if ( len(overlay_active_changers)<=0 ):
+            return
+            
+        sdk = self.sdk
+        
+        defined_active_overlays = []
+        overlay_setting=utilities.lists.coerce(self.settings['recalculate_overlay_active']);
+        if ( len(overlay_setting) > index ):
+            defined_active_overlays = utilities.lists.coerce(overlay_setting[index])
+        
+        active_overlays = sdk.session.items.get_matching( item_type=items.Overlay, matchables=defined_active_overlays )
+        active_ids = [overlay.get_controlling_overlay_id() for overlay in active_overlays]
+        
+        for changer in overlay_active_changers:
+            overlay_id = changer
+            overlay_active = (changer in active_ids)
+            self.log( 'Setting Overlay with ID '+str(overlay_id)+' to '+('active' if overlay_active else 'inactive'))
+            sdk.session.connector.fire_event(
+                    event=sdk.session.events.editoroverlay.set_grid_active( overlay_id, overlay_active )
+                )
+    
+    def _get_overlay_active_changers( self ):
+        if ( len(self.settings.get('recalculate_overlay_active', []))==0 ):
+            return []
+            
+        sdk = self.sdk
+        
+        defined_overlay_ids = []
+        for new_overlay_ids in utilities.lists.coerce(self.settings['recalculate_overlay_active']):
+            new_overlay_ids = utilities.lists.coerce(new_overlay_ids)
+            defined_overlay_ids=defined_overlay_ids+new_overlay_ids
+        overlays = sdk.session.items.get_matching( item_type=items.Overlay, matchables=defined_overlay_ids )
+        
+        controlling_overlays = [overlay.get_controlling_overlay_id() for overlay in overlays]
+        
+        return controlling_overlays
+    
     
     def _partially_format_data_export_key( self, export_key:str = None ):
         if ( export_key is None ):
@@ -507,6 +563,8 @@ class TemplateRunner:
                     )
         self.log( 'Files written' )
     
+    
+    
     def _cleanup( self ):
         sdk = self.sdk
         
@@ -518,10 +576,3 @@ class TemplateRunner:
                 'delete_created_project': (not self.settings['keep_project'])
             } )
         self.log('Template runner\'s sdk has shut down succesfully')
-    
-    
-    
-    
-    
-    
-        

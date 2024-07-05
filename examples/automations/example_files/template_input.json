@@ -20,8 +20,11 @@
 	"allow_errors" : true,
 	
 	
-	"recalculate_reset_sequence" : [true, false],
+	"recalculate_reset_sequence" : [true, false, false],
+	"recalculate_scheduled_sequence" : [true, false, false],
+	"recalculate_overlay_active" : [null, "PE Temperature", null],
 	"timeout_in_seconds" : 1200,
+	"scheduled_timeout_in_seconds" : 2400,
 	
 	
 	"export_files" : true,
