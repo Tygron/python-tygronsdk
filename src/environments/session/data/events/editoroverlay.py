@@ -159,6 +159,8 @@ definitions = {
                                         api_description='Prequel Type Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('prequel_timeframe', Type[int], False, 
                                         api_description='Prequel Timeframe ID (optional)', api_type=Type[int], api_required=False, api_default=None, api_aggregation=0,  ),
+                        EventParameter('iterational_input', Type[bool], False, 
+                                        api_description='Iterational Input (optional)', api_type=Type[bool], api_required=False, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_prequel' : EventDefinition(

@@ -140,12 +140,12 @@ definitions = {
         'get_log' : EventDefinition(
                 group='Logging',
                 parameters=[
-                        EventParameter('domain', Type[str], 
-                                        api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('domain', Type[str], False, 
+                                        api_description='Domain Name (optional, leave empty by default)', api_type=Type[str], api_required=False, api_default=None, api_aggregation=0,  ),
                         EventParameter('log_type', ['BACKUP', 'SECURITY', 'SESSIONS', 'USERS'], 
                                         api_description='Type;{"default": null, "values": ["BACKUP", "SECURITY", "SESSIONS", "USERS"]}', api_type=['BACKUP', 'SECURITY', 'SESSIONS', 'USERS'], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('log_id_token', Type[str], 
-                                        api_description='String', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Log Token', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'get_logs' : EventDefinition(

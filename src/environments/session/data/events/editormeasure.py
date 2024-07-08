@@ -320,7 +320,7 @@ definitions = {
                         EventParameter('measure_id', Type[int], 
                                         api_description='Measure IDs', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('spatial_id', Type[int], 
-                                        api_description='Stakeholder ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                                        api_description='Terrain Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('height_absolute', Type[float], 
                                         api_description='', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
