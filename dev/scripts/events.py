@@ -15,7 +15,7 @@ class Script(interfaces.Script):
             'platform' : 'engine',
             'computer_name' : 'dev script',
             
-            'credentials' : ['credentials.json'],
+            'init_file_credentials' : ['credentials.json'],
             'minimal_rights' : 'DOMAIN_ADMIN',
             'assume_unchanged_parameters' : False,
             'existing_types_only' : True,
@@ -24,7 +24,7 @@ class Script(interfaces.Script):
             'platform_postfix' : None,
             **kwargs
         }
-            
+        
             
         sdk = tygron.sdk( settings )
         sdk.authenticate()
@@ -32,7 +32,7 @@ class Script(interfaces.Script):
 
 
         if ( not (sdk.base.users.get_my_user().rights) == settings['minimal_rights'] ):    
-             raise Exception(' User ' + str(sdk.base.users.get_my_user()) + ' has insufficient rights. Use "credentials=" to overwrite used credentials file.' )
+             raise Exception(' User ' + str(sdk.base.users.get_my_user()) + ' has insufficient rights. Use "init_file_credentials=" to overwrite used credentials file.' )
 
 
 
