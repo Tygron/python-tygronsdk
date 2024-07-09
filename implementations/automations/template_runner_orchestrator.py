@@ -42,6 +42,8 @@ class TemplateRunnerOrchestrator:
                 'on_done_stop_orchestration' : True,
                 
                 'path_to_orchestrator' : None,
+                'allow_orchestrator_task_parameter_override' : False,
+                
                 'debug_on_completion_reset_output_tasks' : False
             }
         
@@ -338,6 +340,9 @@ class TemplateRunnerOrchestrator:
         try:
             task_file = self.get_input_dir_or_file( self.settings['task_file'] )
             task_parameters = utilities.files.read_file_as_json( task_file )
+            if ( self.settings.get('allow_orchestrator_task_parameter_override', False)):
+                self.log_orchestrator( 'Supplementing task with orchestrator settings.' )
+                task_parameters.update(**self.settings)
             runner.set_settings( task_parameters )
             self.log_orchestrator( 'Read out task file and configured runner with settings.' )
             
