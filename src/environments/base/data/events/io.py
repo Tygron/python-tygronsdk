@@ -115,15 +115,6 @@ definitions = {
                                         api_description='High Detail (<10m DEM, <5m grid)', api_type=Type[bool], api_required=False, api_default=None, api_aggregation=0,  ),
                     ]
             ),
-        'trash_project' : EventDefinition(
-                group='Saving project data',
-                parameters=[
-                        EventParameter('project_name', Type[str], 
-                                        api_description='Project Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('delete', Type[bool], 
-                                        api_description='Trashed;{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
-                    ]
-            ),
         'save_project' : EventDefinition(
                 group='Saving project data',
                 parameters=[
@@ -151,6 +142,24 @@ definitions = {
                                         api_description='Session ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('save_token', Type[str], 
                                         api_description='Randomly generated save token', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_project_trashed' : EventDefinition(
+                group='Saving project data',
+                parameters=[
+                        EventParameter('project_name', Type[str], 
+                                        api_description='Project Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('trashed', Type[bool], 
+                                        api_description='Trashed;{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_project_archived' : EventDefinition(
+                group='Saving project data',
+                parameters=[
+                        EventParameter('project_name', Type[str], 
+                                        api_description='Project Name', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('archived', Type[bool], 
+                                        api_description='Archived;{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'add_project_version' : EventDefinition(
