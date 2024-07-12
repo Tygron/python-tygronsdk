@@ -37,7 +37,7 @@ class Init:
         return str(module+'_'+platform).replace('_engine','')
     
     def load_data_from_file( file:str = None, files:list=['./data.txt','./data.json','./config.txt','./config.json',], fail_if_missing:bool=False ):
-        files_to_try = [ f for f in Lists.coerce(files)+Lists.coerce(file) if f is not None ]
+        files_to_try = [ f for f in Lists.coerce(file)+Lists.coerce(files) if f is not None ]
         for f in ( files_to_try ):
             try :
                 return DataStore( file=f )
