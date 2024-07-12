@@ -12,8 +12,8 @@ class TygronTest(unittest.TestCase):
         self.new_project_name = 'py_unittest'
         self.existing_project_name = 'demo_heat_stress'
     
-    def load_settings(self):
-        self.data = tygronsdk.init.init_data()
+    def load_settings(self, *args, **kwargs):
+        self.data = tygronsdk.init.init_data(*args, **kwargs)
         return self.data
     
     def setUp(self):
