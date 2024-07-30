@@ -20,11 +20,11 @@ class Init:
             args.update( **kwargs )
             
         if (use_data):
-            data = Init.load_data_from_file( file=args.get('init_file_data', None ) )
+            data = Init.load_data_from_file( file=args.get('init_file_data', init_file_data ) )
         data.update( **args ) 
         
         if (use_credentials):
-            cred = Init.load_credentials_from_file( file=data.get('init_file_credentials', None ), create_if_missing=credentials_create_if_missing )
+            cred = Init.load_credentials_from_file( file=data.get('init_file_credentials', init_file_credentials ), create_if_missing=credentials_create_if_missing )
         cred.update( **args )
 
         data_store = CollectiveDataStore( data_store=data, credentials_store=cred )
