@@ -35,7 +35,7 @@ class Files:
         
     @staticmethod
     def write_file_binary( directory:str, file:str, content = None, append:bool = False ):
-        flag = 'ab' if append else 'b'
+        flag = 'ab' if append else 'wb'
         Files.ensure_directory(directory)
         f = open( os.path.join( directory, file), flag)
         f.write(content)
