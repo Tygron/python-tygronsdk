@@ -1,6 +1,7 @@
 from .lists import Lists
 from .exceptions import Exceptions
 from .bools import Bools
+from .strings import Strings
 
 import json, os, re, shutil
 from pathlib import Path
@@ -82,7 +83,7 @@ class Files:
                 try:
                     if to_bool and isinstance(value, str):
                         value = Bools.to_bool(value)
-                    if to_number and isinstance(value, str):
+                    if to_number and isinstance(value, str) and Strings.is_number(value):
                         value = float(value)
                 except:
                     pass
