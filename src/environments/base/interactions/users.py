@@ -1,3 +1,5 @@
+from ....core.interactions.interaction_set import InteractionSet
+
 from ..connectors import Connector
 from ..data import objects
 
@@ -5,7 +7,7 @@ from ..interactions.domains import Domains
 
 import json
 
-class Users:
+class Users(InteractionSet):
 
     @staticmethod
     def get_my_user( conn: Connector ):

@@ -1,1 +1,2 @@
 from .environment_interaction_wrapper import EnvironmentInteractionWrapper
+from .interaction_set import InteractionSet

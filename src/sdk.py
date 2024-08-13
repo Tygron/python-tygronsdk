@@ -69,18 +69,22 @@ class sdk():
         self.on_exit_settings = { **value, **kwargs }
         
         
-    def platform_module_name( self, platform:str = 'engine', module:str = '' ):
-        platform = self.data.get('platform_'+str(platform)) or platform
-        from .. import platform_module_name
-        return platform_module_name(platform, module)
+    def platform_version( self, platform:str = 'engine' ):
+        found_version = self.data.get('platform_'+str(platform), None)
+        found_version = self.data.get('version_'+str(platform), found_version)
+        if (found_version):
+            return utilities.strings.stringify_number(found_version, drop_decimals=True)
+        from .. import get_platform_version
+        return get_platform_version(platform)
     
     def create_environments(self):
         data_store = self._data.get_data_store()
-        postfix = self.platform_module_name(self.data['platform'])
+        #postfix = self.platform_module_name(self.data['platform'])
+        platform_version = self.platform_version(data_store.get('platform'))
         
-        self.base       = environments.base.ApiEnvironment      ( data_store, platform_postfix=postfix )
-        self.session    = environments.session.ApiEnvironment   ( data_store, platform_postfix=postfix )
-        self.share      = environments.share.ApiEnvironment     ( data_store, platform_postfix=postfix )
+        self.base       = environments.base.ApiEnvironment      ( data_store, module=environments.base,     platform_version=platform_version )
+        self.session    = environments.session.ApiEnvironment   ( data_store, module=environments.session,  platform_version=platform_version )
+        self.share      = environments.share.ApiEnvironment     ( data_store, module=environments.share,    platform_version=platform_version )
         
         self._environments = { 'base' : self.base, 'session' : self.session, 'share' : self.share }
         # self.session    = core.ApiEnvironment( settings= self.settings, module = sessionEnv )

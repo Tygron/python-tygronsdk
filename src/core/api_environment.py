@@ -7,10 +7,10 @@ import sys, inspect
 
 class ApiEnvironment():
 
-    def __init__( self, settings = {}, module = None, platform_postfix:str = '' ):
+    def __init__( self, settings = {}, module = None, platform_version:str = '' ):
         self._settings = settings
         self.module = module
-        self.generate_module_references(self.module, platform_postfix)
+        self.generate_module_references(self.module, platform_version)
 
     @property
     def settings(self):
@@ -60,9 +60,14 @@ class ApiEnvironment():
     
     
     
-    def generate_module_references( self, module, platform_postfix ):
-        self.generate_interaction_wrappers( getattr(module, 'interactions', None) )
-        self.generate_event_collection( getattr(getattr(module, 'data', module), 'events'+platform_postfix, None) )
+    def generate_module_references( self, module, platform_version ):
+        interactions_module = getattr(module, 'interactions', None)
+        self.generate_interaction_wrappers( interactions_module )
+        
+        events_module = getattr(module, 'data', module)
+        events_module = getattr(events_module, 'events', events_module)
+        events_module = events_module._get_platform_version(platform_version)
+        self.generate_event_collection( events_module )
             
     def generate_interaction_wrappers( self, interactions_module ):
         if ( interactions_module == None):
@@ -85,6 +90,7 @@ class ApiEnvironment():
         self.events = getattr(self, 'events', events.EventSetCollection() )
         
         classes = utilities.modules.get_content_from_module(events_module, events.EventSet)
+
         for key, cls in classes.items():
             if ( not hasattr(self.events, key) ):
                 setattr( self.events, key, events.EnvironmentEventSetWrapper(

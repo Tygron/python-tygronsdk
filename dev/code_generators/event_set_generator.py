@@ -100,10 +100,10 @@ class EventSetGenerator:
     def generate_event_set_file( self, event_set:EventSet, lines_as_list=True ):
             code = self.generate_event_set_code( event_set )
             file_content = self.linesep.join([
-                    'from .....core.events import EventSet',
+                    'from ......core.events import EventSet',
                     '',
-                    'from .....core.data.events import EventDefinition',
-                    'from .....core.data.events import EventParameter',
+                    'from ......core.data.events import EventDefinition',
+                    'from ......core.data.events import EventParameter',
                     '',
                     'from typing import Type',
                     '',

@@ -1,0 +1,10 @@
+from .editor import event_set as editor
+from .editorarea import event_set as editorarea
+from .editorbuilding import event_set as editorbuilding
+from .editorgeolink import event_set as editorgeolink
+from .editorgeoplugin import event_set as editorgeoplugin
+from .editorgeotiff import event_set as editorgeotiff
+from .editorindicator import event_set as editorindicator
+from .editormeasure import event_set as editormeasure
+from .editoroverlay import event_set as editoroverlay
+from .logic import event_set as logic

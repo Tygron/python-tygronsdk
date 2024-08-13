@@ -1,7 +1,7 @@
-from .....core.events import EventSet
+from ......core.events import EventSet
 
-from .....core.data.events import EventDefinition
-from .....core.data.events import EventParameter
+from ......core.data.events import EventDefinition
+from ......core.data.events import EventParameter
 
 from typing import Type
 

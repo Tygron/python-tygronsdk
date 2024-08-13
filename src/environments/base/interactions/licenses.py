@@ -1,3 +1,5 @@
+from ....core.interactions.interaction_set import InteractionSet
+
 from ..connectors import Connector
 from ..data import events, objects
 
@@ -5,7 +7,7 @@ from .... import utilities
 
 import json, re
 
-class Licenses:
+class Licenses(InteractionSet):
 
     @staticmethod
     def get_all_licenses( conn: Connector ):

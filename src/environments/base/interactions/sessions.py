@@ -1,3 +1,5 @@
+from ....core.interactions.interaction_set import InteractionSet
+
 from ..connectors import Connector
 from ..data import events, objects
 
@@ -9,12 +11,14 @@ from ....utilities.exceptions import Exceptions
 
 import json
 
-class Sessions:
+class Sessions(InteractionSet):
 
     @staticmethod
     def get_joinable_sessions( conn:Connector ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         response = conn.fire_event( 
-            events.io.get_my_joinable_sessions (
+            versioned_events.io.get_my_joinable_sessions (
             ) )
         sessions = [objects.SessionData(session) for session in response.get_response_body_json()]   
             
@@ -31,8 +35,10 @@ class Sessions:
     
     @staticmethod
     def start_project_session( conn: Connector, project_name:str, session_type:str = 'EDITOR', session_language:str = None, session_id:int = None, group_token:str = None ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         response = conn.fire_event( 
-            events.io.start (
+            versioned_events.io.start (
                 session_type, project_name, session_language, session_id, group_token
             ) )
             
@@ -40,8 +46,10 @@ class Sessions:
         
     @staticmethod
     def join_project_session( conn: Connector, session_id:int, client_type:str = 'EDITOR', computer_name:str = None, client_token:str = None ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         response = conn.fire_event( 
-            events.io.join (
+            versioned_events.io.join (
                 session_id, client_type, computer_name, client_token
             ) )
         join_session_data = response.get_response_body_json()
@@ -55,10 +63,12 @@ class Sessions:
         
     @staticmethod
     def close_project_session( conn: Connector, session_id:int, client_token:str, keep_open:bool = False, error_on_missing:bool = False ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         if ( (not error_on_missing) and (Sessions.get_joinable_session(conn=conn, session_id=session_id) is None) ):
             return None
         response = conn.fire_event( 
-            events.io.close (
+            versioned_events.io.close (
                 session_id, client_token, keep_open
             ) )
             
@@ -66,16 +76,20 @@ class Sessions:
         
     @staticmethod
     def kill_project_session( conn: Connector, session_id:int, error_on_missing:bool = False ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         if ( (not error_on_missing) and (Sessions.get_joinable_session(conn=conn, session_id=session_id) is None) ):
             return None
         response = conn.fire_event( 
-            events.io.kill (
+            versioned_events.io.kill (
                 session_id
             ) )
         return response.get_response_body_json()
 
     @staticmethod
     def create_new_project_from_template( conn: Connector, template_name:str, new_project_name:str, session_language:str = None, attempts:int = 25 ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         session_id = Sessions.start_project_session(
                 conn = conn,
                 project_name = template_name,
@@ -107,6 +121,8 @@ class Sessions:
  
     @staticmethod
     def create_new_project( conn: Connector, new_project_name:str, language:str = 'EN', high_detail:bool = True, attempts:int = 25 ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         response = Projects.add_project(
                 conn = conn,
                 new_project_name = new_project_name, 
@@ -143,6 +159,8 @@ class Sessions:
  
     @staticmethod
     def save_project_as( conn: Connector, session_id: int, new_project_name: str, clear_map: bool = False, attempts:int = 25 ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         domain = Users.get_my_domain_name(conn)
         
         last_err = None
@@ -150,7 +168,7 @@ class Sessions:
             attempt_name = new_project_name + ('' if i==0 else str(i))
             try:
                 response = conn.fire_event( 
-                    events.io.save_project_as (
+                    versioned_events.io.save_project_as (
                         session_id, domain, attempt_name, clear_map
                     ) )
                     
@@ -165,14 +183,18 @@ class Sessions:
  
     @staticmethod
     def save_project( conn: Connector, session_id: int ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         response = conn.fire_event( 
-            events.io.save_project (
+            versioned_events.io.save_project (
                 session_id
             ) )
         return response
  
     @staticmethod
     def set_session_keep_alive( conn: Connector, session_id: int, keep_alive = 'SHORT'):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         mode = keep_alive
         if (keep_alive is True):
             mode = 'SHORT'
@@ -180,7 +202,7 @@ class Sessions:
             mode = 'NEVER'
     
         response = conn.fire_event( 
-            events.io.set_session_keep_alive (
+            versioned_events.io.set_session_keep_alive (
                 session_id,
                 mode
             ) )
@@ -188,8 +210,10 @@ class Sessions:
     
     @staticmethod
     def get_session_keep_alive( conn: Connector, session_id: int ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         response = conn.fire_event(
-            events.io.get_session_keep_alive (
+            versioned_events.io.get_session_keep_alive (
                 session_id
             ) )
         return response.get_response_body_json()

@@ -44,6 +44,9 @@ class ConnectorTygron(Connector):
     def get_platform( self ):
         if ( '.tygron.com' in self.get_host() ):
             return self.get_host().replace('.tygron.com', '')
+    def get_platform_version( self ):
+        from .... import get_platform_version
+        return get_platform_version( self.get_platform() )
     
     def fire_event( self, event, **kwargs ):
         response =  self.request(

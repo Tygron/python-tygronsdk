@@ -1,3 +1,5 @@
+from ....core.interactions.interaction_set import InteractionSet
+
 from ..connectors import Connector
 from ..data import events, objects
 
@@ -5,7 +7,7 @@ from ..interactions.licenses import Licenses
 
 import json
 
-class Domains:
+class Domains(InteractionSet):
 
     @staticmethod
     def get_domain( conn: Connector ):
@@ -26,9 +28,11 @@ class Domains:
     @staticmethod
     # If subdomain does not exist, it will report 0. If no subdomain is provided, it will report 0.
     def get_domain_usage( conn: Connector, subdomain: str = None ):
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         domain_name = Domains.get_domain(conn).name
         
-        response = conn.fire_event( events.io.get_domain_usage(domain_name, subdomain ) )
+        response = conn.fire_event( versioned_events.io.get_domain_usage(domain_name, subdomain ) )
         
         usage = objects.UsageData(response.get_response_body_json())
         

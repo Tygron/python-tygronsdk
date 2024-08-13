@@ -19,6 +19,7 @@ class test(TygronTest):
         settings['existing_types_only'] = True
         settings['assume_unchanged_parameters'] = False
         settings['output_directory'] = 'test_output'
+        settings['verbose'] = settings.get('verbose', False)
         
         result_files=script.run( **settings )
         
@@ -36,9 +37,10 @@ class test(TygronTest):
                     lineterm=''
                 )
             lines = list(lines)
-            
             if (len(lines)>0):
                 differences.append( 'Difference in file: ' + file_generated + '   :   ' + str(len(lines) ) )
+                if (settings['verbose']):
+                    differences.append('\n'.join(lines))
         
         self.assertEqual(len(differences), 0, msg=utilities.strings.create_multiline_string(differences))
            

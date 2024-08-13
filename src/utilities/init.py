@@ -33,8 +33,22 @@ class Init:
         return data_store
         
     
-    def platform_module_name( platform:str = 'engine', module:str = '' ):
-        return str(module+'_'+platform).replace('_engine','')
+    
+    def platform_version_map_from_data( data ):
+        try:
+            mapping = data.get('platform_versions')
+            if ( (not mapping is None) ):
+                return mapping
+        except Exception as err:
+            pass
+        try:
+            mapping = { k.replace('platform_','').replace('version_',''):Strings.stringify_number(v) for k,v in data.data().items() if k.startswith('platform_') or k.startswith('version_') }
+            return mapping
+        except Exception as err:
+            pass
+        return {}
+        
+    
     
     def load_data_from_file( file:str = None, files:list=['./data.txt','./data.json','./config.txt','./config.json',], fail_if_missing:bool=False ):
         files_to_try = [ f for f in Lists.coerce(file)+Lists.coerce(files) if f is not None ]
