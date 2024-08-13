@@ -65,6 +65,21 @@ class Strings:
         return re.sub(regex,'',str(input))
     
     @staticmethod
+    def is_number( input:str ):
+        return ( str(input).lstrip('-').replace('.','',1).isdigit() )
+    
+    @staticmethod
+    def stringify_number( input:str, drop_decimals=True ):
+        if( not Strings.is_number(input) ):
+            return str(input)
+        try:
+            if ( drop_decimals and (int(input) == input)):
+                return str(int(input))
+        except:
+            pass
+        return str(input)
+    
+    @staticmethod
     def parse_file_size_string( input:str, output_unit:str = 'MB' ):
         if (input is None):
             return None
