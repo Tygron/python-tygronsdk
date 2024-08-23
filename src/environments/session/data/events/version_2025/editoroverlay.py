@@ -527,10 +527,54 @@ definitions = {
         'set_neural_network' : EventDefinition(
                 group='Overlay: Inference',
                 parameters=[
-                        EventParameter(0, Type[int], 
+                        EventParameter('overlay_id', Type[int], 
                                         api_description='Overlay ID (must relate to a Inference Overlay)', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter(1, Type[int], 
+                        EventParameter('neural_network_id', Type[int], 
                                         api_description='Neural Network ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_tensor_normalized' : EventDefinition(
+                group='Overlay: Inference',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], 
+                                        api_description='Inference Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tensor_link_id', Type[int], 
+                                        api_description='Tensor Link ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('normalize', Type[bool], 
+                                        api_description='Normalize;{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_tensor_prequel' : EventDefinition(
+                group='Overlay: Inference',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], 
+                                        api_description='Inference Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tensor_link_id', Type[int], 
+                                        api_description='Tensor Link ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('inference_prequel', Type[str], 
+                                        api_description='Inference Prequel', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_tensor_result_type' : EventDefinition(
+                group='Overlay: Inference',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], 
+                                        api_description='Inference Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tensor_link_id', Type[int], 
+                                        api_description='Tensor Link ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tensor_output_result', Type[str], 
+                                        api_description='Output Result', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
+                    ]
+            ),
+        'set_tensor_value_type' : EventDefinition(
+                group='Overlay: Inference',
+                parameters=[
+                        EventParameter('overlay_id', Type[int], 
+                                        api_description='Inference Overlay ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tensor_link_id', Type[int], 
+                                        api_description='Tensor Link ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('tensor_value_type', Type[str], 
+                                        api_description='Value Type', api_type=Type[str], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
 
