@@ -15,12 +15,12 @@ class test(TygronTest):
         script.set_print_log_function(None)
         
         settings = self.load_settings().data( data=True, credentials=True)
-        settings['credentials'] = settings.get('credentials_dev',settings.get('credentials',None))
+        settings['init_file_credentials'] = settings.get('credentials_dev',settings.get('credentials',settings.get('init_file_credentials',None)))
         settings['existing_types_only'] = True
         settings['assume_unchanged_parameters'] = False
         settings['output_directory'] = 'test_output'
         settings['verbose'] = settings.get('verbose', False)
-        
+
         result_files=script.run( **settings )
         
         matches = []
