@@ -69,9 +69,10 @@ def main():
     
     
         #   To work with events, event definitions are directly accessible.
-        #   If there is a difference in platform, a specific platform's collection of events can be selected.
-        events.set_collection( connector_base_api.get_platform() )
-    
+        #   If a specific version of events should be used, a collection of events matching that platform version can be selected.
+        version = tygronsdk.set_global_module_version( 2024 )
+        print( 'Version of SDK set to '+version )
+        
         #   First, obtain data about the Project. This verifies it exists, but is not required.
         event = events.io.get_project_data( project_name = project_to_run )
         print( 'Prepared an event to interact with the server: ' + str(event) )
@@ -154,7 +155,7 @@ def main():
     
     
     if ( not (critical_error is None) ):
-        raise critical_error    
+        raise critical_error
         
         
         

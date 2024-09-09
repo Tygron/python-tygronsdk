@@ -77,16 +77,10 @@ class Projects(InteractionSet):
             else:
                 raise err
         
-        event = None
-        match conn.get_platform_version():
-            case '2025':
-                event =  versioned_events.io.set_project_trashed (
-                project_name, True
-            )
-            case _:
-                event =  versioned_events.io.trash_project (
-                project_name, True
-            )
+        
+        event =  versioned_events.io.set_project_trashed (
+            project_name, True
+        )
         
         response = conn.fire_event( event )
         if response.is_success():

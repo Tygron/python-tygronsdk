@@ -7,10 +7,10 @@ import sys, inspect
 
 class ApiEnvironment():
 
-    def __init__( self, settings = {}, module = None, platform_version:str = '' ):
+    def __init__( self, settings = {}, module = None, module_version:str = '' ):
         self._settings = settings
         self.module = module
-        self.generate_module_references(self.module, platform_version)
+        self.generate_module_references(self.module, module_version)
 
     @property
     def settings(self):
@@ -60,13 +60,13 @@ class ApiEnvironment():
     
     
     
-    def generate_module_references( self, module, platform_version ):
+    def generate_module_references( self, module, module_version ):
         interactions_module = getattr(module, 'interactions', None)
         self.generate_interaction_wrappers( interactions_module )
         
         events_module = getattr(module, 'data', module)
         events_module = getattr(events_module, 'events', events_module)
-        events_module = events_module._get_platform_version(platform_version)
+        events_module = events_module._get_module_version(module_version)
         self.generate_event_collection( events_module )
             
     def generate_interaction_wrappers( self, interactions_module ):

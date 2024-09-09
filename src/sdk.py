@@ -33,7 +33,8 @@ class sdk():
             'delete_created_project' : False
         }
         
-        self.create_environments()
+        self._module_version = ''
+        self.create_environments( self.platform_version() )
         return;
     
     
@@ -68,30 +69,31 @@ class sdk():
     def configure_exit(self, value:dict = {}, **kwargs):
         self.on_exit_settings = { **value, **kwargs }
         
-        
-    def platform_version( self, platform:str = 'engine' ):
-        found_version = self.data.get('platform_'+str(platform), None)
-        found_version = self.data.get('version_'+str(platform), found_version)
-        if (found_version):
-            return utilities.strings.stringify_number(found_version, drop_decimals=True)
-        from .. import get_platform_version
-        return get_platform_version(platform)
     
-    def create_environments(self):
-        data_store = self._data.get_data_store()
-        #postfix = self.platform_module_name(self.data['platform'])
-        platform_version = self.platform_version(data_store.get('platform'))
+    def module_version(self):
+        """Get current configured module version of SDK"""
+        return self._module_version
+    def platform_version(self):
+        platform_connector = core.connectors.connector_tygron.ConnectorTygron(self.data)
+        return platform_connector.get_platform_version()
         
-        self.base       = environments.base.ApiEnvironment      ( data_store, module=environments.base,     platform_version=platform_version )
-        self.session    = environments.session.ApiEnvironment   ( data_store, module=environments.session,  platform_version=platform_version )
-        self.share      = environments.share.ApiEnvironment     ( data_store, module=environments.share,    platform_version=platform_version )
+    def create_environments(self, version:str = None):
+        data_store = self._data.get_data_store()
+        
+        from .. import get_matching_version
+        module_version = get_matching_version(version)
+        self._module_version = module_version
+        
+        self.base       = environments.base.ApiEnvironment      ( data_store, module=environments.base,     module_version=module_version )
+        self.session    = environments.session.ApiEnvironment   ( data_store, module=environments.session,  module_version=module_version )
+        self.share      = environments.share.ApiEnvironment     ( data_store, module=environments.share,    module_version=module_version )
         
         self._environments = { 'base' : self.base, 'session' : self.session, 'share' : self.share }
         # self.session    = core.ApiEnvironment( settings= self.settings, module = sessionEnv )
         pass
     
     
-        
+    
     def authenticate( self, authentication_details: dict = {}, **kwargs ):
         sdk_credentials = self._data.get_credentials_store()._data
         auth_details = { **sdk_credentials, **authentication_details, **kwargs }
@@ -102,7 +104,6 @@ class sdk():
             if ( not (result is None) ):
                 results[name] = result
         return results
-        
         
         
     def exit( self, exit_settings:dict = {} ):

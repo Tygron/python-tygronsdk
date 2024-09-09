@@ -21,7 +21,7 @@ class Script(interfaces.Script):
             'existing_types_only' : True,
             
             'output_directory' : 'dev_output',
-            'platform_version' : None,
+            'module_version' : None,
             **kwargs
         }
         
@@ -35,12 +35,13 @@ class Script(interfaces.Script):
              raise Exception(' User ' + str(sdk.base.users.get_my_user()) + ' has insufficient rights. Use "init_file_credentials=" to overwrite used credentials file.' )
 
 
-        version_module = 'no version found'
-        if ( settings['platform_version'] is None ):
-            version_module = sdk.platform_version(settings['platform'])
-        version_module = 'version_'+version_module
+        platform_version = sdk.platform_version()
+        module_version = settings.get('module_version',None)
+        if ( module_version is None ):
+            module_version = sdk.module_version()
+        module_version = 'version_'+module_version
             
-        output_dir = os.path.join( settings['output_directory'], *['src','environments','{env}','data', 'events' ], version_module )
+        output_dir = os.path.join( settings['output_directory'], *['src','environments','{env}','data', 'events' ], module_version )
         tygronsdk.utilities.files.write_file( settings['output_directory'], '.gitignore', '/*' )
         
         
@@ -61,7 +62,7 @@ class Script(interfaces.Script):
         gen.gen_name = 'event generator for base environment'
         gen.assume_unchanged_parameters = settings['assume_unchanged_parameters']
         gen.output_directory = output_dir.format( env='base' )
-        gen.environment_events = getattr(tygronsdk.src.environments.base.data.events, version_module, None)
+        gen.environment_events = getattr(tygronsdk.src.environments.base.data.events, module_version, None)
         gen.connector = sdk.base.connector
         generators.append(gen)
 
@@ -70,7 +71,7 @@ class Script(interfaces.Script):
         gen.gen_name = 'event generator for session environment'
         gen.assume_unchanged_parameters = settings['assume_unchanged_parameters']
         gen.output_directory = output_dir.format( env='session' )
-        gen.environment_events = getattr(tygronsdk.src.environments.session.data.events, version_module, None)
+        gen.environment_events = getattr(tygronsdk.src.environments.session.data.events, module_version, None)
         gen.connector = sdk.session.connector
         generators.append(gen)
 
@@ -80,7 +81,7 @@ class Script(interfaces.Script):
         gen.assume_unchanged_parameters = settings['assume_unchanged_parameters']
         gen.output_directory = output_dir.format( env='share' )
         gen.environment_events = tygronsdk.src.environments.share.data.events
-        gen.environment_events = getattr(tygronsdk.src.environments.share.data.events, version_module, None)
+        gen.environment_events = getattr(tygronsdk.src.environments.share.data.events, module_version, None)
         gen.connector = sdk.share.connector
         generators.append(gen)
         """
@@ -91,7 +92,8 @@ class Script(interfaces.Script):
         try:
             self.log('Settings: ')
             self.log('platform: ' +                    str(settings['platform']) )
-            self.log('version_module: ' +              str(version_module) )
+            self.log('platform_version: ' +            str(platform_version) )
+            self.log('module_version: ' +              str(module_version) )
             self.log('assume_unchanged_parameters: ' + str(settings['assume_unchanged_parameters']) )
             self.log('existing_types_only: '+          str(settings['existing_types_only']) )
             self.log('minimal_rights: ' +              str(settings['minimal_rights']) )
