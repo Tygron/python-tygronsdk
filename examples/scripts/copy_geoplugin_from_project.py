@@ -178,7 +178,7 @@ class Script(interfaces.Script):
             origin_geolink_geo_modes =[link.geo_mode      for link in origin_geolinks]
         
             response_plugin_id = sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeoplugin.add(
+                    sdk_target.session.events.editorgeoplugin.add(
                         type=origin_geoplugin.link_type 
                     )
                 )
@@ -186,13 +186,13 @@ class Script(interfaces.Script):
             self.log( 'New plugin id: ' + str(target_plugin_id) )
         
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeoplugin.set_name(
+                    sdk_target.session.events.editorgeoplugin.set_name(
                         geoplugin_id=target_plugin_id,
                         name=settings['target_geoplugin_name']
                     )
                 )
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeoplugin.set_new_project(
+                    sdk_target.session.events.editorgeoplugin.set_new_project(
                         geoplugin_id=target_plugin_id,
                         new_project=origin_geoplugin.new_project
                     )
@@ -202,7 +202,7 @@ class Script(interfaces.Script):
                 
                 
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeoplugin.add_new_links(
+                    sdk_target.session.events.editorgeoplugin.add_new_links(
                         geoplugin_id=[target_plugin_id] * len(origin_geoplugin.geolink_ids),
                         name=['placeholder']            * len(origin_geoplugin.geolink_ids)
                     )
@@ -218,7 +218,7 @@ class Script(interfaces.Script):
         
         
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_name(
+                    sdk_target.session.events.editorgeolink.set_name(
                         geolink_id=target_geolink_ids,
                         name=origin_geolink_names
                     )
@@ -226,7 +226,7 @@ class Script(interfaces.Script):
                 
                 
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_geometry_mode(
+                    sdk_target.session.events.editorgeolink.set_geometry_mode(
                         geolink_id      = target_geolink_ids,
                         geometry_mode   = [link.geo_mode for link in origin_geolinks]
                     )
@@ -277,20 +277,20 @@ class Script(interfaces.Script):
                 filtered_function_ids.append( link.function_id )
 
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_line_buffer(
+                    sdk_target.session.events.editorgeolink.set_line_buffer(
                         geolink_id      = filtered_geolink_ids_points,
                         buffer          = filtered_buffers_points
                     )
                 )
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_point_buffer(
+                    sdk_target.session.events.editorgeolink.set_point_buffer(
                         geolink_id      = filtered_geolink_ids_lines,
                         buffer          = filtered_buffers_lines
                     )
                 )
               
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_attributes(
+                    sdk_target.session.events.editorgeolink.set_attributes(
                         geolink_id      = attribute_ids,
                         attribute       = attribute_names,
                         attribute_value = attribute_values
@@ -298,7 +298,7 @@ class Script(interfaces.Script):
                 )
                 
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_mapping(
+                    sdk_target.session.events.editorgeolink.set_mapping(
                         geolink_id      = mapping_ids,
                         attribute       = mapping_names,
                         new_attribute   = mapping_values
@@ -306,7 +306,7 @@ class Script(interfaces.Script):
                 )
             
             sdk_target.session.connector.fire_event(
-                    tygronsdk.events.editorgeolink.set_function(
+                    sdk_target.session.events.editorgeolink.set_function(
                         geolink_id      = filtered_geolink_ids_functions,
                         function_id     = filtered_function_ids
                     )
