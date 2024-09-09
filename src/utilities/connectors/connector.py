@@ -115,8 +115,11 @@ class Connector:
     def get_url_part_port( self ):
         return ( ':' + str(self.port) ) if self.port != None else ''
     def get_url_part_path( self, path=None ):
-        full_path = '/'+self.base
-        if ( (not self.path_is_file(full_path)) or (path != None) ):
+        full_path = ''
+        path_is_root = (not (path is None) and len(path)>0 and path[0] == '/')
+        if ( not path_is_root ):
+            full_path = '/'+self.base
+        if ( ( not self.path_is_file(full_path) ) and ( not path_is_root ) ):
             full_path = full_path.rstrip('/')+'/'
         if ( path!=None ):
             full_path+=path
@@ -124,7 +127,6 @@ class Connector:
                 full_path = full_path.split('?')[0]
             if ( not self.path_is_file(full_path) ):
                 full_path = full_path.rstrip('/')+'/'
-            
         return full_path;
     def get_url_part_query_params( self, path='', query_params={} ):
         params = {}
