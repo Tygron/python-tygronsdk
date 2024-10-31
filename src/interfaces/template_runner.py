@@ -434,8 +434,8 @@ class TemplateRunner:
         result = sdk.session.calculation.recalculate( 
                 reset = reset, 
                 scheduled = scheduled, 
-                #timeout_in_seconds = self.settings['timeout_in_seconds'],
-                #scheduled_timeout_in_seconds = self.settings['scheduled_timeout_in_seconds']
+                timeout_in_seconds = self.settings['timeout_in_seconds'],
+                scheduled_timeout_in_seconds = self.settings['scheduled_timeout_in_seconds']
             )
         
         self.log( 'Recalculation '+str(index+1)+' complete' )
