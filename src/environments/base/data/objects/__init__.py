@@ -5,3 +5,5 @@ from .ProjectData import ProjectData
 from .SessionData import SessionData
 from .UsageData import UsageData
 from .UserData import UserData
+
+from .MaintenanceWindowData import MaintenanceWindowData
