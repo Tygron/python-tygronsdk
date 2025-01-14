@@ -13,7 +13,7 @@ class LicenseData:
                 'new_projects_per_day': ['MAX_NEW_PROJECTS', 'new projects per day'],
                 'max_project_area': ['MAX_PROJECT_DIM_M', 'max project area (km2)'],
                 'max_total_area': ['MAX_AREA_KM2', 'total area (km2)'],
-                'max_geoshare_storage': ['MAX_SHARE_MB','geoshare storage'],
+                'max_geoshare_storage': ['MAX_SHARE_MB',['geoshare storage','geoshare storage (mb)']],
                 'price': ['PRICE_EUR', 'price per year (ex. vat)'],
                 'users': ['MAX_USERS', 'users'],
                 
@@ -50,7 +50,13 @@ class LicenseData:
         if ( not base_only ):
             value = self._variables.get( self.key_mapping[key][variable_term], None )
         if ( value is None and (not override_only) ):
-            value = self._data.get( self.key_mapping[key][table_term], None )
+            if ( isinstance(self.key_mapping[key][table_term], list ) ):
+                for term in self.key_mapping[key][table_term]:
+                    value = self._data.get( term, None )
+                    if ( not (value is None) ):
+                        break
+            else:
+                value = self._data.get( self.key_mapping[key][table_term], None )
         return value
           
     @property
