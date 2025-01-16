@@ -134,6 +134,10 @@ class Script(interfaces.Script):
                 self.log( 'Written merged event sets to '+str(gen.output_directory) )
                 self.log( 'Finished '+gen.gen_name )
                 self.log( '-----' )
+                
+            self.log( 'An overview of differences can be found using the following command: ')
+            self.log( 'diff -r tygronsdk/src/environments/ '+str(settings['output_directory'])+'/src/environments/ | grep -v \'^Only in\'' )
+            
         except Exception as err:
             self.log( utilities.exceptions.stringify(err) )
             pass
