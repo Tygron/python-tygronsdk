@@ -32,7 +32,9 @@ def main():
     print('The server version is: "'+sdk.platform_version()+'".')
     
     print('The internal module version is: "'+sdk.module_version()+'".')
-        
+    
+    print('The server reports the following in regards to maintenance: '+str(sdk.base.platform.get_maintenance_window()))
+    
     sdk.exit()
         
         
