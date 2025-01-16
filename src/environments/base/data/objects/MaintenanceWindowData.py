@@ -48,14 +48,18 @@ class MaintenanceWindowData:
     def is_upcoming(self, current_time_in_seconds:int = None, look_ahead_in_seconds:int = None):
         time_to_window = self.time_to_start_in_seconds(current_time_in_seconds)
         if ( look_ahead_in_seconds is None ):
-            return time_to_window > 0
+            return time_to_window >= 0
         else:
-            return (time_to_window > 0) and (time_to_window < look_ahead_in_seconds)
+            return (time_to_window >= 0) and (time_to_window <= look_ahead_in_seconds)
             
     def is_completed(self, current_time_in_seconds:int = None):
         time_to_window_end = self.time_to_end_in_seconds(current_time_in_seconds)
         return time_to_window_end < 0
         
     def is_upcoming_or_active(self, current_time_in_seconds:int = None, look_ahead_in_seconds:int = None):
-        return self.is_upcoming(current_time_in_seconds, look_ahead_in_seconds) or self.is_completed(current_time_in_seconds)
+        if (self.is_completed(current_time_in_seconds)):
+            return False
+        elif ( self.is_upcoming(current_time_in_seconds, look_ahead_in_seconds) ):
+            return True
+        return False
     

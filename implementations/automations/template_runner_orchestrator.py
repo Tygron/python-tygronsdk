@@ -34,7 +34,6 @@ class TemplateRunnerOrchestrator:
                 'domain_projects_limit_fraction' : 0.75,
                 'license_allowance_retry_time_in_seconds' : 3600,
                 
-                
                 'single_task' : False,
                 'on_start_clean_running_tasks' : True,
                 'on_start_reset_completed_tasks' : False,
@@ -199,7 +198,7 @@ class TemplateRunnerOrchestrator:
             if (not loop):
                 break
 
-            utilities.timing.wait_for( timeout_in_seconds=5 )                
+            utilities.timing.wait_for( timeout_in_seconds=5 )
                 
         self.log_orchestrator( 'Orchestrator has completed its orchestration' )
             
@@ -249,7 +248,7 @@ class TemplateRunnerOrchestrator:
                 'Amount of tasks in parallel: '+str(self.settings['parallel_tasks']),
                 'Maximum allowed amount of new projects. Runs are paused if exceeded: '+str(self.settings['domain_projects_limit']),
                 'Maximum allowed percentage of new projects. Runs are paused if exceeded: '+str(self.settings['domain_projects_limit_fraction']),
-                'Paused runs are paused for this many seconds: '+str(self.settings['license_allowance_retry_time_in_seconds']),
+                'Runs paused due to license are paused for this many seconds: '+str(self.settings['license_allowance_retry_time_in_seconds']),
                 '',
                 'On finish:',
                 'Stop orchestration when input and running directories are empty: '+str(self.settings['on_done_stop_orchestration']),
@@ -338,6 +337,28 @@ class TemplateRunnerOrchestrator:
         credentials = None
         
         try:
+            self.set_runner_task_file( runner )
+            task_in_input = False
+            
+            credentials = self.set_runner_credentials( runner )
+            self.check_runner_platform( runner )
+            self.check_runner_license( runner )
+            self.start_runner( runner, credentials )
+        except Exception as err:
+            self.log_orchestrator( 'A critical error occured' )
+            critical_error = err
+        
+        if (task_in_input):
+            self.move_task_file_input_running( self.settings['task_file'] )
+        
+        self.output_log_of_runner( self.settings['task_file'], runner, critical_error )
+        self.output_task_file( self.settings['task_file'], critical_error )
+        
+        if ( not critical_error is None ):
+            self.log_orchestrator(critical_error)
+    
+    def set_runner_task_file( self, runner ):
+        try:
             task_file = self.get_input_dir_or_file( self.settings['task_file'] )
             task_parameters = utilities.files.read_file_as_json( task_file )
             if ( self.settings.get('allow_orchestrator_task_parameter_override', False)):
@@ -351,53 +372,81 @@ class TemplateRunnerOrchestrator:
             
             self.move_task_file_input_running( self.settings['task_file'] )
             self.log_orchestrator( 'Moved task file into running directory.' )
-            task_in_input = False
             
         except Exception as err:
             self.log_orchestrator( 'Encountered an error while interpreting task file data' )
-            critical_error = err
+            raise err
+    
+    
+    def set_runner_credentials( self, runner ):
+        try:
+            credentials = self.get_credentials( runner.settings.get('credentials_file', None) )
+            self.log_orchestrator( 'Read out credentials file from '+str(credentials.source) )
+        except Exception as err:
+            self.log_orchestrator( 'Encountered an error while establishing credentials for run' )
+            raise err
             
-        
-        if ( not critical_error ):
-            try:
-                credentials = self.get_credentials( task_parameters.get('credentials_file', None) )
-                self.log_orchestrator( 'Read out credentials file from '+str(credentials.source) )
-            except Exception as err:
-                self.log_orchestrator( 'Encountered an error while establishing credentials for run' )
-                critical_error = err
-        
-        
-        if ( not critical_error ):
-            try:
-                self.log_orchestrator( 'Checking runner can authenticate with obtained credentials' )
-                runner.check_sdk_ready( credentials )
-                
-                self.log_orchestrator( 'Checking license allowance for new projects today' )
-                self.wait_license_allowance_new_projects( runner.sdk )        
-            except Exception as err:
-                self.log_orchestrator( 'Encountered an error while checking authorization and license' )
-                critical_error = err
-        
-        if ( not critical_error ):
-            try:
-                self.log_orchestrator( 'Starting the template runner as user: '+str(credentials.username) )
-                runner.run(credentials)        
-            except Exception as err:
-                self.log_orchestrator( 'Encountered an error while the task was running' )
-                critical_error = err
+        try:
+            self.log_orchestrator( 'Checking runner can authenticate with obtained credentials' )
+            runner.check_sdk_ready( credentials )
+        except Exception as err:
+            self.log_orchestrator( 'Encountered an error while checking authorization' )
+            raise err
+        return credentials
 
-        
-        if (task_in_input):
-            self.move_task_file_input_running( self.settings['task_file'] )
-        
-        self.output_log_of_runner( self.settings['task_file'], runner, critical_error )
-        self.output_task_file( self.settings['task_file'], critical_error )
-        
-        if ( not critical_error is None ):
-            self.log_orchestrator(critical_error)
+    
+    def check_runner_platform( self, runner ):
+        try:
+            self.log_orchestrator( 'Checking platform readyness (e.g. maintenance)' )
+            if ( not runner.check_maintenance_window( exception=False ) ):
+                self.wait_maintenance_window( runner.sdk )
+        except Exception as err:
+            self.log_orchestrator( 'Encountered an error while testing platform is ready' )
+            raise err
+    
+    
+    def check_runner_license( self, runner ):
+        try:
+            self.log_orchestrator( 'Checking license allowance for new projects today' )
+            self.wait_license_allowance_new_projects( runner.sdk )
+        except Exception as err:
+            self.log_orchestrator( 'Encountered an error while checking license' )
+            raise err
+    
+    
+    def start_runner( self, runner, credentials  ):
+        try:
+            self.log_orchestrator( 'Starting the template runner as user: '+str(credentials.username) )
+            runner.run(credentials)
+        except Exception as err:
+            self.log_orchestrator( 'Encountered an error while the task was running' )
+            raise err
     
     
     
+    
+    
+    def wait_maintenance_window( self, sdk:tygron.sdk ):
+        result = False
+        previous_result = False
+        maintenance_window = sdk.base.platform.get_maintenance_window()
+        
+        while ( not maintenance_window.is_completed() ):
+            if ( not (previous_result == maintenance_window.end_in_seconds) ):
+                self.log_orchestrator( 'Task will not start due to maintenance window starting at: '+str(utilities.timing.get_readable_time(maintenance_window.start_in_seconds)) )
+                self.log_orchestrator( 'Waiting until maintenance window has passed at: '+str(utilities.timing.get_readable_time(maintenance_window.end_in_seconds)) )
+            else:
+                self.log_orchestrator( 'Task is still waiting on maintenance window to end at: '+str(utilities.timing.get_readable_time(maintenance_window.end_in_seconds)) )
+            
+            previous_result = maintenance_window.end_in_seconds 
+                
+            utilities.timing.wait_for( timeout_in_seconds=maintenance_window.time_to_end_in_seconds() )
+                
+            if (utilities.timing.time_remaining( start_time=maintenance_window.time_to_end_in_seconds() ) < 0 ):
+                maintenance_window = sdk.base.platform.get_maintenance_window()
+        
+        return True
+        
     def wait_license_allowance_new_projects( self, sdk:tygron.sdk ):
         result = False
         previous_result = False
@@ -410,7 +459,7 @@ class TemplateRunnerOrchestrator:
                 else:
                     self.log_orchestrator( 'Task is still not allowed to start due to license allowance: '+str(result) )
                 previous_result = result
-                utilities.timing.wait_for( timeout_in_seconds=self.settings['license_allowance_retry_time_in_seconds'] )       
+                utilities.timing.wait_for( timeout_in_seconds=self.settings['license_allowance_retry_time_in_seconds'] )
             result = self.check_license_allows_new_projects( sdk )
             
         return True

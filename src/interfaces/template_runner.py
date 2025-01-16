@@ -18,6 +18,8 @@ class TemplateRunner:
             'run_collection_name' : 'automated',
             'run_name' : utilities.strings.generate_random_token(10),
         
+            'maintenance_window_lookahead' : 0,
+            
             'template_name' : None,
             'new_project_name' : utilities.strings.generate_random_token(10),
             'attempts' : None,
@@ -97,7 +99,13 @@ class TemplateRunner:
                 collection=self.settings['run_collection_name'],
                 run=self.settings['run_name'],
             )
-        
+    
+    def set_maintenance_window_lookahead( self, lookahead_in_seconds:int = None ):
+        if ( (lookahead_in_seconds is None) or (lookahead_in_seconds < 0) ):
+            self.settings['maintenance_window_lookahead'] = None;
+        else:
+            self.settings['maintenance_window_lookahead'] = lookahead_in_seconds;
+    
     def set_logging_function( self, logging_function:Callable = None ):
         self.logging_function = logging_function
     def set_formatted_logging_function( self, formatted_logging_function:Callable = None, log_format:str = None ):
@@ -124,18 +132,33 @@ class TemplateRunner:
             )
         return self.sdk
     
-    def check_sdk_ready( self, credentials:dict = {} ):
+    def check_sdk_ready( self, credentials:dict = {}, exception=True ):
         if ( getattr(self, 'sdk', None ) is None ):
             self.create_sdk()
+            
         if ( not self.sdk.base.authenticate(credentials) ):
-            raise Exception('Could not authenticate with provided credentials')
-
-    def check_settings_ready( self ):
-        if ( self.settings['template_name'] == None ):
-            raise Exception('A template project must be provided')
+            if (exception):
+                raise Exception('Could not authenticate with provided credentials')
+            return False
+        return True
     
-        
-        
+    def check_settings_ready( self, exception=True ):
+        if ( self.settings['template_name'] == None ):
+            if (exception):
+                raise Exception('A template project must be provided')
+            return False
+        return True
+    
+    def check_maintenance_window( self, exception=True ):
+        maintenance_window = self.sdk.base.platform.get_maintenance_window()
+        lookahead = self.settings['maintenance_window_lookahead']
+        if ( maintenance_window.is_upcoming_or_active( look_ahead_in_seconds=lookahead ) ):
+            if (exception):
+                raise Exception('Too close to upcoming maintenance window')
+            return False
+        return True
+    
+    
     def set_template_name( self, template_name:str ):
         if ( not utilities.tygron_strings.is_allowed_project_name( template_name) ):
             raise Exception('The name of the template must be valid')
@@ -239,6 +262,7 @@ class TemplateRunner:
     
         self.check_sdk_ready( credentials )
         self.check_settings_ready( )
+        self.check_maintenance_window( )
         self.log( 'Template runner is ready. Starting process.' )
     
         exceptions = []
