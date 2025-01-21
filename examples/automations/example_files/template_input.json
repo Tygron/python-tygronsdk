@@ -5,6 +5,7 @@
 	
 	"platform": "engine",
 	
+	"maintenance_window_lookahead":3600,
 	
 	"template_name" : "demo_heat_stress",
 	"new_project_name" : "auto-{randomtoken6}-{feature_index}-",
