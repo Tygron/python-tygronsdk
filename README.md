@@ -2,6 +2,8 @@
 
 Software Development Kit in Python for interacting with the Tygron Platform.
 
+This SDK is offered as-is, under the MIT license. This SDK is not part of the core Tygron Platform technology.
+
 ## Using the sdk:
 
 Add as a module to a python project, ideally in a folder named "tygronsdk". It is then possible to import the sdk with:
