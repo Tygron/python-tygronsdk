@@ -7,4 +7,5 @@ from .editorgeotiff import event_set as editorgeotiff
 from .editorindicator import event_set as editorindicator
 from .editormeasure import event_set as editormeasure
 from .editoroverlay import event_set as editoroverlay
+from .editorparametric import event_set as editorparametric
 from .logic import event_set as logic
