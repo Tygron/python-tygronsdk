@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from typing import Union
 
@@ -34,7 +34,7 @@ class Datetimes:
         
     @staticmethod
     def timestamp_to_datetime( ts:Union[int,datetime], millis:bool = None ):
-        if ( isinstance(ts, datetime) ):
+        if ( isinstance(ts, datetime.datetime) ):
             return ts
         if ( ts is None ):
             return None
@@ -42,4 +42,4 @@ class Datetimes:
             millis = Datetimes.guess_is_timestamp_in_milliseconds(ts)
         if ( millis ):
             ts = ts/1000
-        return datetime.utcfromtimestamp(ts)
+        return datetime.datetime.fromtimestamp(ts, datetime.UTC)
