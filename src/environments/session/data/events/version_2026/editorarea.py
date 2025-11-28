@@ -126,8 +126,8 @@ definitions = {
                 parameters=[
                         EventParameter('area_id', Type[int], aggregation=1, 
                                         api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('geometry', 'Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', aggregation=1, 
-                                        api_description='MultiPolygon[]', api_type='Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('geometry', 'MultiPolygon', aggregation=1, 
+                                        api_description='MultiPolygon[]', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
         'remove_polygons' : EventDefinition(
@@ -135,8 +135,8 @@ definitions = {
                 parameters=[
                         EventParameter('area_id', Type[int], aggregation=1, 
                                         api_description='Areas', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('geometry', 'Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', aggregation=1, 
-                                        api_description='MultiPolygon[]', api_type='Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('geometry', 'MultiPolygon', aggregation=1, 
+                                        api_description='MultiPolygon[]', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 

@@ -296,7 +296,6 @@ class Script(interfaces.Script):
                     )
                 )
 
-            #attribute_matching_event = None
             try:
                 attribute_matching_event = sdk_target.session.events.editorgeolink.set_attributes
             except:

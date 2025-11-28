@@ -133,8 +133,8 @@ definitions = {
                                         api_description='Selling Stakeholder ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('stakeholder_id_buyer', Type[int], 
                                         api_description='Buying Stakeholder ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('transaction_area', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='Area of land being sold', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('transaction_area', 'MultiPolygon', 
+                                        api_description='Area of land being sold', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('price_per_m2', Type[float], 
                                         api_description='Price per square meter', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]

@@ -298,8 +298,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('levee_spatial_id', Type[int], 
                                         api_description='Levee Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='Multipolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='Multipolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_levee_polygons' : EventDefinition(
@@ -309,8 +309,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('levee_spatial_id', Type[int], 
                                         api_description='Levee Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'set_levee_type' : EventDefinition(
@@ -352,8 +352,8 @@ definitions = {
                                         api_description='Levee Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('outer', Type[bool], 
                                         api_description='Is Outer (false = inner);{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_terrain_polygons' : EventDefinition(
@@ -365,8 +365,8 @@ definitions = {
                                         api_description='Terrain Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('outer', Type[bool], 
                                         api_description='Is Outer (false = inner);{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'set_terrain_edit_type' : EventDefinition(
@@ -439,8 +439,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], 
                                         api_description='GeoTIFF Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_geotiff_polygons' : EventDefinition(
@@ -450,8 +450,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('tiff_spatial_id', Type[int], 
                                         api_description='GeoTIFFs Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'set_geotiff_automatic_polygons' : EventDefinition(
@@ -522,8 +522,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('upgrade_spatial_id', Type[int], 
                                         api_description='Upgrade Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_upgrade_polygons' : EventDefinition(
@@ -533,8 +533,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('upgrade_spatial_id', Type[int], 
                                         api_description='Upgrade Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
 
@@ -554,8 +554,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter(1, Type[int], 
                                         api_description='Grid Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter(2, 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(2, 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_grid' : EventDefinition(
@@ -574,8 +574,8 @@ definitions = {
                                         api_description='Measure ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter(1, Type[int], 
                                         api_description='Grid Spatial ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter(2, 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter(2, 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'remove_grid_terrain_type' : EventDefinition(

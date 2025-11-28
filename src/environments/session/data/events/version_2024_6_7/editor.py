@@ -25,10 +25,10 @@ definitions = {
                                         api_description='Center point (Longitude or X coordinate)', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('center_point_y', Type[float], 
                                         api_description='Center point (Latitude or Y coordinate)', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('area_to_generate', 'Unknown: (multipolygon with crs: epsg:3857)', False, 
-                                        api_description='Optional: Limit data loading to this Polygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=False, api_default=None, api_aggregation=0,  ),
-                        EventParameter('area_of_interest', 'Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', False, aggregation=1, 
-                                        api_description='Optional: Area of Interest Polygons', api_type='Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', api_required=False, api_default=None, api_aggregation=1,  ),
+                        EventParameter('area_to_generate', 'MultiPolygon', False, 
+                                        api_description='Optional: Limit data loading to this Polygon', api_type='MultiPolygon', api_required=False, api_default=None, api_aggregation=0,  ),
+                        EventParameter('area_of_interest', 'MultiPolygon', False, aggregation=1, 
+                                        api_description='Optional: Area of Interest Polygons', api_type='MultiPolygon', api_required=False, api_default=None, api_aggregation=1,  ),
                     ]
             ),
 

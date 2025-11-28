@@ -145,8 +145,8 @@ definitions = {
                                         api_description='Building ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('section_id', Type[int], aggregation=1, 
                                         api_description='Section ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', aggregation=1, 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857 or multiple values in array [a, b, c])', api_required=True, api_default=None, api_aggregation=1,  ),
+                        EventParameter('polygon', 'MultiPolygon', aggregation=1, 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('largest_owner', Type[bool], 
                                         api_description='Use largest Owner;{"default": null, "values": ["true", "false"]}', api_type=Type[bool], api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
@@ -158,8 +158,8 @@ definitions = {
                                         api_description='Building ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
                         EventParameter('section_id', Type[int], aggregation=1, 
                                         api_description='Section ID', api_type=Type[int], api_required=True, api_default=None, api_aggregation=1,  ),
-                        EventParameter('polygon', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='MultiPolygon', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('polygon', 'MultiPolygon', 
+                                        api_description='MultiPolygon', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                     ]
             ),
         'add_geometry' : EventDefinition(
@@ -295,8 +295,8 @@ definitions = {
                 parameters=[
                         EventParameter('function_id', Type[int], 
                                         api_description='Function', api_type=Type[int], api_required=True, api_default=None, api_aggregation=0,  ),
-                        EventParameter('area_to_generate', 'Unknown: (multipolygon with crs: epsg:3857)', 
-                                        api_description='Area', api_type='Unknown: (multipolygon with crs: epsg:3857)', api_required=True, api_default=None, api_aggregation=0,  ),
+                        EventParameter('area_to_generate', 'MultiPolygon', 
+                                        api_description='Area', api_type='MultiPolygon', api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('min_length', Type[float], 
                                         api_description='Min Length', api_type=Type[float], api_required=True, api_default=None, api_aggregation=0,  ),
                         EventParameter('max_length', Type[float], 
