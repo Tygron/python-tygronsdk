@@ -254,6 +254,8 @@ class ApiReaderEventSet:
 
                 'alignment' : ['ROAD', 'SPACED'],
                 'functiontype' : ['ROAD', 'BUILDING', 'REMAINDER', 'WATER', 'PARKING', 'PUBLIC_GREEN', 'SIDEWALK', 'GARDEN'],
+    
+                'timing' : ['BEFORE','AFTER'],
             }
         
         for string, ptype in types.items():
