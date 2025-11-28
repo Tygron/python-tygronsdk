@@ -232,13 +232,17 @@ class Script(interfaces.Script):
                     )
                 )
                 
-            attribute_ids=[]
-            attribute_names=[]
-            attribute_values=[]
+            attribute_matchings_ids=[]
+            attribute_matchings_names=[]
+            attribute_matchings_values=[]
             
-            mapping_ids=[]
-            mapping_names=[]
-            mapping_values=[]
+            attribute_mappings_ids=[]
+            attribute_mappings_names=[]
+            attribute_mappings_values=[]
+            
+            attribute_additionals_ids=[]
+            attribute_additionals_names=[]
+            attribute_additionals_values=[]
             
             filtered_geolink_ids_points=[]
             filtered_buffers_points=[]
@@ -252,15 +256,18 @@ class Script(interfaces.Script):
             for index, link in enumerate(origin_geolinks):
                 link_id = target_geolink_ids[index]
                   
-                for attr_name, attr_val in link.attributes.items():
-                    attribute_ids.append( link_id )
-                    attribute_names.append( attr_name )
-                    attribute_values.append( attr_val )
-                  
-                for attr_name, attr_val in link.mapping.items():
-                    mapping_ids.append( link_id )
-                    mapping_names.append( attr_name )
-                    mapping_values.append( attr_val )
+                for attr_name, attr_val in link.matchings.items():
+                    attribute_matchings_ids.append( link_id )
+                    attribute_matchings_names.append( attr_name )
+                    attribute_matchings_values.append( attr_val )
+                for attr_name, attr_val in link.mappings.items():
+                    attribute_mappings_ids.append( link_id )
+                    attribute_mappings_names.append( attr_name )
+                    attribute_mappings_values.append( attr_val )
+                for attr_name, attr_val in link.additionals.items():
+                    attribute_additionals_ids.append( link_id )
+                    attribute_additionals_names.append( attr_name )
+                    attribute_additionals_values.append( attr_val )
                     
                 if ( not (link.point_buffer is None) ):
                     filtered_geolink_ids_points.append( link_id )
@@ -288,22 +295,36 @@ class Script(interfaces.Script):
                         buffer          = filtered_buffers_lines
                     )
                 )
-              
+
+            #attribute_matching_event = None
+            try:
+                attribute_matching_event = sdk_target.session.events.editorgeolink.set_attributes
+            except:
+                attribute_matching_event = sdk_target.session.events.editorgeolink.set_matching
             sdk_target.session.connector.fire_event(
-                    sdk_target.session.events.editorgeolink.set_attributes(
-                        geolink_id      = attribute_ids,
-                        attribute       = attribute_names,
-                        attribute_value = attribute_values
+                    attribute_matching_event(
+                        geolink_id      = attribute_matchings_ids,
+                        attribute       = attribute_matchings_names,
+                        attribute_value = attribute_matchings_values
                     )
                 )
-                
             sdk_target.session.connector.fire_event(
                     sdk_target.session.events.editorgeolink.set_mapping(
-                        geolink_id      = mapping_ids,
-                        attribute       = mapping_names,
-                        new_attribute   = mapping_values
+                        geolink_id      = attribute_mappings_ids,
+                        attribute       = attribute_mappings_names,
+                        new_attribute   = attribute_mappings_values
                     )
                 )
+            try:
+                sdk_target.session.connector.fire_event(
+                        sdk_target.session.events.editorgeolink.set_additional(
+                            geolink_id      = attribute_additionals_ids,
+                            attribute       = attribute_additionals_names,
+                            attribute_value   = attribute_additionals_values
+                        )
+                    )
+            except:
+                pass
             
             sdk_target.session.connector.fire_event(
                     sdk_target.session.events.editorgeolink.set_function(

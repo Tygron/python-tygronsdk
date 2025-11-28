@@ -14,11 +14,16 @@ class Projects(InteractionSet):
         versioned_events = InteractionSet.versioned(conn, events)
         
         domain = Users.get_my_domain_name(conn)
-            
+        
+        try: 
+            versioned_event = versioned_events.io.get_domain_startable_projects
+        except:
+            versioned_event = versioned_events.io.get_startable_projects
+
         response = conn.fire_event( 
-            versioned_events.io.get_domain_startable_projects (
-                domain
+            versioned_event (
             ) )
+            
         projects = [objects.ProjectData(project) for project in response.get_response_body_json()] 
             
         return projects
@@ -29,10 +34,15 @@ class Projects(InteractionSet):
         
         domain = Users.get_my_domain_name(conn)
         
+        try: 
+            versioned_event = versioned_events.io.get_domain_startable_templates
+        except:
+            versioned_event = versioned_events.io.get_startable_templates
+
         response = conn.fire_event( 
-            versioned_events.io.get_domain_startable_templates (
-                domain
+            versioned_event (
             ) )
+            
         projects = [objects.ProjectData(project) for project in response.get_response_body_json()] 
             
         return projects
@@ -44,8 +54,13 @@ class Projects(InteractionSet):
     def get_project( conn: Connector, project_name: str ):
         versioned_events = InteractionSet.versioned(conn, events)
         
+        try: 
+            versioned_event = versioned_events.io.get_project_data
+        except:
+            versioned_event = versioned_events.io.get_project
+
         response = conn.fire_event( 
-            versioned_events.io.get_project_data (
+            versioned_event (
                 project_name
             ) )
                 
@@ -100,18 +115,16 @@ class Projects(InteractionSet):
             else:
                 raise err
         
-        event = None
-        match conn.get_platform_version():
-            case '2025':
-                event =  versioned_events.io.set_project_trashed (
+        try: 
+            versioned_event = versioned_events.io.set_project_trashed
+        except:
+            versioned_event = versioned_events.io.trash_project
+
+        response = conn.fire_event( 
+            versioned_event (
                 project_name, False
-            )
-            case _:
-                event =  versioned_events.io.trash_project (
-                project_name, False
-            )
-        
-        response = conn.fire_event( event )
+            ) )
+            
         if response.is_success():
             return True
         else:

@@ -17,8 +17,12 @@ class Sessions(InteractionSet):
     def get_joinable_sessions( conn:Connector ):
         versioned_events = InteractionSet.versioned(conn, events)
         
+        try: 
+            versioned_event = versioned_events.io.get_my_joinable_sessions
+        except:
+            versioned_event = versioned_events.io.get_joinable_sessions
         response = conn.fire_event( 
-            versioned_events.io.get_my_joinable_sessions (
+            versioned_event (
             ) )
         sessions = [objects.SessionData(session) for session in response.get_response_body_json()]   
             

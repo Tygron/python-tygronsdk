@@ -3,11 +3,14 @@ from . import Item
 class Geolink(Item):
    
     @property
-    def attributes(self):
-        return self._data.get( 'attributes', {} )
+    def matchings(self):
+        return self._data.get( 'attributes', {} ) | self._data.get( 'matchings', {} )
     @property
-    def mapping(self):
-        return self._data.get( 'mapping', {} )
+    def mappings(self):
+        return self._data.get( 'mapping', {} ) | self._data.get( 'mappings', {} )
+    @property
+    def additionals(self):
+        return self._data.get( 'additionals', {} )
     
     @property
     def function_id(self):
