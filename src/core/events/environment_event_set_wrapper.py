@@ -12,6 +12,10 @@ class EnvironmentEventSetWrapper():
         
     def __getattr__( self, event_name ):
         event_data = self._events.get_definition( name=event_name )
+
+        if event_data is None:
+            raise TypeError('No event of type '+str(event_name))
+
         settings = self._settings
         storage = self._storage
         
