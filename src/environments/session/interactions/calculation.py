@@ -1,5 +1,8 @@
+from ....core.interactions.interaction_set import InteractionSet
 from ..connectors import Connector
 from ..data.items import Item
+from ..data import events, objects
+
 from .items import Items
 from .... import utilities
 
@@ -27,16 +30,30 @@ class Calculation:
     
     
     @staticmethod
-    def recalculate_scheduled( conn:Connector, recalculation_timestamp_in_seconds:int = None, wait_until_scheduled = True, timeout_in_seconds:int = 3600 ):
+    def recalculate_scheduled( conn:Connector, recalculation_timestamp_in_seconds:int = 0, wait_until_scheduled = True, timeout_in_seconds:int = 3600 ):
         response = None
+        
+        versioned_events = InteractionSet.versioned(conn, events)
+        
         try:
-            response = conn.request(
-                    method='POST',
-                    url='event/editorsetting/set_scheduled_update',
-                    data=[ recalculation_timestamp_in_seconds*1000 ],
-                    timeout=min(timeout_in_seconds, 60)
-                )
-                #Explicitly setting a maximum timeout of 1 minute here, to prevent unreasonable waits and request timeouts
+            try:
+                #Version 2026
+                versioned_event = versioned_events.editor.set_scheduled_update( recalculation_timestamp_in_seconds*1000 )
+                response = conn.request(
+                        method='POST',
+                        url='event/'+versioned_event.get_path(),
+                        data=versioned_event.get_arguments(),
+                        timeout=min(timeout_in_seconds, 60)
+                    )
+            except Exception as err:
+                #Version 2025 and earlier
+                response = conn.request(
+                        method='POST',
+                        url='event/editorsetting/set_scheduled_update',
+                        data=[ recalculation_timestamp_in_seconds*1000 ],
+                        timeout=min(timeout_in_seconds, 60)
+                    )
+                    #Explicitly setting a maximum timeout of 1 minute here, to prevent unreasonable waits and request timeouts
         except Exception as err:
             raise err
             
@@ -47,11 +64,20 @@ class Calculation:
     @staticmethod
     def recalculate_direct( conn:Connector, reset: bool = True, timeout_in_seconds:int = 600 ):
         response = None
+        
+        versioned_events = InteractionSet.versioned(conn, events)
+        try:
+            #Version 2026 and earlier
+            versioned_event = versioned_events.editor.update( reset )
+        except:
+            #Version 2025 and earlier
+            versioned_event = versioned_events.editorindicator.reset_indicators( reset )
+            
         try:
             response = conn.request(
                     method='POST',
-                    url='event/editorindicator/reset_indicators',
-                    data=[ reset ],
+                    url='event/'+versioned_event.get_path(),
+                    data=versioned_event.get_arguments(),
                     timeout=min(timeout_in_seconds, 60)
                 )
                 #Explicitly setting a maximum timeout of 1 minute here, to prevent unreasonable waits and request timeouts
