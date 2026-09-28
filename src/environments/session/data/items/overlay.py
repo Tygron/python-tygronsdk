@@ -32,15 +32,18 @@ class Overlay(Item):
             }.get(self.overlay_type, Overlay.ATTRIBUTE_TIMEFRAMES)
         if ( not by_attribute_value is None ):
             return self.get_attribute_value( attribute=by_attribute_value, include_attribute=True, include_maquette=False, first_only=True, default_zero=True)
-                
+        
         raise Exception( 'No (known) timeframes attribute exists for Overlay ' + self.get_printable_id() )
         
         
     def get_timeframe( self, index:int = -1 ):
-        timeframes = self.get_timeframes( )
+        timeframes = self.get_timeframes()
         if ( timeframes == None ):
             raise Exception( 'No (known) timeframes attribute exists for Overlay ' + self.get_printable_id() )
-            
+        
+        if ( timeframes == 0 ):
+            return int(0)
+        
         if ( index < 0 ):
             target_timeframe = timeframes + index
         else:
@@ -60,7 +63,10 @@ class Overlay(Item):
         number_of_timeframes = int(number_of_timeframes)
         
         if ( indexes is True ):
-            timeframes = list(range(0, number_of_timeframes))
+            if ( number_of_timeframes == 0 ):
+                timeframes = [0]
+            else:
+                timeframes = list(range(0, number_of_timeframes))
         elif ( isinstance(indexes, int) ):
             timeframes = self.get_timeframe(indexes)
         elif ( isinstance(indexes, list) ):
