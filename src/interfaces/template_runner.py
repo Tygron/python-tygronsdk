@@ -340,6 +340,8 @@ class TemplateRunner:
         sdk = self.sdk
         
         self.log( 'Starting template and creating a new project with it.' )
+        
+        self.log( 'Using template named: '+str(self.settings['template_name']) )
         creation_response = sdk.base.sessions.create_new_project_from_template( **self.settings )
         
         self.log( 'Created a new project named: ' +str(creation_response['project']) )
