@@ -9,7 +9,7 @@ class ConnectorTygron(Connector):
         
         self.settings = {
             'platform' : 'engine',
-            'query_params' : {'f':'JSON'},
+            #'query_params' : {'f':'JSON'},
             'request_format' : 'JSON'
         }
         self.settings = settings
