@@ -150,19 +150,19 @@ class LicenseData:
     @property
     def allow_basic(self):
         value = self.get_license_value('allow_basic')
-        return (value == 1) or (value.lower() == 'yes')
+        return (value == 1) or (str(value).lower() == 'yes')
     @property
     def allow_long_keepalive(self):
         value = self.get_license_value('allow_long_keepalive')
-        return (value == 1) or (value.lower() == 'yes')
+        return (value == 1) or (str(value).lower() == 'yes')
     @property
     def allow_preview(self):
         value = self.get_license_value('allow_preview')
-        return (value == 1) or (value.lower() == 'yes')
+        return (value == 1) or (str(value).lower() == 'yes')
     @property
     def allow_subdomains(self):
         value = self.get_license_value('allow_subdomains')
-        return (value == 1) or (value.lower() == 'yes')
+        return (value == 1) or (str(value).lower() == 'yes')
     def get_allows_string(self):
         values = []
         if (self.allow_basic): values.append('basic mode')
