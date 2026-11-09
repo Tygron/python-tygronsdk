@@ -398,7 +398,7 @@ class TemplateRunnerOrchestrator:
     def check_runner_platform( self, runner ):
         try:
             self.log_orchestrator( 'Checking platform readyness (e.g. maintenance)' )
-            if ( not runner.check_maintenance_window( exception=False ) ):
+            while ( not runner.check_maintenance_window( exception=False ) ):
                 self.wait_maintenance_window( runner.sdk )
         except Exception as err:
             self.log_orchestrator( 'Encountered an error while testing platform is ready' )
@@ -426,24 +426,29 @@ class TemplateRunnerOrchestrator:
     
     
     
-    def wait_maintenance_window( self, sdk:tygron.sdk ):
-        result = False
-        previous_result = False
-        maintenance_window = sdk.base.platform.get_maintenance_window()
+    def wait_maintenance_window( self, sdk:tygron.sdk ):        
+        current_window = sdk.base.platform.get_maintenance_window()
+        previous_window = False
         
-        while ( not maintenance_window.is_completed() ):
-            if ( not (previous_result == maintenance_window.end_in_seconds) ):
-                self.log_orchestrator( 'Task will not start due to maintenance window starting at: '+str(utilities.timing.get_readable_time(maintenance_window.start_in_seconds)) )
-                self.log_orchestrator( 'Waiting until maintenance window has passed at: '+str(utilities.timing.get_readable_time(maintenance_window.end_in_seconds)) )
-            else:
-                self.log_orchestrator( 'Task is still waiting on maintenance window to end at: '+str(utilities.timing.get_readable_time(maintenance_window.end_in_seconds)) )
+        while ( not current_window.is_completed() ):
+        
+            if ( previous_window is False ):
+                self.log_orchestrator( 'Task will not start due to maintenance window starting at: '+str(utilities.timing.get_readable_time(current_window.start_in_seconds)) )
+                self.log_orchestrator( 'Waiting until maintenance window has passed at: '+str(utilities.timing.get_readable_time(current_window.end_in_seconds)) )
             
-            previous_result = maintenance_window.end_in_seconds 
-                
-            utilities.timing.wait_for( timeout_in_seconds=maintenance_window.time_to_end_in_seconds() )
-                
-            if (utilities.timing.time_remaining( start_time=maintenance_window.time_to_end_in_seconds() ) < 0 ):
-                maintenance_window = sdk.base.platform.get_maintenance_window()
+            elif ( not ( str(current_window) == str(previous_window) ) ):
+                if ( current_window.is_upcoming() ):
+                    self.log_orchestrator( 'New maintenance window has been established, starting at: '+str(utilities.timing.get_readable_time(current_window.start_in_seconds)) )
+                else:
+                    self.log_orchestrator( 'Task is waiting on renewed maintenance window to end at: '+str(utilities.timing.get_readable_time(current_window.end_in_seconds)) )
+            
+            else:                
+                self.log_orchestrator( 'Task is still waiting on maintenance window to end at: '+str(utilities.timing.get_readable_time(current_window.end_in_seconds)) )
+ 
+            if ( (previous_window is False) or (not current_window.is_upcoming() ) ):
+                previous_window = current_window
+                utilities.timing.wait_for( timeout_in_seconds=current_window.time_to_end_in_seconds() )
+                current_window = sdk.base.platform.get_maintenance_window()
         
         return True
         
